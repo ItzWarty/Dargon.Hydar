@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Dargon.Audits;
-using Dargon.Hydar.Grid.Phases;
+using Dargon.Hydar.Grid.ClusterPhases;
 using Dargon.Hydar.Networking;
 
 namespace Dargon.Hydar.Grid {

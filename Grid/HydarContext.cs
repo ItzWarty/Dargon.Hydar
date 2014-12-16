@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 using Dargon.Audits;
-using Dargon.Hydar.Grid.Phases;
+using Dargon.Hydar.Grid.ClusterPhases;
 using Dargon.Hydar.Networking;
 using Dargon.Hydar.PortableObjects;
 using ItzWarty;
@@ -12,7 +12,7 @@ namespace Dargon.Hydar.Grid {
       GridConfiguration Configuration { get; }
       Network Network { get; }
       HydarNode Node { get; }
-      void SetPhase(IPhase phase);
+      void SetClusterPhase(IClusterPhase clusterPhase);
       void Receive(IRemoteIdentity senderIdentity, HydarMessage message);
       void Log(string x);
    }
@@ -24,7 +24,7 @@ namespace Dargon.Hydar.Grid {
       private readonly NodePhaseFactory phaseFactory;
       private readonly object synchronization = new object();
       private readonly HydarNode node;
-      private IPhase currentPhase;
+      private IClusterPhase currentClusterPhase;
       private Timer timer;
 
       public HydarContextImpl(AuditEventBus auditEventBus, GridConfiguration configuration, Network network, NodePhaseFactory phaseFactory, HydarNode node) {
@@ -33,7 +33,7 @@ namespace Dargon.Hydar.Grid {
          this.network = network;
          this.phaseFactory = phaseFactory;
          this.node = node;
-         this.currentPhase = null;
+         this.currentClusterPhase = null;
       }
 
       public GridConfiguration Configuration { get { return configuration; } }
@@ -42,30 +42,30 @@ namespace Dargon.Hydar.Grid {
       public HydarNode Node { get { return node; } }
 
       public void Initialize() {
-         currentPhase = phaseFactory.CreateInitializationPhase();
-         SetPhase(currentPhase);
+         currentClusterPhase = phaseFactory.CreateInitializationPhase();
+         SetClusterPhase(currentClusterPhase);
 
          timer = new Timer((e) => {
             lock (synchronization) {
-               currentPhase.Tick();
+               currentClusterPhase.Tick();
             }
          }, null, configuration.TickIntervalMillis, configuration.TickIntervalMillis);
       }
 
-      public void SetPhase(IPhase phase) {
+      public void SetClusterPhase(IClusterPhase clusterPhase) {
          lock (synchronization) {
-            phase.ThrowIfNull("phase");
-            Log("=> " + phase);
-            currentPhase = phase;
-            currentPhase.Enter();
+            clusterPhase.ThrowIfNull("phase");
+            Log("=> " + clusterPhase);
+            currentClusterPhase = clusterPhase;
+            currentClusterPhase.Enter();
          }
       }
 
       public void Receive(IRemoteIdentity senderIdentity, HydarMessage message) {
-         if (currentPhase.Process(senderIdentity, message)) {
+         if (currentClusterPhase.Process(senderIdentity, message)) {
             // do nothing
          } else {
-            auditEventBus.Error(GlobalHydarConfiguration.kAuditEventBusErrorKey, "Unknown Payload Type", "Connectivity Phase: {0}, Payload Type: {1}".F(currentPhase.GetType(), message.Payload.GetType().FullName));
+            auditEventBus.Error(GlobalHydarConfiguration.kAuditEventBusErrorKey, "Unknown Payload Type", "Connectivity Phase: {0}, Payload Type: {1}".F(currentClusterPhase.GetType(), message.Payload.GetType().FullName));
          }
       }
 

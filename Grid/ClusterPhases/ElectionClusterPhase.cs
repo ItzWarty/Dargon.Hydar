@@ -1,13 +1,12 @@
-﻿using Dargon.Audits;
+﻿using System;
+using System.Collections.Generic;
+using Dargon.Audits;
 using Dargon.Hydar.Networking;
 using Dargon.Hydar.PortableObjects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using NLog;
 
-namespace Dargon.Hydar.Grid.Phases {
-   public class ElectionPhase : PhaseBase {
+namespace Dargon.Hydar.Grid.ClusterPhases {
+   public class ElectionClusterPhase : ClusterPhaseBase {
       private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
       private readonly object synchronization = new object();
@@ -16,7 +15,7 @@ namespace Dargon.Hydar.Grid.Phases {
       private List<Guid> currentRoundVotes = new List<Guid>();
       private int electionSecurity = 0;
 
-      public ElectionPhase(AuditEventBus auditEventBus, NodePhaseFactory phaseFactory, HydarContext context) : base(auditEventBus, phaseFactory, context) {}
+      public ElectionClusterPhase(AuditEventBus auditEventBus, NodePhaseFactory phaseFactory, HydarContext context) : base(auditEventBus, phaseFactory, context) {}
 
       public void Initialize() {
          selectedCandidate = node.Identifier;
@@ -47,7 +46,7 @@ namespace Dargon.Hydar.Grid.Phases {
                   electionSecurity++;
 
                   if (electionSecurity > configuration.ElectionTicksToPromotion) {
-                     context.SetPhase(phaseFactory.CreateLeaderPhase());
+                     context.SetClusterPhase(phaseFactory.CreateLeaderPhase());
                   }
                } else {
                   electionSecurity = 0;
@@ -68,7 +67,7 @@ namespace Dargon.Hydar.Grid.Phases {
       }
 
       private void HandleLeaderHeartBeat(IRemoteIdentity leader, HydarMessageHeader header, LeaderHeartBeat payload) {
-         context.SetPhase(phaseFactory.CreateMemberPhase());
+         context.SetClusterPhase(phaseFactory.CreateMemberPhase());
       }
    }
 }

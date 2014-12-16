@@ -3,11 +3,11 @@ using Dargon.Audits;
 using Dargon.Hydar.Networking;
 using Dargon.Hydar.PortableObjects;
 
-namespace Dargon.Hydar.Grid.Phases {
-   public class MemberPhase : PhaseBase {
+namespace Dargon.Hydar.Grid.ClusterPhases {
+   public class MemberClusterPhase : ClusterPhaseBase {
       private int leaderAbsentTicks = 0;
 
-      public MemberPhase(AuditEventBus auditEventBus, NodePhaseFactory phaseFactory, HydarContext context) : base(auditEventBus, phaseFactory, context) {}
+      public MemberClusterPhase(AuditEventBus auditEventBus, NodePhaseFactory phaseFactory, HydarContext context) : base(auditEventBus, phaseFactory, context) {}
 
       public void Initialize() {
          RegisterHandler<LeaderHeartBeat>(HandleLeaderHeartBeat);
@@ -16,7 +16,7 @@ namespace Dargon.Hydar.Grid.Phases {
       public override void Tick() {
          var nextLeaderAbsentTicks = Interlocked.Increment(ref leaderAbsentTicks);
          if (nextLeaderAbsentTicks > configuration.TicksToElection) {
-            context.SetPhase(phaseFactory.CreateElectionPhase());
+            context.SetClusterPhase(phaseFactory.CreateElectionPhase());
          }
          SendDataNodeHeartBeat();
       }

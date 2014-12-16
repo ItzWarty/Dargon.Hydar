@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Dargon.Audits;
 using Dargon.Hydar.Networking;
 using Dargon.Hydar.PortableObjects;
 using ItzWarty;
 
-namespace Dargon.Hydar.Grid.Phases {
-   public abstract class PhaseBase : IPhase {
+namespace Dargon.Hydar.Grid.ClusterPhases {
+   public abstract class ClusterPhaseBase : IClusterPhase {
       private readonly Dictionary<Type, Action<IRemoteIdentity, HydarMessageHeader, object>> messageHandlersByPayloadType = new Dictionary<Type, Action<IRemoteIdentity, HydarMessageHeader, object>>();
       protected readonly AuditEventBus auditEventBus;
       protected readonly NodePhaseFactory phaseFactory;
@@ -18,7 +15,7 @@ namespace Dargon.Hydar.Grid.Phases {
       protected readonly HydarNode node;
       protected readonly Network network;
 
-      protected PhaseBase(AuditEventBus auditEventBus, NodePhaseFactory phaseFactory, HydarContext context) {
+      protected ClusterPhaseBase(AuditEventBus auditEventBus, NodePhaseFactory phaseFactory, HydarContext context) {
          this.auditEventBus = auditEventBus;
          this.phaseFactory = phaseFactory;
          this.context = context;
