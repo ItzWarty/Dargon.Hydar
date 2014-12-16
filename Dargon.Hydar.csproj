@@ -64,6 +64,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GlobalHydarConfiguration.cs" />
+    <Compile Include="Grid\MessageProcessorBase.cs" />
+    <Compile Include="Grid\DataContext.cs" />
     <Compile Include="Grid\GridConfiguration.cs" />
     <Compile Include="Grid\GridConfigurationImpl.cs" />
     <Compile Include="Grid\HydarNodeFactory.cs" />
