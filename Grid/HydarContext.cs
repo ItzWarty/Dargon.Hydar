@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using Dargon.Audits;
 using Dargon.Hydar.Grid.Phases;
 using Dargon.Hydar.Networking;
 using Dargon.Hydar.PortableObjects;
@@ -17,6 +18,7 @@ namespace Dargon.Hydar.Grid {
    }
 
    public class HydarContextImpl : HydarContext {
+      private readonly AuditEventBus auditEventBus;
       private readonly GridConfiguration configuration;
       private readonly Network network;
       private readonly NodePhaseFactory phaseFactory;
@@ -25,7 +27,8 @@ namespace Dargon.Hydar.Grid {
       private IPhase currentPhase;
       private Timer timer;
 
-      public HydarContextImpl(GridConfiguration configuration, Network network, NodePhaseFactory phaseFactory, HydarNode node) {
+      public HydarContextImpl(AuditEventBus auditEventBus, GridConfiguration configuration, Network network, NodePhaseFactory phaseFactory, HydarNode node) {
+         this.auditEventBus = auditEventBus;
          this.configuration = configuration;
          this.network = network;
          this.phaseFactory = phaseFactory;
@@ -59,7 +62,11 @@ namespace Dargon.Hydar.Grid {
       }
 
       public void Receive(IRemoteIdentity senderIdentity, HydarMessage message) {
-         currentPhase.Receive(senderIdentity, message);
+         if (currentPhase.Process(senderIdentity, message)) {
+            // do nothing
+         } else {
+            auditEventBus.Error(GlobalHydarConfiguration.kAuditEventBusErrorKey, "Unknown Payload Type", "Connectivity Phase: {0}, Payload Type: {1}".F(currentPhase.GetType(), message.Payload.GetType().FullName));
+         }
       }
 
       public void Log(string x) {

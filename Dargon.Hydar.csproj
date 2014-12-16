@@ -90,6 +90,7 @@
     <Compile Include="PortableObjects\HydarMessageHeader.cs" />
     <Compile Include="PortableObjects\HydarMessageHeaderImpl.cs" />
     <Compile Include="PortableObjects\HydarMessageImpl.cs" />
+    <Compile Include="PortableObjects\DataNodeHeartBeat.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MulticastSocket.cs" />

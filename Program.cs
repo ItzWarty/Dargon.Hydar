@@ -19,7 +19,7 @@ namespace Dargon.Hydar {
          var node2 = nodeFactory.Create();
          var node3 = nodeFactory.Create();
          var node4 = nodeFactory.Create();
-         
+
          CountdownEvent synchronization = new CountdownEvent(1);
          synchronization.Wait();
       }

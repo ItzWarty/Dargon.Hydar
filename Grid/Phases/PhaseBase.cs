@@ -34,7 +34,7 @@ namespace Dargon.Hydar.Grid.Phases {
       public virtual void Enter() { }
       public abstract void Tick();
 
-      public void Receive(IRemoteIdentity sender, HydarMessage message) {
+      public bool Process(IRemoteIdentity sender, HydarMessage message) {
          message.ThrowIfNull("message");
          message.Header.ThrowIfNull("header");
          message.Payload.ThrowIfNull("payload");
@@ -43,9 +43,10 @@ namespace Dargon.Hydar.Grid.Phases {
 
          var handler = messageHandlersByPayloadType.GetValueOrDefault(payloadType);
          if (handler == null) {
-            auditEventBus.Error(GlobalHydarConfiguration.kAuditEventBusErrorKey, "Unknown Payload Type", "Phase: {0}, Type: {1}".F(GetType(), payloadType.FullName));
+            return false;
          } else {
             handler(sender, message.Header, message.Payload);
+            return true;
          }
       }
 

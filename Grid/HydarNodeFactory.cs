@@ -22,7 +22,7 @@ namespace Dargon.Hydar.Grid {
       public HydarNode Create() {
          var nodePhaseFactory = new NodePhaseFactoryImpl(auditEventBus);
          var node = new HydarNodeImpl(auditEventBus, nodePhaseFactory);
-         var context = new HydarContextImpl(configuration, network, nodePhaseFactory, node);
+         var context = new HydarContextImpl(auditEventBus, configuration, network, nodePhaseFactory, node);
          nodePhaseFactory.SetContext(context);
          node.SetContext(context);
          context.Initialize();

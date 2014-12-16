@@ -18,7 +18,11 @@ namespace Dargon.Hydar.Grid.Phases {
          if (nextLeaderAbsentTicks > configuration.TicksToElection) {
             context.SetPhase(phaseFactory.CreateElectionPhase());
          }
+         SendDataNodeHeartBeat();
+      }
 
+      private void SendDataNodeHeartBeat() {
+         Send(new DataNodeHeartBeat());
       }
 
       private void HandleLeaderHeartBeat(IRemoteIdentity arg1, HydarMessageHeader arg2, LeaderHeartBeat arg3) {

@@ -5,6 +5,6 @@ namespace Dargon.Hydar.Grid.Phases {
    public interface IPhase {
       void Enter();
       void Tick();
-      void Receive(IRemoteIdentity sender, HydarMessage message);
+      bool Process(IRemoteIdentity sender, HydarMessage message);
    }
 }
