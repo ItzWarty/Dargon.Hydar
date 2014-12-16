@@ -3,11 +3,11 @@ using Dargon.Audits;
 using Dargon.Hydar.Networking;
 using Dargon.Hydar.PortableObjects;
 
-namespace Dargon.Hydar.Grid.ClusterPhases {
-   public class MemberClusterPhase : ClusterPhaseBase {
+namespace Dargon.Hydar.Grid.Peering {
+   public class MemberPeeringPhase : PeeringPhaseBase {
       private int leaderAbsentTicks = 0;
 
-      public MemberClusterPhase(AuditEventBus auditEventBus, NodePhaseFactory phaseFactory, HydarContext context) : base(auditEventBus, phaseFactory, context) {}
+      public MemberPeeringPhase(AuditEventBus auditEventBus, HydarContext context, NodePhaseFactory phaseFactory) : base(auditEventBus, context, phaseFactory) {}
 
       public void Initialize() {
          RegisterHandler<LeaderHeartBeat>(HandleLeaderHeartBeat);
@@ -16,7 +16,7 @@ namespace Dargon.Hydar.Grid.ClusterPhases {
       public override void Tick() {
          var nextLeaderAbsentTicks = Interlocked.Increment(ref leaderAbsentTicks);
          if (nextLeaderAbsentTicks > configuration.TicksToElection) {
-            context.SetClusterPhase(phaseFactory.CreateElectionPhase());
+            peeringContext.SetPhase(phaseFactory.CreateElectionPhase());
          }
          SendDataNodeHeartBeat();
       }

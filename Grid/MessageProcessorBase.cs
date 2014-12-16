@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Dargon.Audits;
-using Dargon.Hydar.Grid.ClusterPhases;
 using Dargon.Hydar.Networking;
 using Dargon.Hydar.PortableObjects;
 using ItzWarty;
@@ -9,16 +8,14 @@ using ItzWarty;
 namespace Dargon.Hydar.Grid {
    public class MessageProcessorBase {
       protected readonly AuditEventBus auditEventBus;
-      protected readonly NodePhaseFactory phaseFactory;
       protected readonly HydarContext context;
       protected readonly GridConfiguration configuration;
       protected readonly HydarNode node;
       protected readonly Network network;
       private readonly Dictionary<Type, Action<IRemoteIdentity, HydarMessageHeader, object>> messageHandlersByPayloadType = new Dictionary<Type, Action<IRemoteIdentity, HydarMessageHeader, object>>();
 
-      public MessageProcessorBase(AuditEventBus auditEventBus, NodePhaseFactory phaseFactory, HydarContext context) {
+      public MessageProcessorBase(AuditEventBus auditEventBus, HydarContext context) {
          this.auditEventBus = auditEventBus;
-         this.phaseFactory = phaseFactory;
          this.context = context;
          this.configuration = context.Configuration;
          this.node = context.Node;

@@ -64,21 +64,23 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GlobalHydarConfiguration.cs" />
+    <Compile Include="Grid\Peering\PeeringContext.cs" />
+    <Compile Include="Grid\Peering\EpochDescriptor.cs" />
     <Compile Include="Grid\MessageProcessorBase.cs" />
-    <Compile Include="Grid\DataContext.cs" />
+    <Compile Include="Grid\Data\DataContext.cs" />
     <Compile Include="Grid\GridConfiguration.cs" />
     <Compile Include="Grid\GridConfigurationImpl.cs" />
     <Compile Include="Grid\HydarNodeFactory.cs" />
     <Compile Include="Grid\HydarContext.cs" />
-    <Compile Include="Grid\ClusterPhases\ElectionClusterPhase.cs" />
-    <Compile Include="Grid\ClusterPhases\IndeterminateClusterPhase.cs" />
-    <Compile Include="Grid\ClusterPhases\InitializationClusterPhase.cs" />
-    <Compile Include="Grid\ClusterPhases\IClusterPhase.cs" />
-    <Compile Include="Grid\ClusterPhases\LeaderClusterPhase.cs" />
-    <Compile Include="Grid\ClusterPhases\MemberClusterPhase.cs" />
-    <Compile Include="Grid\ClusterPhases\NodePhaseFactoryImpl.cs" />
-    <Compile Include="Grid\ClusterPhases\ClusterPhaseBase.cs" />
-    <Compile Include="Grid\ClusterPhases\NodePhaseFactory.cs" />
+    <Compile Include="Grid\Peering\ElectionPeeringPhase.cs" />
+    <Compile Include="Grid\Peering\IndeterminatePeeringPhase.cs" />
+    <Compile Include="Grid\Peering\InitializationPeeringPhase.cs" />
+    <Compile Include="Grid\Peering\IPeeringPhase.cs" />
+    <Compile Include="Grid\Peering\LeaderPeeringPhase.cs" />
+    <Compile Include="Grid\Peering\MemberPeeringPhase.cs" />
+    <Compile Include="Grid\Peering\NodePhaseFactoryImpl.cs" />
+    <Compile Include="Grid\Peering\PeeringPhaseBase.cs" />
+    <Compile Include="Grid\Peering\NodePhaseFactory.cs" />
     <Compile Include="HydarPofContext.cs" />
     <Compile Include="Grid\HydarNode.cs" />
     <Compile Include="Networking\Network.cs" />

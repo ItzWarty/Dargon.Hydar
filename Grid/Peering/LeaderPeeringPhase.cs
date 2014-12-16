@@ -1,9 +1,9 @@
 using Dargon.Audits;
 using Dargon.Hydar.PortableObjects;
 
-namespace Dargon.Hydar.Grid.ClusterPhases {
-   public class LeaderClusterPhase : ClusterPhaseBase {
-      public LeaderClusterPhase(AuditEventBus auditEventBus, NodePhaseFactory phaseFactory, HydarContext context) : base(auditEventBus, phaseFactory, context) {}
+namespace Dargon.Hydar.Grid.Peering {
+   public class LeaderPeeringPhase : PeeringPhaseBase {
+      public LeaderPeeringPhase(AuditEventBus auditEventBus, HydarContext context, NodePhaseFactory phaseFactory) : base(auditEventBus, context, phaseFactory) {}
 
       public override void Enter() {
          base.Enter();

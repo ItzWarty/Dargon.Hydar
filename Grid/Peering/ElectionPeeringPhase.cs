@@ -5,8 +5,8 @@ using Dargon.Hydar.Networking;
 using Dargon.Hydar.PortableObjects;
 using NLog;
 
-namespace Dargon.Hydar.Grid.ClusterPhases {
-   public class ElectionClusterPhase : ClusterPhaseBase {
+namespace Dargon.Hydar.Grid.Peering {
+   public class ElectionPeeringPhase : PeeringPhaseBase {
       private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
       private readonly object synchronization = new object();
@@ -15,7 +15,7 @@ namespace Dargon.Hydar.Grid.ClusterPhases {
       private List<Guid> currentRoundVotes = new List<Guid>();
       private int electionSecurity = 0;
 
-      public ElectionClusterPhase(AuditEventBus auditEventBus, NodePhaseFactory phaseFactory, HydarContext context) : base(auditEventBus, phaseFactory, context) {}
+      public ElectionPeeringPhase(AuditEventBus auditEventBus, HydarContext context, NodePhaseFactory phaseFactory) : base(auditEventBus, context, phaseFactory) {}
 
       public void Initialize() {
          selectedCandidate = node.Identifier;
@@ -46,7 +46,7 @@ namespace Dargon.Hydar.Grid.ClusterPhases {
                   electionSecurity++;
 
                   if (electionSecurity > configuration.ElectionTicksToPromotion) {
-                     context.SetClusterPhase(phaseFactory.CreateLeaderPhase());
+                     peeringContext.SetPhase(phaseFactory.CreateLeaderPhase());
                   }
                } else {
                   electionSecurity = 0;
@@ -67,7 +67,7 @@ namespace Dargon.Hydar.Grid.ClusterPhases {
       }
 
       private void HandleLeaderHeartBeat(IRemoteIdentity leader, HydarMessageHeader header, LeaderHeartBeat payload) {
-         context.SetClusterPhase(phaseFactory.CreateMemberPhase());
+         peeringContext.SetPhase(phaseFactory.CreateMemberPhase());
       }
    }
 }
