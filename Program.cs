@@ -30,6 +30,11 @@ namespace Dargon.Hydar {
 
       public void Post(AuditEvent obj) {
          Console.WriteLine("{0}: {1} // {2}".F(obj.EventType, obj.EventMessage, obj.EventData));
+
+         var capture = EventPosted;
+         if (capture != null) {
+            capture(this, obj);
+         }
       }
 
       public void Post(AuditEventType eventType, string eventKey, string message, string data = null) {
