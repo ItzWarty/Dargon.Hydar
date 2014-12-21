@@ -1,18 +1,19 @@
 using System;
-using System.Collections.Generic;
 using Dargon.Audits;
+using Dargon.Hydar.Clustering;
 using Dargon.Hydar.Networking;
 using Dargon.Hydar.PortableObjects;
 using ItzWarty;
+using ItzWarty.Collections;
 
-namespace Dargon.Hydar.Grid {
+namespace Dargon.Hydar.Utilities {
    public class MessageProcessorBase {
       protected readonly AuditEventBus auditEventBus;
       protected readonly HydarContext context;
-      protected readonly GridConfiguration configuration;
-      protected readonly HydarNode node;
+      protected readonly ClusteringConfiguration configuration;
+      protected readonly NetworkNode node;
       protected readonly Network network;
-      private readonly Dictionary<Type, Action<IRemoteIdentity, HydarMessageHeader, object>> messageHandlersByPayloadType = new Dictionary<Type, Action<IRemoteIdentity, HydarMessageHeader, object>>();
+      private readonly MultiValueDictionary<Type, Action<IRemoteIdentity, HydarMessageHeader, object>> messageHandlersByPayloadType = new MultiValueDictionary<Type, Action<IRemoteIdentity, HydarMessageHeader, object>>();
 
       public MessageProcessorBase(AuditEventBus auditEventBus, HydarContext context) {
          this.auditEventBus = auditEventBus;
@@ -33,12 +34,12 @@ namespace Dargon.Hydar.Grid {
 
          var payloadType = message.Payload.GetType();
 
-         var handler = messageHandlersByPayloadType.GetValueOrDefault(payloadType);
-         if (handler == null) {
+         var handlers = messageHandlersByPayloadType.GetValueOrDefault(payloadType);
+         if (handlers == null) {
             return false;
          } else {
-            handler(sender, message.Header, message.Payload);
-            return true;
+            handlers.ForEach(handler => handler(sender, message.Header, message.Payload));
+            return handlers.Count > 0;
          }
       }
 

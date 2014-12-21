@@ -42,8 +42,9 @@
     <Reference Include="libdpo">
       <HintPath>..\packages\libdpo.0.0.14\lib\net45\libdpo.dll</HintPath>
     </Reference>
-    <Reference Include="libwarty">
-      <HintPath>..\packages\libwarty.proxies-api.0.0.16\lib\net45\libwarty.dll</HintPath>
+    <Reference Include="libwarty, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>packages\libwarty.0.0.16\lib\portable-net45+netcore45+MonoAndroid1+MonoTouch1\libwarty.dll</HintPath>
     </Reference>
     <Reference Include="libwarty.proxies-api">
       <HintPath>..\packages\libwarty.proxies-api.0.0.16\lib\net45\libwarty.proxies-api.dll</HintPath>
@@ -63,29 +64,32 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GlobalHydarConfiguration.cs" />
-    <Compile Include="Grid\Peering\PeeringContext.cs" />
-    <Compile Include="Grid\Peering\EpochDescriptor.cs" />
-    <Compile Include="Grid\MessageProcessorBase.cs" />
-    <Compile Include="Grid\Data\DataContext.cs" />
-    <Compile Include="Grid\GridConfiguration.cs" />
-    <Compile Include="Grid\GridConfigurationImpl.cs" />
-    <Compile Include="Grid\HydarNodeFactory.cs" />
-    <Compile Include="Grid\HydarContext.cs" />
-    <Compile Include="Grid\Peering\ElectionPeeringPhase.cs" />
-    <Compile Include="Grid\Peering\IndeterminatePeeringPhase.cs" />
-    <Compile Include="Grid\Peering\InitializationPeeringPhase.cs" />
-    <Compile Include="Grid\Peering\IPeeringPhase.cs" />
-    <Compile Include="Grid\Peering\LeaderPeeringPhase.cs" />
-    <Compile Include="Grid\Peering\MemberPeeringPhase.cs" />
-    <Compile Include="Grid\Peering\NodePhaseFactoryImpl.cs" />
-    <Compile Include="Grid\Peering\PeeringPhaseBase.cs" />
-    <Compile Include="Grid\Peering\NodePhaseFactory.cs" />
-    <Compile Include="HydarPofContext.cs" />
-    <Compile Include="Grid\HydarNode.cs" />
+    <Compile Include="HydarContextImpl.cs" />
+    <Compile Include="HydarConstants.cs" />
+    <Compile Include="Clustering\ClusterContextImpl.cs" />
+    <Compile Include="Clustering\EpochDescriptorImpl.cs" />
+    <Compile Include="Clustering\ClusterContext.cs" />
+    <Compile Include="Clustering\EpochDescriptor.cs" />
+    <Compile Include="Utilities\MessageProcessorBase.cs" />
+    <Compile Include="Clustering\ClusteringConfiguration.cs" />
+    <Compile Include="Clustering\ClusteringConfigurationImpl.cs" />
+    <Compile Include="HydarFactory.cs" />
+    <Compile Include="HydarContext.cs" />
+    <Compile Include="Clustering\Peering\ElectionPeeringPhase.cs" />
+    <Compile Include="Clustering\Peering\IndeterminatePeeringPhase.cs" />
+    <Compile Include="Clustering\Peering\InitializationPeeringPhase.cs" />
+    <Compile Include="Clustering\Peering\IPeeringPhase.cs" />
+    <Compile Include="Clustering\Peering\LeaderPeeringPhase.cs" />
+    <Compile Include="Clustering\Peering\MemberPeeringPhase.cs" />
+    <Compile Include="Clustering\Peering\NodePhaseFactoryImpl.cs" />
+    <Compile Include="Clustering\Peering\PeeringPhaseBase.cs" />
+    <Compile Include="Clustering\Peering\NodePhaseFactory.cs" />
+    <Compile Include="Clustering\PeerStatus.cs" />
+    <Compile Include="PortableObjects\HydarPofContext.cs" />
+    <Compile Include="Networking\NetworkNode.cs" />
     <Compile Include="Networking\Network.cs" />
-    <Compile Include="IRemoteNodeDescriptor.cs" />
-    <Compile Include="Grid\HydarNodeImpl.cs" />
+    <Compile Include="Networking\IRemoteNodeDescriptor.cs" />
+    <Compile Include="Networking\NetworkNodeImpl.cs" />
     <Compile Include="Networking\IRemoteIdentity.cs" />
     <Compile Include="Networking\TestRemoteIdentity.cs" />
     <Compile Include="PortableObjects\ElectionVote.cs" />
@@ -94,10 +98,9 @@
     <Compile Include="PortableObjects\HydarMessageHeader.cs" />
     <Compile Include="PortableObjects\HydarMessageHeaderImpl.cs" />
     <Compile Include="PortableObjects\HydarMessageImpl.cs" />
-    <Compile Include="PortableObjects\DataNodeHeartBeat.cs" />
+    <Compile Include="PortableObjects\MemberNodeHeartBeat.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="MulticastSocket.cs" />
     <Compile Include="Networking\TestNetwork.cs" />
     <Compile Include="Networking\TestNetworkConfiguration.cs" />
   </ItemGroup>

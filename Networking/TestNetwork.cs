@@ -1,5 +1,4 @@
 ﻿using System.Threading;
-using Dargon.Hydar.Grid;
 using Dargon.Hydar.PortableObjects;
 using ItzWarty;
 using ItzWarty.Collections;
@@ -7,25 +6,25 @@ using ItzWarty.Collections;
 namespace Dargon.Hydar.Networking {
    public class TestNetwork : Network {
       private readonly TestNetworkConfiguration configuration;
-      private readonly IConcurrentSet<HydarNode> nodes = new ConcurrentSet<HydarNode>();
-      private readonly ConcurrentDictionary<HydarNode, IRemoteIdentity> identitiesByNode = new ConcurrentDictionary<HydarNode, IRemoteIdentity>();
+      private readonly IConcurrentSet<NetworkNode> nodes = new ConcurrentSet<NetworkNode>();
+      private readonly ConcurrentDictionary<NetworkNode, IRemoteIdentity> identitiesByNode = new ConcurrentDictionary<NetworkNode, IRemoteIdentity>();
       private int addressCounter = 0; 
 
       public TestNetwork(TestNetworkConfiguration configuration) {
          this.configuration = configuration;
       }
 
-      public void Join(HydarNode node) {
+      public void Join(NetworkNode node) {
          var address = (uint)Interlocked.Increment(ref addressCounter);
          identitiesByNode.TryAdd(node, new TestRemoteIdentity(address));
          nodes.Add(node);
       }
 
-      public void Part(HydarNode node) {
+      public void Part(NetworkNode node) {
          nodes.Remove(node);
       }
 
-      public void Broadcast(HydarNode sender, HydarMessage message) {
+      public void Broadcast(NetworkNode sender, HydarMessage message) {
          if (StaticRandom.NextDouble() < configuration.PacketLossProbability) {
             return;
          }

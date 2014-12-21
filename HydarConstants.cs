@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Dargon.Hydar {
-   public static class GlobalHydarConfiguration {
+   public static class HydarConstants {
       public static readonly string kAuditEventBusErrorKey = "Dargon.Hydar.Errors";
    }
 }

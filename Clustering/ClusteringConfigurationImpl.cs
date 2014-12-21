@@ -1,10 +1,10 @@
-﻿namespace Dargon.Hydar.Grid {
-   public class GridConfigurationImpl : GridConfiguration {
+﻿namespace Dargon.Hydar.Clustering {
+   public class ClusteringConfigurationImpl : ClusteringConfiguration {
       private readonly int tickIntervalMillis;
       private readonly int ticksToElection;
       private readonly int electionTicksToPromotion;
 
-      public GridConfigurationImpl(int tickIntervalMillis, int ticksToElection, int electionTicksToPromotion) {
+      public ClusteringConfigurationImpl(int tickIntervalMillis, int ticksToElection, int electionTicksToPromotion) {
          this.tickIntervalMillis = tickIntervalMillis;
          this.ticksToElection = ticksToElection;
          this.electionTicksToPromotion = electionTicksToPromotion;

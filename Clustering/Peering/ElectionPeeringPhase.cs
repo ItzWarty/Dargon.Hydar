@@ -3,21 +3,21 @@ using System.Collections.Generic;
 using Dargon.Audits;
 using Dargon.Hydar.Networking;
 using Dargon.Hydar.PortableObjects;
-using NLog;
 
-namespace Dargon.Hydar.Grid.Peering {
+namespace Dargon.Hydar.Clustering.Peering {
    public class ElectionPeeringPhase : PeeringPhaseBase {
-      private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-
       private readonly object synchronization = new object();
       private Guid lastSelectedCandidate = Guid.Empty;
       private Guid selectedCandidate;
       private List<Guid> currentRoundVotes = new List<Guid>();
+      private ItzWarty.Collections.ISet<Guid> allParticipants = new ItzWarty.Collections.HashSet<Guid>();
       private int electionSecurity = 0;
 
-      public ElectionPeeringPhase(AuditEventBus auditEventBus, HydarContext context, NodePhaseFactory phaseFactory) : base(auditEventBus, context, phaseFactory) {}
+      public ElectionPeeringPhase(AuditEventBus auditEventBus, HydarContext context, ManageableClusterContext manageableClusterContext, NodePhaseFactory phaseFactory) : base(auditEventBus, context, manageableClusterContext, phaseFactory) {}
 
-      public void Initialize() {
+      public override void Initialize() {
+         base.Initialize();
+
          selectedCandidate = node.Identifier;
 
          RegisterHandler<ElectionVote>(HandleElectionVote);
@@ -28,13 +28,14 @@ namespace Dargon.Hydar.Grid.Peering {
          base.Enter();
 
          lock (synchronization) {
+            allParticipants.Add(node.Identifier);
             Send(new ElectionVote(selectedCandidate));
          }
       }
 
       public override void Tick() {
          lock (synchronization) {
-            var currentRoundVoteSet = new HashSet<Guid>(currentRoundVotes);
+            var currentRoundVoteSet = new ItzWarty.Collections.HashSet<Guid>(currentRoundVotes);
             if (selectedCandidate != node.Identifier && lastSelectedCandidate == selectedCandidate && currentRoundVoteSet.Count == 1) {
                Log("Silent");
                // silence - we're voting for another and have advertised our opinion
@@ -46,7 +47,7 @@ namespace Dargon.Hydar.Grid.Peering {
                   electionSecurity++;
 
                   if (electionSecurity > configuration.ElectionTicksToPromotion) {
-                     peeringContext.SetPhase(phaseFactory.CreateLeaderPhase());
+                     clusterContext.Transition(phaseFactory.CreateLeaderPhase(allParticipants));
                   }
                } else {
                   electionSecurity = 0;
@@ -60,6 +61,7 @@ namespace Dargon.Hydar.Grid.Peering {
       }
 
       private void HandleElectionVote(IRemoteIdentity voter, HydarMessageHeader header, ElectionVote vote) {
+         allParticipants.Add(header.SenderGuid);
          if (selectedCandidate.CompareTo(vote.CandidateGuid) < 0) {
             selectedCandidate = vote.CandidateGuid;
          }
@@ -67,7 +69,8 @@ namespace Dargon.Hydar.Grid.Peering {
       }
 
       private void HandleLeaderHeartBeat(IRemoteIdentity leader, HydarMessageHeader header, LeaderHeartBeat payload) {
-         peeringContext.SetPhase(phaseFactory.CreateMemberPhase());
+         clusterContext.EnterEpoch(payload.EpochId, header.SenderGuid, payload.ParticipantIds);
+         clusterContext.Transition(phaseFactory.CreateMemberPhase());
       }
    }
 }

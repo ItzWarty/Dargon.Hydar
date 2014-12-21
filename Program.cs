@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 using Dargon.Audits;
-using Dargon.Hydar.Grid;
+using Dargon.Hydar.Clustering;
 using Dargon.Hydar.Networking;
 using ItzWarty;
 
@@ -11,10 +11,10 @@ namespace Dargon.Hydar {
          const int tickIntervalMillis = 500;
          const int ticksToElection = 10;
          const int electionTicksToPromotion = 10;
-         GridConfiguration configuration = new GridConfigurationImpl(tickIntervalMillis, ticksToElection, electionTicksToPromotion);
+         ClusteringConfiguration configuration = new ClusteringConfigurationImpl(tickIntervalMillis, ticksToElection, electionTicksToPromotion);
          Network network = new TestNetwork(new TestNetworkConfiguration());
          AuditEventBus auditEventBus = new ConsoleAuditEventBus();
-         var nodeFactory = new HydarNodeFactory(configuration, network, auditEventBus);
+         var nodeFactory = new HydarFactory(configuration, network, auditEventBus);
          var node1 = nodeFactory.Create();
          var node2 = nodeFactory.Create();
          var node3 = nodeFactory.Create();
