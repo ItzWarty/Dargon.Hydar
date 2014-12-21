@@ -6,7 +6,11 @@ namespace Dargon.Hydar.Clustering {
       bool IsLeader { get; }
       int Rank { get; }
       long LastHeartBeatTime { get; }
-      long MaxHeartBeatInterval { get; }
       bool IsActive { get; }
+   }
+
+   public interface ManageablePeerStatus : PeerStatus {
+      void HandleNewEpoch(bool isLeader, int rank);
+      void HandleHeartBeat();
    }
 }

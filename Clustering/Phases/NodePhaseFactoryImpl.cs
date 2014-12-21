@@ -34,7 +34,7 @@ namespace Dargon.Hydar.Clustering.Phases {
       }
 
       public IPhase CreateLeaderPhase(ISet<Guid> participants) {
-         return new LeaderPhase(auditEventBus, context, clusterContext, this, participants);
+         return new LeaderPhase(auditEventBus, context, clusterContext, this, participants).With(x => x.Initialize());
       }
 
       public IPhase CreateMemberPhase() {

@@ -64,6 +64,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Clustering\PeerStatusFactory.cs" />
+    <Compile Include="Clustering\PeerStatusImpl.cs" />
     <Compile Include="HydarContextImpl.cs" />
     <Compile Include="HydarConstants.cs" />
     <Compile Include="Clustering\ClusterContextImpl.cs" />
@@ -98,7 +100,7 @@
     <Compile Include="PortableObjects\HydarMessageHeader.cs" />
     <Compile Include="PortableObjects\HydarMessageHeaderImpl.cs" />
     <Compile Include="PortableObjects\HydarMessageImpl.cs" />
-    <Compile Include="PortableObjects\MemberNodeHeartBeat.cs" />
+    <Compile Include="PortableObjects\MemberHeartBeat.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Networking\TestNetwork.cs" />

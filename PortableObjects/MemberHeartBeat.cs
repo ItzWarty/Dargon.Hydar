@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 using Dargon.PortableObjects;
 
 namespace Dargon.Hydar.PortableObjects {
-   public class MemberNodeHeartBeat : IPortableObject {
+   public class MemberHeartBeat : IPortableObject {
       private Guid epochId;
 
-      public MemberNodeHeartBeat() { }
+      public MemberHeartBeat() { }
 
-      public MemberNodeHeartBeat(Guid epochId) {
+      public MemberHeartBeat(Guid epochId) {
          this.epochId = epochId;
       }
 

@@ -21,7 +21,8 @@ namespace Dargon.Hydar {
          var nodePhaseFactory = new NodePhaseFactoryImpl(auditEventBus);
          var node = new NetworkNodeImpl(identifier);
          var context = new HydarContextImpl(auditEventBus, configuration, network, node);
-         var clusterContext = new ClusterContextImpl(context, configuration, nodePhaseFactory);
+         var peerStatusFactory = new PeerStatusFactoryImpl(configuration);
+         var clusterContext = new ClusterContextImpl(context, peerStatusFactory, configuration, nodePhaseFactory);
          context.SetClusteringContext(clusterContext);
          nodePhaseFactory.SetContext(context);
          nodePhaseFactory.SetClusterContext(clusterContext);

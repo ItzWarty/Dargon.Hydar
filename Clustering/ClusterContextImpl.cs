@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Dargon.Hydar.Clustering.Phases;
 using Dargon.Hydar.Networking;
 using Dargon.Hydar.PortableObjects;
@@ -10,16 +11,18 @@ namespace Dargon.Hydar.Clustering {
    public class ClusterContextImpl : ManageableClusterContext {
       public event NewEpochHandler NewEpoch;
       private readonly HydarContext context;
+      private readonly PeerStatusFactory peerStatusFactory;
       private readonly ClusteringConfiguration configuration;
       private readonly NodePhaseFactory phaseFactory;
       private readonly Dictionary<Guid, EpochDescriptor> epochsById = new Dictionary<Guid, EpochDescriptor>();
-      private readonly Dictionary<Guid, DateTime> heartBeatTimesByNodeId = new Dictionary<Guid, DateTime>();
+      private readonly Dictionary<Guid, ManageablePeerStatus> peerStatusById = new Dictionary<Guid, ManageablePeerStatus>();
       private readonly object synchronization = new object();
-      private EpochDescriptor currentEpoch = new EpochDescriptorImpl(Guid.Empty, Guid.Empty, new ItzWarty.Collections.HashSet<Guid>());
+      private EpochDescriptor currentEpoch = new EpochDescriptorImpl(Guid.Empty, Guid.Empty, new ItzWarty.Collections.HashSet<Guid>(), new SortedList<Guid, ManageablePeerStatus>());
       private IPhase currentPhase;
 
-      public ClusterContextImpl(HydarContext context, ClusteringConfiguration configuration, NodePhaseFactory phaseFactory) {
+      public ClusterContextImpl(HydarContext context, PeerStatusFactory peerStatusFactory, ClusteringConfiguration configuration, NodePhaseFactory phaseFactory) {
          this.context = context;
+         this.peerStatusFactory = peerStatusFactory;
          this.configuration = configuration;
          this.phaseFactory = phaseFactory;
       }
@@ -64,8 +67,33 @@ namespace Dargon.Hydar.Clustering {
       }
 
       public void EnterEpoch(Guid epochId, Guid leaderGuid, IReadOnlySet<Guid> participantGuids) {
-         var epoch = new EpochDescriptorImpl(epochId, leaderGuid, participantGuids);
-         currentEpoch = epoch;
+         lock (synchronization) {
+            var participantStatusesByGuid = participantGuids.Aggregate(new SortedList<Guid, ManageablePeerStatus>(), (list, x) => list.Add(x, GetOrCreatePeerStatus(x)));
+            var epoch = currentEpoch = new EpochDescriptorImpl(epochId, leaderGuid, participantGuids, participantStatusesByGuid);
+            epochsById.Add(epochId, epoch); 
+            foreach (var kvp in participantStatusesByGuid) {
+               var peerGuid = kvp.Key;
+               var peerStatus = kvp.Value;
+               peerStatus.HandleNewEpoch(peerGuid == leaderGuid, participantStatusesByGuid.IndexOfKey(peerGuid));
+            }
+         }
+      }
+
+      public void HandlePeerHeartBeat(Guid peerGuid) {
+         lock (synchronization) {
+            GetOrCreatePeerStatus(peerGuid).HandleHeartBeat();
+         }
+      }
+
+      private ManageablePeerStatus GetOrCreatePeerStatus(Guid guid) {
+         lock (synchronization) {
+            ManageablePeerStatus result;
+            if (!peerStatusById.TryGetValue(guid, out result)) {
+               result = peerStatusFactory.Create(guid);
+               peerStatusById.Add(guid, result);
+            }
+            return result;
+         }
       }
       #endregion
 
