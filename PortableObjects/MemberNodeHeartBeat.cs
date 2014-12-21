@@ -9,6 +9,8 @@ namespace Dargon.Hydar.PortableObjects {
    public class MemberNodeHeartBeat : IPortableObject {
       private Guid epochId;
 
+      public MemberNodeHeartBeat() { }
+
       public MemberNodeHeartBeat(Guid epochId) {
          this.epochId = epochId;
       }

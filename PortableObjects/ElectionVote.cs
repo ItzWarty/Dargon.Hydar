@@ -5,6 +5,8 @@ namespace Dargon.Hydar.PortableObjects {
    public class ElectionVote : IPortableObject {
       private Guid candidateGuid;
 
+      public ElectionVote() { }
+
       public ElectionVote(Guid candidateGuid) {
          this.candidateGuid = candidateGuid;
       }

@@ -1,16 +1,21 @@
-﻿using System.Threading;
+﻿using System.IO;
+using System.Text;
 using Dargon.Hydar.PortableObjects;
 using ItzWarty;
 using ItzWarty.Collections;
+using System.Threading;
+using Dargon.PortableObjects;
 
 namespace Dargon.Hydar.Networking {
    public class TestNetwork : Network {
+      private readonly IPofSerializer pofSerializer;
       private readonly TestNetworkConfiguration configuration;
       private readonly IConcurrentSet<NetworkNode> nodes = new ConcurrentSet<NetworkNode>();
       private readonly ConcurrentDictionary<NetworkNode, IRemoteIdentity> identitiesByNode = new ConcurrentDictionary<NetworkNode, IRemoteIdentity>();
       private int addressCounter = 0; 
 
-      public TestNetwork(TestNetworkConfiguration configuration) {
+      public TestNetwork(IPofSerializer pofSerializer, TestNetworkConfiguration configuration) {
+         this.pofSerializer = pofSerializer;
          this.configuration = configuration;
       }
 
@@ -25,6 +30,16 @@ namespace Dargon.Hydar.Networking {
       }
 
       public void Broadcast(NetworkNode sender, HydarMessage message) {
+         using (var ms = new MemoryStream()) {
+            using (var writer = new BinaryWriter(ms, Encoding.UTF8, true)) {
+               pofSerializer.Serialize(writer, message);
+            }
+            ms.Position = 0;
+            using (var reader = new BinaryReader(ms, Encoding.UTF8, true)) {
+               message = pofSerializer.Deserialize<HydarMessage>(reader);
+            }
+         }
+
          if (StaticRandom.NextDouble() < configuration.PacketLossProbability) {
             return;
          }

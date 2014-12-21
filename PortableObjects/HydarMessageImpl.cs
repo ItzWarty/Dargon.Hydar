@@ -13,6 +13,10 @@ namespace Dargon.Hydar.PortableObjects {
          this.payload = payload;
       }
 
+      public HydarMessageHeader Header { get { return header; } }
+      public TPayload Payload { get { return payload; } }
+      object HydarMessage.Payload { get { return payload; } }
+
       public void Serialize(IPofWriter writer) {
          writer.WriteObject(0, header);
          writer.WriteObject(1, payload);
@@ -22,9 +26,5 @@ namespace Dargon.Hydar.PortableObjects {
          header = (HydarMessageHeader)reader.ReadObject(0);
          payload = reader.ReadObject<TPayload>(1);
       }
-
-      public HydarMessageHeader Header { get { return header; } }
-      public TPayload Payload { get { return payload; } }
-      object HydarMessage.Payload { get { return payload; } }
    }
 }

@@ -3,6 +3,8 @@ using System.Threading;
 using Dargon.Audits;
 using Dargon.Hydar.Clustering;
 using Dargon.Hydar.Networking;
+using Dargon.Hydar.PortableObjects;
+using Dargon.PortableObjects;
 using ItzWarty;
 
 namespace Dargon.Hydar {
@@ -11,8 +13,10 @@ namespace Dargon.Hydar {
          const int tickIntervalMillis = 500;
          const int ticksToElection = 10;
          const int electionTicksToPromotion = 10;
+         IPofContext pofContext = new HydarPofContext();
+         IPofSerializer pofSerializer = new PofSerializer(pofContext);
          ClusteringConfiguration configuration = new ClusteringConfigurationImpl(tickIntervalMillis, ticksToElection, electionTicksToPromotion);
-         Network network = new TestNetwork(new TestNetworkConfiguration());
+         Network network = new TestNetwork(pofSerializer, new TestNetworkConfiguration());
          AuditEventBus auditEventBus = new ConsoleAuditEventBus();
          var nodeFactory = new HydarFactory(configuration, network, auditEventBus);
          var node1 = nodeFactory.Create();
