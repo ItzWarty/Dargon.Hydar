@@ -8,6 +8,5 @@ namespace Dargon.Hydar.Clustering {
       long LastHeartBeatTime { get; }
       long MaxHeartBeatInterval { get; }
       bool IsActive { get; }
-      void HandleHeartBeat();
    }
 }

@@ -3,12 +3,12 @@ using Dargon.Audits;
 using Dargon.Hydar.PortableObjects;
 using ItzWarty.Collections;
 
-namespace Dargon.Hydar.Clustering.Peering {
-   public class LeaderPeeringPhase : PeeringPhaseBase {
+namespace Dargon.Hydar.Clustering.Phases {
+   public class LeaderPhase : PhaseBase {
       private readonly ISet<Guid> participants;
       private Guid epochId;
 
-      public LeaderPeeringPhase(AuditEventBus auditEventBus, HydarContext context, ManageableClusterContext manageableClusterContext, NodePhaseFactory phaseFactory, ISet<Guid> participants) : base(auditEventBus, context, manageableClusterContext, phaseFactory) {
+      public LeaderPhase(AuditEventBus auditEventBus, HydarContext context, ManageableClusterContext manageableClusterContext, NodePhaseFactory phaseFactory, ISet<Guid> participants) : base(auditEventBus, context, manageableClusterContext, phaseFactory) {
          this.participants = participants;
       }
 

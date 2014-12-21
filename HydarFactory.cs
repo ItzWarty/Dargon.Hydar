@@ -1,7 +1,7 @@
 ﻿using System;
 using Dargon.Audits;
 using Dargon.Hydar.Clustering;
-using Dargon.Hydar.Clustering.Peering;
+using Dargon.Hydar.Clustering.Phases;
 using Dargon.Hydar.Networking;
 
 namespace Dargon.Hydar {

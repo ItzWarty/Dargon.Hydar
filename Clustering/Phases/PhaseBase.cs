@@ -1,12 +1,12 @@
 ﻿using Dargon.Audits;
 using Dargon.Hydar.Utilities;
 
-namespace Dargon.Hydar.Clustering.Peering {
-   public abstract class PeeringPhaseBase : MessageProcessorBase, IPeeringPhase {
+namespace Dargon.Hydar.Clustering.Phases {
+   public abstract class PhaseBase : MessageProcessorBase, IPhase {
       protected readonly NodePhaseFactory phaseFactory;
       protected readonly ManageableClusterContext clusterContext;
 
-      protected PeeringPhaseBase(AuditEventBus auditEventBus, HydarContext context, ManageableClusterContext manageableClusterContext, NodePhaseFactory phaseFactory) 
+      protected PhaseBase(AuditEventBus auditEventBus, HydarContext context, ManageableClusterContext manageableClusterContext, NodePhaseFactory phaseFactory) 
          : base (auditEventBus, context) {
          this.phaseFactory = phaseFactory;
          this.clusterContext = manageableClusterContext;

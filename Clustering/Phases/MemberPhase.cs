@@ -3,11 +3,11 @@ using Dargon.Audits;
 using Dargon.Hydar.Networking;
 using Dargon.Hydar.PortableObjects;
 
-namespace Dargon.Hydar.Clustering.Peering {
-   public class MemberPeeringPhase : PeeringPhaseBase {
+namespace Dargon.Hydar.Clustering.Phases {
+   public class MemberPhase : PhaseBase {
       private int leaderAbsentTicks = 0;
 
-      public MemberPeeringPhase(AuditEventBus auditEventBus, HydarContext context, ManageableClusterContext manageableClusterContext, NodePhaseFactory phaseFactory) : base(auditEventBus, context, manageableClusterContext, phaseFactory) {}
+      public MemberPhase(AuditEventBus auditEventBus, HydarContext context, ManageableClusterContext manageableClusterContext, NodePhaseFactory phaseFactory) : base(auditEventBus, context, manageableClusterContext, phaseFactory) {}
 
       public override void Initialize() {
          base.Initialize();

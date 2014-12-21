@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Dargon.Hydar.Clustering.Peering;
+using Dargon.Hydar.Clustering.Phases;
 using Dargon.Hydar.Networking;
 using Dargon.Hydar.PortableObjects;
 using ItzWarty;
@@ -16,7 +16,7 @@ namespace Dargon.Hydar.Clustering {
       private readonly Dictionary<Guid, DateTime> heartBeatTimesByNodeId = new Dictionary<Guid, DateTime>();
       private readonly object synchronization = new object();
       private EpochDescriptor currentEpoch = new EpochDescriptorImpl(Guid.Empty, Guid.Empty, new ItzWarty.Collections.HashSet<Guid>());
-      private IPeeringPhase currentPeeringPhase;
+      private IPhase currentPhase;
 
       public ClusterContextImpl(HydarContext context, ClusteringConfiguration configuration, NodePhaseFactory phaseFactory) {
          this.context = context;
@@ -25,8 +25,8 @@ namespace Dargon.Hydar.Clustering {
       }
 
       public void Initialize() {
-         currentPeeringPhase = phaseFactory.CreateInitializationPhase();
-         Transition(currentPeeringPhase);
+         currentPhase = phaseFactory.CreateInitializationPhase();
+         Transition(currentPhase);
       }
 
       #region ClusterContext Implementation
@@ -38,28 +38,28 @@ namespace Dargon.Hydar.Clustering {
          throw new NotImplementedException();
       }
 
-      public IPeeringPhase __DebugCurrentPhase { get { return currentPeeringPhase; } }
+      public IPhase __DebugCurrentPhase { get { return currentPhase; } }
       #endregion
 
       #region ManageableClusterContext Implementation
       public void Tick() {
          lock (synchronization) {
-            currentPeeringPhase.Tick();
+            currentPhase.Tick();
          }
       }
 
-      public void Transition(IPeeringPhase peeringPhase) {
+      public void Transition(IPhase phase) {
          lock (synchronization) {
-            peeringPhase.ThrowIfNull("phase");
-            Log("=> " + peeringPhase);
-            currentPeeringPhase = peeringPhase;
-            currentPeeringPhase.Enter();
+            phase.ThrowIfNull("phase");
+            Log("=> " + phase);
+            currentPhase = phase;
+            currentPhase.Enter();
          }
       }
 
       public bool Process(IRemoteIdentity senderIdentity, HydarMessage message) {
          lock (synchronization) {
-            return currentPeeringPhase.Process(senderIdentity, message);
+            return currentPhase.Process(senderIdentity, message);
          }
       }
 

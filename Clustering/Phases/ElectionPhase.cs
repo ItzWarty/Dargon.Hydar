@@ -4,8 +4,8 @@ using Dargon.Audits;
 using Dargon.Hydar.Networking;
 using Dargon.Hydar.PortableObjects;
 
-namespace Dargon.Hydar.Clustering.Peering {
-   public class ElectionPeeringPhase : PeeringPhaseBase {
+namespace Dargon.Hydar.Clustering.Phases {
+   public class ElectionPhase : PhaseBase {
       private readonly object synchronization = new object();
       private Guid lastSelectedCandidate = Guid.Empty;
       private Guid selectedCandidate;
@@ -13,7 +13,7 @@ namespace Dargon.Hydar.Clustering.Peering {
       private ItzWarty.Collections.ISet<Guid> allParticipants = new ItzWarty.Collections.HashSet<Guid>();
       private int electionSecurity = 0;
 
-      public ElectionPeeringPhase(AuditEventBus auditEventBus, HydarContext context, ManageableClusterContext manageableClusterContext, NodePhaseFactory phaseFactory) : base(auditEventBus, context, manageableClusterContext, phaseFactory) {}
+      public ElectionPhase(AuditEventBus auditEventBus, HydarContext context, ManageableClusterContext manageableClusterContext, NodePhaseFactory phaseFactory) : base(auditEventBus, context, manageableClusterContext, phaseFactory) {}
 
       public override void Initialize() {
          base.Initialize();
