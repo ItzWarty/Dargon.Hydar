@@ -9,6 +9,7 @@ namespace Dargon.Hydar {
       NetworkNode Node { get; }
       ClusterContext ClusterContext { get; }
 
+      void RegisterDispatcher(HydarDispatcher dispatcher);
       void Dispatch(IRemoteIdentity senderIdentity, HydarMessage message);
       void Log(string x);
    }

@@ -5,6 +5,7 @@ using Dargon.Hydar.Clustering;
 using Dargon.Hydar.Networking;
 using Dargon.Hydar.PortableObjects;
 using ItzWarty;
+using ItzWarty.Collections;
 
 namespace Dargon.Hydar {
    public class HydarContextImpl : HydarContext {
@@ -12,6 +13,7 @@ namespace Dargon.Hydar {
       private readonly ClusteringConfiguration configuration;
       private readonly Network network;
       private readonly NetworkNode node;
+      private readonly ConcurrentSet<HydarDispatcher> dispatchers = new ConcurrentSet<HydarDispatcher>();
       private ManageableClusterContext clusteringContext;
       private Timer timer;
 
@@ -37,10 +39,23 @@ namespace Dargon.Hydar {
          }, null, configuration.TickIntervalMillis, configuration.TickIntervalMillis);
       }
 
+      public void RegisterDispatcher(HydarDispatcher dispatcher) {
+         dispatchers.TryAdd(dispatcher);
+      }
+
       public void Dispatch(IRemoteIdentity senderIdentity, HydarMessage message) {
+         bool dispatched = false;
          if (clusteringContext.Process(senderIdentity, message)) {
-            // do nothing
+            dispatched = true;
          } else {
+            foreach (var dispatcher in dispatchers) {
+               if (dispatcher.Dispatch(senderIdentity, message)) {
+                  dispatched = true;
+                  break;
+               }
+            }
+         }
+         if (!dispatched) {
             auditEventBus.Error(HydarConstants.kAuditEventBusErrorKey, "Unknown Payload Type", "Connectivity Phase: {0}, Payload Type: {1}".F(ClusterContext.__DebugCurrentPhase.GetType(), message.Payload.GetType().FullName));
          }
       }
