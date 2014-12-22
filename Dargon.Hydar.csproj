@@ -64,6 +64,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Caching\CacheConfiguration.cs" />
+    <Compile Include="Caching\CacheContext.cs" />
+    <Compile Include="Caching\CachingDispatcher.cs" />
+    <Compile Include="Caching\CachingPayload.cs" />
+    <Compile Include="Caching\CachingPayloadMetadata.cs" />
     <Compile Include="Clustering\PeerStatusFactory.cs" />
     <Compile Include="Clustering\PeerStatusImpl.cs" />
     <Compile Include="HydarContextImpl.cs" />
