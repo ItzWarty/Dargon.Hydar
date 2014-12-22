@@ -1,12 +1,12 @@
-﻿using System;
-using System.Threading;
-using Dargon.Audits;
+﻿using Dargon.Audits;
 using Dargon.Hydar.Caching;
 using Dargon.Hydar.Clustering;
 using Dargon.Hydar.Networking;
 using Dargon.Hydar.PortableObjects;
 using Dargon.PortableObjects;
 using ItzWarty;
+using System;
+using System.Threading;
 
 namespace Dargon.Hydar {
    public class Program {
@@ -20,20 +20,21 @@ namespace Dargon.Hydar {
          Network network = new TestNetwork(pofSerializer, new TestNetworkConfiguration());
          AuditEventBus auditEventBus = new ConsoleAuditEventBus();
          var hydarFactory = new HydarFactory(configuration, network, auditEventBus);
-         var context1 = CreateAndConfigureContext(hydarFactory);
-         var context2 = CreateAndConfigureContext(hydarFactory);
-         var context3 = CreateAndConfigureContext(hydarFactory);
-         var context4 = CreateAndConfigureContext(hydarFactory);
+         var contexts = Util.Generate(8, i => CreateAndConfigureContext(auditEventBus, hydarFactory));
 
          CountdownEvent synchronization = new CountdownEvent(1);
          synchronization.Wait();
       }
 
-      private static HydarContext CreateAndConfigureContext(HydarFactory nodeFactory) {
+      private static HydarContext CreateAndConfigureContext(AuditEventBus auditEventBus, HydarFactory nodeFactory) {
          var context = nodeFactory.CreateContext();
          var cachingDispatcher = new CachingDispatcher();
          context.RegisterDispatcher(cachingDispatcher);
-
+         var dummyCacheGuid = new Guid(129832, 2189, 19823, 38, 82, 218, 83, 37, 93, 173, 18);
+         var dummyCacheConfiguration = new CacheConfigurationImpl { Redundancy = 3 };
+         var dummyCacheContext = new CacheContextImpl(auditEventBus, context, dummyCacheGuid, dummyCacheConfiguration);
+         dummyCacheContext.Initialize();
+         cachingDispatcher.AddCacheContext(dummyCacheContext);
          return context;
       }
    }

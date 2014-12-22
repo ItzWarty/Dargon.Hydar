@@ -1,8 +1,8 @@
-﻿using System;
-using Dargon.Audits;
+﻿using Dargon.Audits;
 using Dargon.Hydar.Clustering;
 using Dargon.Hydar.Clustering.Phases;
 using Dargon.Hydar.Networking;
+using System;
 
 namespace Dargon.Hydar {
    public class HydarFactory {

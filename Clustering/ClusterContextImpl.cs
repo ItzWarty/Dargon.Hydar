@@ -76,6 +76,10 @@ namespace Dargon.Hydar.Clustering {
                var peerStatus = kvp.Value;
                peerStatus.HandleNewEpoch(peerGuid == leaderGuid, participantStatusesByGuid.IndexOfKey(peerGuid));
             }
+            var capture = NewEpoch;
+            if (capture != null) {
+               capture(epoch);
+            }
          }
       }
 
