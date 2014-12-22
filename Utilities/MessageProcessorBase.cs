@@ -1,33 +1,31 @@
-using System;
 using Dargon.Audits;
-using Dargon.Hydar.Clustering;
 using Dargon.Hydar.Networking;
 using Dargon.Hydar.PortableObjects;
 using ItzWarty;
 using ItzWarty.Collections;
+using System;
 
 namespace Dargon.Hydar.Utilities {
-   public class MessageProcessorBase {
+   public abstract class MessageProcessorBase<TMessage, THandler>
+      where TMessage : class, HydarMessage {
       protected readonly AuditEventBus auditEventBus;
       protected readonly HydarContext context;
-      protected readonly ClusteringConfiguration configuration;
       protected readonly NetworkNode node;
       protected readonly Network network;
-      private readonly MultiValueDictionary<Type, Action<IRemoteIdentity, HydarMessageHeader, object>> messageHandlersByPayloadType = new MultiValueDictionary<Type, Action<IRemoteIdentity, HydarMessageHeader, object>>();
+      private readonly MultiValueDictionary<Type, THandler> messageHandlersByPayloadType = new MultiValueDictionary<Type, THandler>();
 
-      public MessageProcessorBase(AuditEventBus auditEventBus, HydarContext context) {
+      protected MessageProcessorBase(AuditEventBus auditEventBus, HydarContext context) {
          this.auditEventBus = auditEventBus;
          this.context = context;
-         this.configuration = context.Configuration;
          this.node = context.Node;
          this.network = context.Network;
       }
 
-      protected void RegisterHandler<TPayload>(Action<IRemoteIdentity, HydarMessageHeader, TPayload> handler) {
-         messageHandlersByPayloadType.Add(typeof(TPayload), (identity, header, payload) => handler(identity, header, (TPayload)payload));
+      protected void RegisterHandler<TPayload>(THandler handler) {
+         messageHandlersByPayloadType.Add(typeof(TPayload), handler);
       }
 
-      public bool Process(IRemoteIdentity sender, HydarMessage message) {
+      public bool Process(IRemoteIdentity sender, TMessage message) {
          message.ThrowIfNull("message");
          message.Header.ThrowIfNull("header");
          message.Payload.ThrowIfNull("payload");
@@ -38,15 +36,12 @@ namespace Dargon.Hydar.Utilities {
          if (handlers == null) {
             return false;
          } else {
-            handlers.ForEach(handler => handler(sender, message.Header, message.Payload));
+            handlers.ForEach(handler => Invoke(handler, sender, message));
             return handlers.Count > 0;
          }
       }
 
-      public void Send<TPayload>(TPayload payload) {
-         var header = new HydarMessageHeaderImpl(node.Identifier);
-         network.Broadcast(node, new HydarMessageImpl<TPayload>(header, payload));
-      }
+      protected abstract void Invoke(THandler handler, IRemoteIdentity sender, TMessage message);
 
       public void Log(string s) {
          context.Log(s);
