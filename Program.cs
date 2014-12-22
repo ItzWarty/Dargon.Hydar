@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using Dargon.Audits;
+using Dargon.Hydar.Caching;
 using Dargon.Hydar.Clustering;
 using Dargon.Hydar.Networking;
 using Dargon.Hydar.PortableObjects;
@@ -18,14 +19,22 @@ namespace Dargon.Hydar {
          ClusteringConfiguration configuration = new ClusteringConfigurationImpl(tickIntervalMillis, ticksToElection, electionTicksToPromotion);
          Network network = new TestNetwork(pofSerializer, new TestNetworkConfiguration());
          AuditEventBus auditEventBus = new ConsoleAuditEventBus();
-         var nodeFactory = new HydarFactory(configuration, network, auditEventBus);
-         var node1 = nodeFactory.Create();
-         var node2 = nodeFactory.Create();
-         var node3 = nodeFactory.Create();
-         var node4 = nodeFactory.Create();
+         var hydarFactory = new HydarFactory(configuration, network, auditEventBus);
+         var context1 = CreateAndConfigureContext(hydarFactory);
+         var context2 = CreateAndConfigureContext(hydarFactory);
+         var context3 = CreateAndConfigureContext(hydarFactory);
+         var context4 = CreateAndConfigureContext(hydarFactory);
 
          CountdownEvent synchronization = new CountdownEvent(1);
          synchronization.Wait();
+      }
+
+      private static HydarContext CreateAndConfigureContext(HydarFactory nodeFactory) {
+         var context = nodeFactory.CreateContext();
+         var cachingDispatcher = new CachingDispatcher();
+         context.RegisterDispatcher(cachingDispatcher);
+
+         return context;
       }
    }
 

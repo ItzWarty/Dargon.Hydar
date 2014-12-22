@@ -16,7 +16,7 @@ namespace Dargon.Hydar {
          this.auditEventBus = auditEventBus;
       }
 
-      public NetworkNode Create() {
+      public HydarContext CreateContext() {
          var identifier = Guid.NewGuid();
          var nodePhaseFactory = new NodePhaseFactoryImpl(auditEventBus);
          var node = new NetworkNodeImpl(identifier);
@@ -29,7 +29,7 @@ namespace Dargon.Hydar {
          node.SetContext(context);
          clusterContext.Initialize();
          context.Initialize();
-         return node;
+         return context;
       }
    }
 }
