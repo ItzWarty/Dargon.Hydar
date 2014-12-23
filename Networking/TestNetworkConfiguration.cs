@@ -1,6 +1,6 @@
 ﻿namespace Dargon.Hydar.Networking {
    public class TestNetworkConfiguration {
-      private double packetLossProbability = 0.1;
+      private double packetLossProbability = 0.2;
       private double packetReorderingFactor = 200;
 
       /// <summary>

@@ -49,7 +49,7 @@ namespace Dargon.Hydar.Networking {
                continue;
             }
             if (StaticRandom.NextDouble() < configuration.PacketLossProbability) {
-               return;
+               continue;
             }
             var delay = configuration.PacketReorderingFactor * StaticRandom.NextDouble();
             var capture = node;
