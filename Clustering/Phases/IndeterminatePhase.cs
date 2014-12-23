@@ -13,6 +13,8 @@ namespace Dargon.Hydar.Clustering.Phases {
       public override void Initialize() {
          base.Initialize();
          RegisterHandler<LeaderHeartBeat>(HandleLeaderHeartBeat);
+         RegisterHandler<MemberHeartBeat>(HandleMemberHeartBeat);
+         RegisterNullHandler<ElectionVote>();
       }
 
       public override void Tick() {
@@ -25,6 +27,10 @@ namespace Dargon.Hydar.Clustering.Phases {
       }
 
       public void HandleLeaderHeartBeat(IRemoteIdentity remoteIdentity, HydarMessageHeader messageHeader, LeaderHeartBeat heartbeat) {
+         Interlocked.Exchange(ref tickCount, 0);
+      }
+
+      private void HandleMemberHeartBeat(IRemoteIdentity remoteIdentity, HydarMessageHeader messageHeader, MemberHeartBeat heartbeat) {
          Interlocked.Exchange(ref tickCount, 0);
       }
    }

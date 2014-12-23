@@ -25,6 +25,10 @@ namespace Dargon.Hydar.Clustering.Phases {
          base.RegisterHandler<TPayload>((identity, header, payload) => handler(identity, header, (TPayload)payload));
       }
 
+      protected void RegisterNullHandler<TPayload>() {
+         base.RegisterHandler<TPayload>((x, y, z) => { });
+      }
+
       protected override void Invoke(Action<IRemoteIdentity, HydarMessageHeader, object> handler, IRemoteIdentity sender, HydarMessage message) {
          handler(sender, message.Header, message.Payload);
       }

@@ -8,5 +8,6 @@ namespace Dargon.Hydar.Clustering.Phases {
       IPhase CreateElectionPhase();
       IPhase CreateLeaderPhase(ISet<Guid> participants);
       IPhase CreateMemberPhase();
+      IPhase CreateDroppedPhase();
    }
 }

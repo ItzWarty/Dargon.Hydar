@@ -2,6 +2,7 @@ using System;
 using Dargon.Audits;
 using Dargon.Hydar.Networking;
 using Dargon.Hydar.PortableObjects;
+using ItzWarty;
 using ItzWarty.Collections;
 
 namespace Dargon.Hydar.Clustering.Phases {
@@ -16,6 +17,8 @@ namespace Dargon.Hydar.Clustering.Phases {
       public override void Initialize() {
          base.Initialize();
          RegisterHandler<MemberHeartBeat>(HandleMemberHeartBeat);
+         RegisterNullHandler<ElectionAcknowledgement>();
+         RegisterNullHandler<ElectionVote>();
 
          epochId = Guid.NewGuid();
       }
@@ -23,6 +26,7 @@ namespace Dargon.Hydar.Clustering.Phases {
       public override void Enter() {
          base.Enter();
 
+         clusterContext.EnterEpoch(epochId, node.Identifier, participants);
          SendHeartBeat();
       }
 
@@ -31,9 +35,7 @@ namespace Dargon.Hydar.Clustering.Phases {
       }
 
       private void SendHeartBeat() {
-         foreach (var participant in participants) {
-            Console.WriteLine(participant);
-         }
+         Log("Sending heartbeat to {0} participants".F(participants.Count));
          Send(new LeaderHeartBeat(epochId, participants));
       }
 

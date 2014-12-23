@@ -20,7 +20,7 @@ namespace Dargon.Hydar {
          Network network = new TestNetwork(pofSerializer, new TestNetworkConfiguration());
          AuditEventBus auditEventBus = new ConsoleAuditEventBus();
          var hydarFactory = new HydarFactory(configuration, network, auditEventBus);
-         var contexts = Util.Generate(8, i => CreateAndConfigureContext(auditEventBus, hydarFactory));
+         var contexts = Util.Generate(128, i => CreateAndConfigureContext(auditEventBus, hydarFactory));
 
          CountdownEvent synchronization = new CountdownEvent(1);
          synchronization.Wait();

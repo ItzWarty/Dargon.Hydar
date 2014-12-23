@@ -11,8 +11,9 @@ namespace Dargon.Hydar.PortableObjects {
 
          // [100, 200) clustering suff
          RegisterPortableObjectType(kBasePofId + 100, typeof(ElectionVote));
-         RegisterPortableObjectType(kBasePofId + 101, typeof(LeaderHeartBeat));
-         RegisterPortableObjectType(kBasePofId + 102, typeof(MemberHeartBeat));
+         RegisterPortableObjectType(kBasePofId + 101, typeof(ElectionAcknowledgement));
+         RegisterPortableObjectType(kBasePofId + 102, typeof(LeaderHeartBeat));
+         RegisterPortableObjectType(kBasePofId + 103, typeof(MemberHeartBeat));
       }
    }
 }

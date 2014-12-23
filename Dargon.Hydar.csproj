@@ -71,6 +71,7 @@
     <Compile Include="Caching\CachingPayloadMetadata.cs" />
     <Compile Include="Clustering\PeerStatusFactory.cs" />
     <Compile Include="Clustering\PeerStatusImpl.cs" />
+    <Compile Include="Clustering\Phases\DroppedPhase.cs" />
     <Compile Include="HydarContextImpl.cs" />
     <Compile Include="HydarConstants.cs" />
     <Compile Include="Clustering\ClusterContextImpl.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="Clustering\ClusterContext.cs" />
     <Compile Include="Clustering\EpochDescriptor.cs" />
     <Compile Include="HydarDispatcher.cs" />
+    <Compile Include="PortableObjects\ElectionAcknowledgement.cs" />
     <Compile Include="Utilities\MessageProcessorBase.cs" />
     <Compile Include="Clustering\ClusteringConfiguration.cs" />
     <Compile Include="Clustering\ClusteringConfigurationImpl.cs" />

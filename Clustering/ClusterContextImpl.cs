@@ -68,17 +68,22 @@ namespace Dargon.Hydar.Clustering {
 
       public void EnterEpoch(Guid epochId, Guid leaderGuid, IReadOnlySet<Guid> participantGuids) {
          lock (synchronization) {
-            var participantStatusesByGuid = participantGuids.Aggregate(new SortedList<Guid, ManageablePeerStatus>(), (list, x) => list.Add(x, GetOrCreatePeerStatus(x)));
-            var epoch = currentEpoch = new EpochDescriptorImpl(epochId, leaderGuid, participantGuids, participantStatusesByGuid);
-            epochsById.Add(epochId, epoch); 
-            foreach (var kvp in participantStatusesByGuid) {
-               var peerGuid = kvp.Key;
-               var peerStatus = kvp.Value;
-               peerStatus.HandleNewEpoch(peerGuid == leaderGuid, participantStatusesByGuid.IndexOfKey(peerGuid));
-            }
-            var capture = NewEpoch;
-            if (capture != null) {
-               capture(epoch);
+            if (currentEpoch.Id == epochId) {
+               // todo: rejoin epoch logic
+               Log("Rejoining epoch " + epochId.ToString("n").Substring(0, 8));
+            } else {
+               var participantStatusesByGuid = participantGuids.Aggregate(new SortedList<Guid, ManageablePeerStatus>(), (list, x) => list.Add(x, GetOrCreatePeerStatus(x)));
+               var epoch = currentEpoch = new EpochDescriptorImpl(epochId, leaderGuid, participantGuids, participantStatusesByGuid);
+               epochsById.Add(epochId, epoch);
+               foreach (var kvp in participantStatusesByGuid) {
+                  var peerGuid = kvp.Key;
+                  var peerStatus = kvp.Value;
+                  peerStatus.HandleNewEpoch(peerGuid == leaderGuid, participantStatusesByGuid.IndexOfKey(peerGuid));
+               }
+               var capture = NewEpoch;
+               if (capture != null) {
+                  capture(epoch);
+               }
             }
          }
       }
