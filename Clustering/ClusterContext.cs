@@ -4,6 +4,7 @@ using ItzWarty.Collections;
 using System;
 using System.Collections.Generic;
 using Dargon.Hydar.Clustering.Phases;
+using Dargon.Hydar.Utilities;
 
 namespace Dargon.Hydar.Clustering {
    public delegate void NewEpochHandler(EpochDescriptor epochDescriptor);
@@ -22,7 +23,7 @@ namespace Dargon.Hydar.Clustering {
       void Transition(IPhase phase);
 
       bool Process(IRemoteIdentity senderIdentity, HydarMessage message);
-      void EnterEpoch(Guid epochId, Guid leaderGuid, IReadOnlySet<Guid> participantGuids);
+      void EnterEpoch(Guid epochId, DateTimeInterval epochTimeInterval, Guid leaderGuid, IReadOnlySet<Guid> participantGuids);
       void HandlePeerHeartBeat(Guid peerGuid);
    }
 }

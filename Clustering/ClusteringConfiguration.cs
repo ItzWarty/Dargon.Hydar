@@ -3,5 +3,6 @@
       int TickIntervalMillis { get; }
       int MaximumHeartBeatInterval { get; }
       int ElectionTicksToPromotion { get; }
+      long EpochDurationMilliseconds { get; }
    }
 }

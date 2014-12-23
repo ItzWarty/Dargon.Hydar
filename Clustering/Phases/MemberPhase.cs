@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using Dargon.Audits;
 using Dargon.Hydar.Networking;
 using Dargon.Hydar.PortableObjects;
@@ -19,9 +20,13 @@ namespace Dargon.Hydar.Clustering.Phases {
       }
 
       public override void Tick() {
+         var currentEpoch = clusterContext.GetCurrentEpoch();
          var nextLeaderAbsentTicks = Interlocked.Increment(ref leaderAbsentTicks);
          if (nextLeaderAbsentTicks > configuration.MaximumHeartBeatInterval) {
             Log("Leader missed {0} heartbeats".F(configuration.MaximumHeartBeatInterval));
+            clusterContext.Transition(phaseFactory.CreateElectionPhase());
+         } else if (DateTime.Now >= currentEpoch.Interval.End) {
+            Log("End of epoch {0}".F(currentEpoch.Id.ToString("n").Substring(0, 8)));
             clusterContext.Transition(phaseFactory.CreateElectionPhase());
          }
          SendDataNodeHeartBeat();
@@ -34,6 +39,9 @@ namespace Dargon.Hydar.Clustering.Phases {
       private void HandleLeaderHeartBeat(IRemoteIdentity remoteIdentity, HydarMessageHeader header, LeaderHeartBeat payload) {
          Interlocked.Exchange(ref leaderAbsentTicks, 0);
          clusterContext.HandlePeerHeartBeat(header.SenderGuid);
+         if (payload.EpochId != clusterContext.GetCurrentEpoch().Id) {
+            clusterContext.EnterEpoch(payload.EpochId, payload.Interval, header.SenderGuid, payload.ParticipantIds);
+         }
       }
 
       private void HandleMemberHeartBeat(IRemoteIdentity remoteIdentity, HydarMessageHeader header, MemberHeartBeat payload) {

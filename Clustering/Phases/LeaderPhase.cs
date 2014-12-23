@@ -1,14 +1,14 @@
-using System;
 using Dargon.Audits;
 using Dargon.Hydar.Networking;
 using Dargon.Hydar.PortableObjects;
 using ItzWarty;
 using ItzWarty.Collections;
+using System;
+using Dargon.Hydar.Utilities;
 
 namespace Dargon.Hydar.Clustering.Phases {
    public class LeaderPhase : PhaseBase {
       private readonly ISet<Guid> participants;
-      private Guid epochId;
 
       public LeaderPhase(AuditEventBus auditEventBus, HydarContext context, ManageableClusterContext manageableClusterContext, NodePhaseFactory phaseFactory, ISet<Guid> participants) : base(auditEventBus, context, manageableClusterContext, phaseFactory) {
          this.participants = participants;
@@ -20,23 +20,35 @@ namespace Dargon.Hydar.Clustering.Phases {
          RegisterNullHandler<ElectionAcknowledgement>();
          RegisterNullHandler<ElectionVote>();
 
-         epochId = Guid.NewGuid();
       }
 
       public override void Enter() {
          base.Enter();
 
-         clusterContext.EnterEpoch(epochId, node.Identifier, participants);
+         StartNewEpoch();
          SendHeartBeat();
       }
 
+      private void StartNewEpoch() {
+         var epochId = Guid.NewGuid();
+         var epochStartTime = DateTime.Now;
+         var epochExpirationTime = epochStartTime + TimeSpan.FromMilliseconds(configuration.EpochDurationMilliseconds);
+         var epochTimeInterval = new DateTimeInterval(epochStartTime, epochExpirationTime);
+         clusterContext.EnterEpoch(epochId, epochTimeInterval, node.Identifier, participants);
+      }
+
       public override void Tick() {
+         var epoch = clusterContext.GetCurrentEpoch();
+         if (DateTime.Now >= epoch.Interval.End) {
+            clusterContext.Transition(phaseFactory.CreateElectionPhase());
+         }
          SendHeartBeat();
       }
 
       private void SendHeartBeat() {
          Log("Sending heartbeat to {0} participants".F(participants.Count));
-         Send(new LeaderHeartBeat(epochId, participants));
+         var epoch = clusterContext.GetCurrentEpoch();
+         Send(new LeaderHeartBeat(epoch.Id, epoch.Interval, participants));
       }
 
       private void HandleMemberHeartBeat(IRemoteIdentity identity, HydarMessageHeader header, MemberHeartBeat payload) {

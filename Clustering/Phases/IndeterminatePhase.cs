@@ -14,7 +14,8 @@ namespace Dargon.Hydar.Clustering.Phases {
          base.Initialize();
          RegisterHandler<LeaderHeartBeat>(HandleLeaderHeartBeat);
          RegisterHandler<MemberHeartBeat>(HandleMemberHeartBeat);
-         RegisterNullHandler<ElectionVote>();
+         RegisterHandler<ElectionVote>(HandleElectionVote);
+         RegisterNullHandler<ElectionAcknowledgement>();
       }
 
       public override void Tick() {
@@ -32,6 +33,10 @@ namespace Dargon.Hydar.Clustering.Phases {
 
       private void HandleMemberHeartBeat(IRemoteIdentity remoteIdentity, HydarMessageHeader messageHeader, MemberHeartBeat heartbeat) {
          Interlocked.Exchange(ref tickCount, 0);
+      }
+
+      private void HandleElectionVote(IRemoteIdentity arg1, HydarMessageHeader arg2, ElectionVote arg3) {
+         clusterContext.Transition(phaseFactory.CreateElectionPhase());
       }
    }
 }

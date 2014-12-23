@@ -14,9 +14,10 @@ namespace Dargon.Hydar {
          const int tickIntervalMillis = 500;
          const int ticksToElection = 10;
          const int electionTicksToPromotion = 10;
+         const long epochDurationMilliseconds = 30 * 1000;
          IPofContext pofContext = new HydarPofContext();
          IPofSerializer pofSerializer = new PofSerializer(pofContext);
-         ClusteringConfiguration configuration = new ClusteringConfigurationImpl(tickIntervalMillis, ticksToElection, electionTicksToPromotion);
+         ClusteringConfiguration configuration = new ClusteringConfigurationImpl(tickIntervalMillis, ticksToElection, electionTicksToPromotion, epochDurationMilliseconds);
          Network network = new TestNetwork(pofSerializer, new TestNetworkConfiguration());
          AuditEventBus auditEventBus = new ConsoleAuditEventBus();
          var hydarFactory = new HydarFactory(configuration, network, auditEventBus);

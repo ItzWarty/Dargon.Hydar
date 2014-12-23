@@ -27,7 +27,7 @@ namespace Dargon.Hydar.Clustering.Phases {
          RegisterHandler<ElectionVote>(HandleElectionVote);
          RegisterHandler<ElectionAcknowledgement>(HandleElectionAcknowledgement);
          RegisterHandler<LeaderHeartBeat>(HandleLeaderHeartBeat);
-         RegisterNullHandler<MemberHeartBeat>();
+         RegisterHandler<MemberHeartBeat>(HandleMemberHeartBeat);
       }
 
       public override void Enter() {
@@ -91,6 +91,7 @@ namespace Dargon.Hydar.Clustering.Phases {
          lock (synchronization) {
             if (acknowledgement.AcknowledgedVoter == node.Identifier) {
                if (bestAcknowledgingLeader.CompareTo(header.SenderGuid) < 0) {
+                  Log("Acknowledged " + bestAcknowledgingLeader.ToString("n").Substring(0, 8) + " => " + header.SenderGuid.ToString("n").Substring(0, 8));
                   bestAcknowledgingLeader = header.SenderGuid;
                }
             } else {
@@ -101,10 +102,16 @@ namespace Dargon.Hydar.Clustering.Phases {
 
       private void HandleLeaderHeartBeat(IRemoteIdentity leader, HydarMessageHeader header, LeaderHeartBeat payload) {
          if (payload.ParticipantIds.Contains(node.Identifier)) {
-            clusterContext.EnterEpoch(payload.EpochId, header.SenderGuid, payload.ParticipantIds);
+            clusterContext.EnterEpoch(payload.EpochId, payload.Interval, header.SenderGuid, payload.ParticipantIds);
             clusterContext.Transition(phaseFactory.CreateMemberPhase());
          } else {
             clusterContext.Transition(phaseFactory.CreateDroppedPhase());
+         }
+      }
+
+      private void HandleMemberHeartBeat(IRemoteIdentity member, HydarMessageHeader header, MemberHeartBeat payload) {
+         lock (synchronization) {
+            electionSecurity = 0;
          }
       }
    }

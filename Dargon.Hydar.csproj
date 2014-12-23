@@ -80,6 +80,7 @@
     <Compile Include="Clustering\EpochDescriptor.cs" />
     <Compile Include="HydarDispatcher.cs" />
     <Compile Include="PortableObjects\ElectionAcknowledgement.cs" />
+    <Compile Include="Utilities\DateTimeInterval.cs" />
     <Compile Include="Utilities\MessageProcessorBase.cs" />
     <Compile Include="Clustering\ClusteringConfiguration.cs" />
     <Compile Include="Clustering\ClusteringConfigurationImpl.cs" />
