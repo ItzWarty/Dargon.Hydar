@@ -11,18 +11,21 @@ using System.Threading;
 namespace Dargon.Hydar {
    public class Program {
       public static void Main() {
-         const int tickIntervalMillis = 500;
+         const int tickIntervalMillis = 200;
          const int ticksToElection = 10;
          const int electionTicksToPromotion = 10;
-         const long epochDurationMilliseconds = 30 * 1000;
+         const long epochDurationMilliseconds = 20 * 1000;
          IPofContext pofContext = new HydarPofContext();
          IPofSerializer pofSerializer = new PofSerializer(pofContext);
          ClusteringConfiguration configuration = new ClusteringConfigurationImpl(tickIntervalMillis, ticksToElection, electionTicksToPromotion, epochDurationMilliseconds);
          Network network = new TestNetwork(pofSerializer, new TestNetworkConfiguration());
          AuditEventBus auditEventBus = new ConsoleAuditEventBus();
          var hydarFactory = new HydarFactory(configuration, network, auditEventBus);
-         var contexts = Util.Generate(128, i => CreateAndConfigureContext(auditEventBus, hydarFactory));
-
+         Util.Generate(64, i => CreateAndConfigureContext(auditEventBus, hydarFactory));
+         for (var i = 0; i < 16; i++) {
+            Thread.Sleep((int)epochDurationMilliseconds);
+            Util.Generate(8, x => CreateAndConfigureContext(auditEventBus, hydarFactory));
+         }
          CountdownEvent synchronization = new CountdownEvent(1);
          synchronization.Wait();
       }

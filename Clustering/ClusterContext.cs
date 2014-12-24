@@ -23,7 +23,7 @@ namespace Dargon.Hydar.Clustering {
       void Transition(IPhase phase);
 
       bool Process(IRemoteIdentity senderIdentity, HydarMessage message);
-      void EnterEpoch(Guid epochId, DateTimeInterval epochTimeInterval, Guid leaderGuid, IReadOnlySet<Guid> participantGuids);
+      void EnterEpoch(Guid epochId, DateTimeInterval epochTimeInterval, Guid leaderGuid, IReadOnlySet<Guid> participantGuids, Guid previousEpochId);
       void HandlePeerHeartBeat(Guid peerGuid);
    }
 }

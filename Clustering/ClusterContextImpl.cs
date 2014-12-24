@@ -1,12 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Dargon.Hydar.Clustering.Phases;
 using Dargon.Hydar.Networking;
 using Dargon.Hydar.PortableObjects;
 using Dargon.Hydar.Utilities;
 using ItzWarty;
 using ItzWarty.Collections;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Dargon.Hydar.Clustering {
    public class ClusterContextImpl : ManageableClusterContext {
@@ -18,7 +18,7 @@ namespace Dargon.Hydar.Clustering {
       private readonly Dictionary<Guid, EpochDescriptor> epochsById = new Dictionary<Guid, EpochDescriptor>();
       private readonly Dictionary<Guid, ManageablePeerStatus> peerStatusById = new Dictionary<Guid, ManageablePeerStatus>();
       private readonly object synchronization = new object();
-      private EpochDescriptor currentEpoch = new EpochDescriptorImpl(Guid.Empty, new DateTimeInterval(),  Guid.Empty, new ItzWarty.Collections.HashSet<Guid>(), new SortedList<Guid, ManageablePeerStatus>());
+      private EpochDescriptor currentEpoch = new EpochDescriptorImpl(Guid.Empty, new DateTimeInterval(),  Guid.Empty, new ItzWarty.Collections.HashSet<Guid>(), new SortedList<Guid, ManageablePeerStatus>(), Guid.Empty);
       private IPhase currentPhase;
 
       public ClusterContextImpl(HydarContext context, PeerStatusFactory peerStatusFactory, ClusteringConfiguration configuration, NodePhaseFactory phaseFactory) {
@@ -67,14 +67,14 @@ namespace Dargon.Hydar.Clustering {
          }
       }
 
-      public void EnterEpoch(Guid epochId, DateTimeInterval epochTimeInterval, Guid leaderGuid, IReadOnlySet<Guid> participantGuids) {
+      public void EnterEpoch(Guid epochId, DateTimeInterval epochTimeInterval, Guid leaderGuid, IReadOnlySet<Guid> participantGuids, Guid previousEpochId) {
          lock (synchronization) {
             if (currentEpoch.Id == epochId) {
                // todo: rejoin epoch logic
                Log("Rejoining epoch " + epochId.ToString("n").Substring(0, 8));
             } else {
                var participantStatusesByGuid = participantGuids.Aggregate(new SortedList<Guid, ManageablePeerStatus>(), (list, x) => list.Add(x, GetOrCreatePeerStatus(x)));
-               var epoch = currentEpoch = new EpochDescriptorImpl(epochId, epochTimeInterval, leaderGuid, participantGuids, participantStatusesByGuid);
+               var epoch = currentEpoch = new EpochDescriptorImpl(epochId, epochTimeInterval, leaderGuid, participantGuids, participantStatusesByGuid, previousEpochId);
                epochsById.Add(epochId, epoch);
                foreach (var kvp in participantStatusesByGuid) {
                   var peerGuid = kvp.Key;

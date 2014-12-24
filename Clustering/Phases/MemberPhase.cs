@@ -24,10 +24,10 @@ namespace Dargon.Hydar.Clustering.Phases {
          var nextLeaderAbsentTicks = Interlocked.Increment(ref leaderAbsentTicks);
          if (nextLeaderAbsentTicks > configuration.MaximumHeartBeatInterval) {
             Log("Leader missed {0} heartbeats".F(configuration.MaximumHeartBeatInterval));
-            clusterContext.Transition(phaseFactory.CreateElectionPhase());
+            clusterContext.Transition(phaseFactory.CreateElectionPhase(currentEpoch.Id));
          } else if (DateTime.Now >= currentEpoch.Interval.End) {
             Log("End of epoch {0}".F(currentEpoch.Id.ToString("n").Substring(0, 8)));
-            clusterContext.Transition(phaseFactory.CreateElectionPhase());
+            clusterContext.Transition(phaseFactory.CreateElectionPhase(currentEpoch.Id));
          }
          SendDataNodeHeartBeat();
       }
@@ -40,7 +40,7 @@ namespace Dargon.Hydar.Clustering.Phases {
          Interlocked.Exchange(ref leaderAbsentTicks, 0);
          clusterContext.HandlePeerHeartBeat(header.SenderGuid);
          if (payload.EpochId != clusterContext.GetCurrentEpoch().Id) {
-            clusterContext.EnterEpoch(payload.EpochId, payload.Interval, header.SenderGuid, payload.ParticipantIds);
+            clusterContext.EnterEpoch(payload.EpochId, payload.Interval, header.SenderGuid, payload.ParticipantIds, payload.LastEpochId);
          }
       }
 

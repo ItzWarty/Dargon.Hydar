@@ -30,7 +30,11 @@ namespace Dargon.Hydar.Clustering.Phases {
       }
 
       public IPhase CreateElectionPhase() {
-         return new ElectionPhase(auditEventBus, context, clusterContext, this).With(x => x.Initialize());
+         return CreateElectionPhase(Guid.Empty);
+      }
+
+      public IPhase CreateElectionPhase(Guid lastEpochId) {
+         return new ElectionPhase(auditEventBus, context, clusterContext, this, lastEpochId).With(x => x.Initialize());
       }
 
       public IPhase CreateLeaderPhase(ISet<Guid> participants) {
