@@ -9,6 +9,6 @@ namespace Dargon.Hydar.Clustering.Phases {
       IPhase CreateElectionPhase(Guid lastEpochId);
       IPhase CreateLeaderPhase(ISet<Guid> participants);
       IPhase CreateMemberPhase();
-      IPhase CreateDroppedPhase();
+      IPhase CreateDroppedPhase(DateTime end);
    }
 }

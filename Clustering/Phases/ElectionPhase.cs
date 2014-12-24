@@ -117,14 +117,14 @@ namespace Dargon.Hydar.Clustering.Phases {
       }
 
       private void HandleLeaderHeartBeat(IRemoteIdentity leader, HydarMessageHeader header, LeaderHeartBeat payload) {
-         if (DateTime.Now > payload.Interval.End) {
+         if (DateTime.Now >= payload.Interval.End) {
             return; // throw away stale message
          }
          if (payload.ParticipantIds.Contains(node.Identifier)) {
             clusterContext.EnterEpoch(payload.EpochId, payload.Interval, header.SenderGuid, payload.ParticipantIds, payload.LastEpochId);
             clusterContext.Transition(phaseFactory.CreateMemberPhase());
          } else {
-            clusterContext.Transition(phaseFactory.CreateDroppedPhase());
+            clusterContext.Transition(phaseFactory.CreateDroppedPhase(payload.Interval.End));
          }
       }
 

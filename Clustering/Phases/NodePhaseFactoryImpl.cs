@@ -45,8 +45,8 @@ namespace Dargon.Hydar.Clustering.Phases {
          return new MemberPhase(auditEventBus, context, clusterContext, this).With(x => x.Initialize());
       }
 
-      public IPhase CreateDroppedPhase() {
-         return new DroppedPhase(auditEventBus, context, clusterContext, this);
+      public IPhase CreateDroppedPhase(DateTime epochEndTime) {
+         return new DroppedPhase(auditEventBus, context, clusterContext, this, epochEndTime).With(x => x.Initialize());
       }
    }
 }
