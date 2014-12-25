@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.30723.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.22310.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dargon.Hydar", "Dargon.Hydar.csproj", "{27FCE073-ACCE-42AB-B85E-67EF69C866A6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dargon.Hydar.Tests", "Tests\Dargon.Hydar.Tests.csproj", "{94481B0F-62CC-433B-9A9E-50DB7F50FCE5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{27FCE073-ACCE-42AB-B85E-67EF69C866A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27FCE073-ACCE-42AB-B85E-67EF69C866A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27FCE073-ACCE-42AB-B85E-67EF69C866A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94481B0F-62CC-433B-9A9E-50DB7F50FCE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94481B0F-62CC-433B-9A9E-50DB7F50FCE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94481B0F-62CC-433B-9A9E-50DB7F50FCE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94481B0F-62CC-433B-9A9E-50DB7F50FCE5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
