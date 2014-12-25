@@ -70,9 +70,12 @@
     <Compile Include="Caching\CacheEpochContextFactory.cs" />
     <Compile Include="Caching\CacheEpochContext.cs" />
     <Compile Include="Caching\CacheEpochPartitionHistory.cs" />
+    <Compile Include="Caching\PartitionRange.cs" />
     <Compile Include="Caching\CachingSubsystem.cs" />
     <Compile Include="Caching\CachingPayload.cs" />
     <Compile Include="Caching\CachingPayloadMetadata.cs" />
+    <Compile Include="Caching\HashSpacePartitioningStrategy.cs" />
+    <Compile Include="Caching\UnweightedRingHashSpacePartitioningStrategy.cs" />
     <Compile Include="Clustering\PeerStatusFactory.cs" />
     <Compile Include="Clustering\PeerStatusImpl.cs" />
     <Compile Include="Clustering\Phases\DroppedPhase.cs" />

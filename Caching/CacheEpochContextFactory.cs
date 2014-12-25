@@ -5,10 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Dargon.Audits;
 using Dargon.Hydar.Clustering;
+using ItzWarty;
 
 namespace Dargon.Hydar.Caching {
    public interface CacheEpochContextFactory {
-      CacheEpochContext Create(EpochDescriptor epochDescriptor);
+      CacheEpochContext Create(CacheContext cacheContext, EpochDescriptor epochDescriptor);
    }
 
    public class CacheEpochContextFactoryImpl : CacheEpochContextFactory {
@@ -20,8 +21,8 @@ namespace Dargon.Hydar.Caching {
          this.context = context;
       }
 
-      public CacheEpochContext Create(EpochDescriptor epochDescriptor) {
-         return new CacheEpochContextImpl(auditEventBus, context, epochDescriptor);
+      public CacheEpochContext Create(CacheContext cacheContext, EpochDescriptor epochDescriptor) {
+         return new CacheEpochContextImpl(auditEventBus, context, cacheContext, epochDescriptor).With(x => x.Initialize());
       }
    }
 }

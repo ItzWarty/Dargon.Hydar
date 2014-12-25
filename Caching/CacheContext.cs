@@ -9,6 +9,7 @@ using System.Collections.Generic;
 namespace Dargon.Hydar.Caching {
    public interface CacheContext {
       Guid Id { get; }
+      CacheConfiguration Configuration { get; }
 
       void Tick();
       bool Process(IRemoteIdentity sender, HydarMessage<CachingPayload> message);
@@ -37,6 +38,7 @@ namespace Dargon.Hydar.Caching {
       }
 
       public Guid Id { get { return cacheId; } }
+      public CacheConfiguration Configuration { get { return defaultCacheConfiguration; } }
 
       public void Initialize() {
          clusterContext.NewEpoch += HandleNewEpoch;
@@ -44,7 +46,7 @@ namespace Dargon.Hydar.Caching {
 
       private void HandleNewEpoch(EpochDescriptor epoch) {
          Log("New Epoch " + epoch.Id);
-         var dispatcher = epochContextFactory.Create(epoch);
+         var dispatcher = epochContextFactory.Create(this, epoch);
          contextsByEpochId.Add(epoch.Id, dispatcher);
       }
 
