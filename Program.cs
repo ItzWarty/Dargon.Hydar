@@ -22,9 +22,9 @@ namespace Dargon.Hydar {
          AuditEventBus auditEventBus = new ConsoleAuditEventBus();
          var hydarFactory = new HydarFactory(configuration, network, auditEventBus);
          Util.Generate(64, i => CreateAndConfigureContext(auditEventBus, hydarFactory));
-         for (var i = 0; i < 16; i++) {
+         for (var i = 0; i < 8; i++) {
             Thread.Sleep((int)epochDurationMilliseconds);
-            Util.Generate(8, x => CreateAndConfigureContext(auditEventBus, hydarFactory));
+            Util.Generate(16, x => CreateAndConfigureContext(auditEventBus, hydarFactory));
          }
          CountdownEvent synchronization = new CountdownEvent(1);
          synchronization.Wait();
@@ -32,11 +32,12 @@ namespace Dargon.Hydar {
 
       private static HydarContext CreateAndConfigureContext(AuditEventBus auditEventBus, HydarFactory nodeFactory) {
          var context = nodeFactory.CreateContext();
-         var cachingDispatcher = new CachingDispatcher();
-         context.RegisterDispatcher(cachingDispatcher);
+         var cachingDispatcher = new CachingSubsystem();
+         context.RegisterSubsystem(cachingDispatcher);
          var dummyCacheGuid = new Guid(129832, 2189, 19823, 38, 82, 218, 83, 37, 93, 173, 18);
          var dummyCacheConfiguration = new CacheConfigurationImpl { Redundancy = 3 };
-         var dummyCacheContext = new CacheContextImpl(auditEventBus, context, dummyCacheGuid, dummyCacheConfiguration);
+         var cacheEpochDispatcherFactory = new CacheEpochContextFactoryImpl(auditEventBus, context);
+         var dummyCacheContext = new CacheContextImpl(auditEventBus, context, dummyCacheGuid, dummyCacheConfiguration, cacheEpochDispatcherFactory);
          dummyCacheContext.Initialize();
          cachingDispatcher.AddCacheContext(dummyCacheContext);
          return context;

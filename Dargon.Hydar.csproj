@@ -66,7 +66,11 @@
   <ItemGroup>
     <Compile Include="Caching\CacheConfiguration.cs" />
     <Compile Include="Caching\CacheContext.cs" />
-    <Compile Include="Caching\CachingDispatcher.cs" />
+    <Compile Include="Caching\CacheEpochContextImpl.cs" />
+    <Compile Include="Caching\CacheEpochContextFactory.cs" />
+    <Compile Include="Caching\CacheEpochContext.cs" />
+    <Compile Include="Caching\CacheEpochPartitionHistory.cs" />
+    <Compile Include="Caching\CachingSubsystem.cs" />
     <Compile Include="Caching\CachingPayload.cs" />
     <Compile Include="Caching\CachingPayloadMetadata.cs" />
     <Compile Include="Clustering\PeerStatusFactory.cs" />
@@ -79,6 +83,9 @@
     <Compile Include="Clustering\ClusterContext.cs" />
     <Compile Include="Clustering\EpochDescriptor.cs" />
     <Compile Include="HydarDispatcher.cs" />
+    <Compile Include="HydarSubsystem.cs" />
+    <Compile Include="PortableObjects\CacheHave.cs" />
+    <Compile Include="PortableObjects\CacheNeed.cs" />
     <Compile Include="PortableObjects\ElectionAcknowledgement.cs" />
     <Compile Include="Utilities\DateTimeInterval.cs" />
     <Compile Include="Utilities\MessageProcessorBase.cs" />

@@ -108,8 +108,8 @@ namespace Dargon.Hydar.Clustering.Phases {
       private void HandleElectionAcknowledgement(IRemoteIdentity remoteIdentity, HydarMessageHeader header, ElectionAcknowledgement acknowledgement) {
          lock (synchronization) {
             if (acknowledgement.AcknowledgedVoter == node.Identifier) {
-                  Log("Acknowledged by " + header.SenderGuid.ToString("n").Substring(0, 8));
-                  allAcknowledgers.Add(header.SenderGuid);
+               Log("Acknowledged by " + header.SenderGuid.ToString("n").Substring(0, 8));
+               allAcknowledgers.Add(header.SenderGuid);
             } else {
                electionSecurity = 0;
             }

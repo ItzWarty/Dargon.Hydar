@@ -25,12 +25,12 @@ namespace Dargon.Hydar.Utilities {
          messageHandlersByPayloadType.Add(typeof(TPayload), handler);
       }
 
-      public bool Process(IRemoteIdentity sender, TMessage message) {
+      public virtual bool Process(IRemoteIdentity sender, TMessage message) {
          message.ThrowIfNull("message");
          message.Header.ThrowIfNull("header");
          message.Payload.ThrowIfNull("payload");
 
-         var payloadType = message.Payload.GetType();
+         var payloadType = GetPayload(message).GetType();
 
          var handlers = messageHandlersByPayloadType.GetValueOrDefault(payloadType);
          if (handlers == null) {
@@ -39,6 +39,10 @@ namespace Dargon.Hydar.Utilities {
             handlers.ForEach(handler => Invoke(handler, sender, message));
             return handlers.Count > 0;
          }
+      }
+
+      protected virtual object GetPayload(TMessage message) {
+         return message.Payload;
       }
 
       protected abstract void Invoke(THandler handler, IRemoteIdentity sender, TMessage message);

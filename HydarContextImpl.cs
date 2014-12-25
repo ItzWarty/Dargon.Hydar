@@ -13,7 +13,7 @@ namespace Dargon.Hydar {
       private readonly ClusteringConfiguration configuration;
       private readonly Network network;
       private readonly NetworkNode node;
-      private readonly ConcurrentSet<HydarDispatcher> dispatchers = new ConcurrentSet<HydarDispatcher>();
+      private readonly ConcurrentSet<HydarSubsystem> subsystems = new ConcurrentSet<HydarSubsystem>();
       private ManageableClusterContext clusteringContext;
       private Timer timer;
 
@@ -36,11 +36,14 @@ namespace Dargon.Hydar {
       public void Initialize() {
          timer = new Timer((x) => {
             clusteringContext.Tick();
+            foreach (var subsystem in subsystems) {
+               subsystem.Tick();
+            }
          }, null, configuration.TickIntervalMillis, configuration.TickIntervalMillis);
       }
 
-      public void RegisterDispatcher(HydarDispatcher dispatcher) {
-         dispatchers.TryAdd(dispatcher);
+      public void RegisterSubsystem(HydarSubsystem subsystem) {
+         subsystems.TryAdd(subsystem);
       }
 
       public void Dispatch(IRemoteIdentity senderIdentity, HydarMessage message) {
@@ -48,7 +51,7 @@ namespace Dargon.Hydar {
          if (clusteringContext.Process(senderIdentity, message)) {
             dispatched = true;
          } else {
-            foreach (var dispatcher in dispatchers) {
+            foreach (var dispatcher in subsystems) {
                if (dispatcher.Dispatch(senderIdentity, message)) {
                   dispatched = true;
                   break;
