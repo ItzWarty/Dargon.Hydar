@@ -40,7 +40,7 @@ namespace Dargon.Hydar.Clustering.Phases {
          Interlocked.Exchange(ref leaderAbsentTicks, 0);
          clusterContext.HandlePeerHeartBeat(header.SenderGuid);
          if (payload.EpochId != clusterContext.GetCurrentEpoch().Id) {
-            clusterContext.EnterEpoch(payload.EpochId, payload.Interval, header.SenderGuid, payload.ParticipantIds, payload.LastEpochId);
+            clusterContext.EnterEpoch(payload.EpochId, payload.Interval, header.SenderGuid, payload.ParticipantIds, payload.LastEpochId, payload.LastParticipantIds);
          }
       }
 

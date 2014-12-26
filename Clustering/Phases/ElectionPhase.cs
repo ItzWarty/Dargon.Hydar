@@ -121,7 +121,7 @@ namespace Dargon.Hydar.Clustering.Phases {
             return; // throw away stale message
          }
          if (payload.ParticipantIds.Contains(node.Identifier)) {
-            clusterContext.EnterEpoch(payload.EpochId, payload.Interval, header.SenderGuid, payload.ParticipantIds, payload.LastEpochId);
+            clusterContext.EnterEpoch(payload.EpochId, payload.Interval, header.SenderGuid, payload.ParticipantIds, payload.LastEpochId, payload.LastParticipantIds);
             clusterContext.Transition(phaseFactory.CreateMemberPhase());
          } else {
             clusterContext.Transition(phaseFactory.CreateDroppedPhase(payload.Interval.End));

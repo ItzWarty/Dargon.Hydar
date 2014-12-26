@@ -29,12 +29,12 @@ namespace Dargon.Hydar.Clustering.Phases {
       }
 
       private void StartNewEpoch() {
-         var lastEpochId = clusterContext.GetCurrentEpoch().Id;
+         var lastEpoch = clusterContext.GetCurrentEpoch();
          var epochId = Guid.NewGuid();
          var epochStartTime = DateTime.Now;
          var epochExpirationTime = epochStartTime + TimeSpan.FromMilliseconds(configuration.EpochDurationMilliseconds);
          var epochTimeInterval = new DateTimeInterval(epochStartTime, epochExpirationTime);
-         clusterContext.EnterEpoch(epochId, epochTimeInterval, node.Identifier, participants, lastEpochId);
+         clusterContext.EnterEpoch(epochId, epochTimeInterval, node.Identifier, participants, lastEpoch.Id, lastEpoch.ParticipantGuids);
       }
 
       public override void Tick() {
@@ -48,7 +48,9 @@ namespace Dargon.Hydar.Clustering.Phases {
       private void SendHeartBeat() {
          Log("Sending heartbeat to {0} participants".F(participants.Count));
          var epoch = clusterContext.GetCurrentEpoch();
-         Send(new LeaderHeartBeat(epoch.Id, epoch.PreviousId, epoch.Interval, participants));
+         var previousEpoch = clusterContext.GetEpochDescriptorByIdOrNull(epoch.PreviousId);
+         IReadOnlySet<Guid> lastParticipantIds = previousEpoch != null ? previousEpoch.ParticipantGuids : new HashSet<Guid>();
+         Send(new LeaderHeartBeat(epoch.Id, epoch.PreviousId, epoch.Interval, participants, lastParticipantIds));
       }
 
       private void HandleMemberHeartBeat(IRemoteIdentity identity, HydarMessageHeader header, MemberHeartBeat payload) {

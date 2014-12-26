@@ -24,7 +24,7 @@ namespace Dargon.Hydar {
          Util.Generate(64, i => CreateAndConfigureContext(auditEventBus, hydarFactory));
          for (var i = 0; i < 8; i++) {
             Thread.Sleep((int)epochDurationMilliseconds);
-            Util.Generate(16, x => CreateAndConfigureContext(auditEventBus, hydarFactory));
+            Util.Generate(12, x => CreateAndConfigureContext(auditEventBus, hydarFactory));
          }
          CountdownEvent synchronization = new CountdownEvent(1);
          synchronization.Wait();

@@ -7,7 +7,8 @@ namespace Dargon.Hydar.Clustering {
       Guid Id { get; }
       DateTimeInterval Interval { get; }
       Guid LeaderGuid { get; }
-      IReadOnlySet<Guid> ParticipantGuids { get; } 
+      IReadOnlySet<Guid> ParticipantGuids { get; }
       Guid PreviousId { get; }
+      IReadOnlySet<Guid> PreviousParticipantGuids { get; }
    }
 }

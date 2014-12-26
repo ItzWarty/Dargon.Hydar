@@ -46,8 +46,9 @@ namespace Dargon.Hydar.Caching {
 
       private void HandleNewEpoch(EpochDescriptor epoch) {
          Log("New Epoch " + epoch.Id);
-         var dispatcher = epochContextFactory.Create(this, epoch);
-         contextsByEpochId.Add(epoch.Id, dispatcher);
+         var epochContext = epochContextFactory.Create(this, epoch);
+         contextsByEpochId.Add(epoch.Id, epochContext);
+         epochContext.HandleNewEpoch();
       }
 
       public void Tick() {

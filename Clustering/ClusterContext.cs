@@ -13,6 +13,7 @@ namespace Dargon.Hydar.Clustering {
       event NewEpochHandler NewEpoch;
 
       EpochDescriptor GetCurrentEpoch();
+      EpochDescriptor GetEpochDescriptorByIdOrNull(Guid previousId);
       IReadOnlyDictionary<Guid, PeerStatus> GetPeerStatuses();
 
       IPhase __DebugCurrentPhase { get; }
@@ -23,7 +24,7 @@ namespace Dargon.Hydar.Clustering {
       void Transition(IPhase phase);
 
       bool Process(IRemoteIdentity senderIdentity, HydarMessage message);
-      void EnterEpoch(Guid epochId, DateTimeInterval epochTimeInterval, Guid leaderGuid, IReadOnlySet<Guid> participantGuids, Guid previousEpochId);
+      void EnterEpoch(Guid epochId, DateTimeInterval epochTimeInterval, Guid leaderGuid, IReadOnlySet<Guid> participantGuids, Guid previousEpochId, IReadOnlySet<Guid> previousParticipantGuids);
       void HandlePeerHeartBeat(Guid peerGuid);
    }
 }

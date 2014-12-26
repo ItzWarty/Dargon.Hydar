@@ -5,8 +5,7 @@ using Dargon.Hydar.Utilities;
 using ItzWarty;
 using ItzWarty.Collections;
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using SCG = System.Collections.Generic;
 
 namespace Dargon.Hydar.Clustering {
    public class ClusterContextImpl : ManageableClusterContext {
@@ -15,10 +14,10 @@ namespace Dargon.Hydar.Clustering {
       private readonly PeerStatusFactory peerStatusFactory;
       private readonly ClusteringConfiguration configuration;
       private readonly NodePhaseFactory phaseFactory;
-      private readonly Dictionary<Guid, EpochDescriptor> epochsById = new Dictionary<Guid, EpochDescriptor>();
-      private readonly Dictionary<Guid, ManageablePeerStatus> peerStatusById = new Dictionary<Guid, ManageablePeerStatus>();
+      private readonly SCG.Dictionary<Guid, EpochDescriptor> epochsById = new SCG.Dictionary<Guid, EpochDescriptor>();
+      private readonly SCG.Dictionary<Guid, ManageablePeerStatus> peerStatusById = new SCG.Dictionary<Guid, ManageablePeerStatus>();
       private readonly object synchronization = new object();
-      private EpochDescriptor currentEpoch = new EpochDescriptorImpl(Guid.Empty, new DateTimeInterval(),  Guid.Empty, new ItzWarty.Collections.HashSet<Guid>(), new SortedList<Guid, ManageablePeerStatus>(), Guid.Empty);
+      private EpochDescriptor currentEpoch = new EpochDescriptorImpl(Guid.Empty, new DateTimeInterval(),  Guid.Empty, new HashSet<Guid>(), new SCG.SortedList<Guid, ManageablePeerStatus>(), Guid.Empty, new HashSet<Guid>(), new SCG.SortedList<Guid, ManageablePeerStatus>());
       private IPhase currentPhase;
 
       public ClusterContextImpl(HydarContext context, PeerStatusFactory peerStatusFactory, ClusteringConfiguration configuration, NodePhaseFactory phaseFactory) {
@@ -38,7 +37,11 @@ namespace Dargon.Hydar.Clustering {
          return currentEpoch;
       }
 
-      public IReadOnlyDictionary<Guid, PeerStatus> GetPeerStatuses() {
+      public EpochDescriptor GetEpochDescriptorByIdOrNull(Guid previousId) {
+         return epochsById.GetValueOrDefault(previousId);
+      }
+
+      public SCG.IReadOnlyDictionary<Guid, PeerStatus> GetPeerStatuses() {
          throw new NotImplementedException();
       }
 
@@ -67,14 +70,15 @@ namespace Dargon.Hydar.Clustering {
          }
       }
 
-      public void EnterEpoch(Guid epochId, DateTimeInterval epochTimeInterval, Guid leaderGuid, IReadOnlySet<Guid> participantGuids, Guid previousEpochId) {
+      public void EnterEpoch(Guid epochId, DateTimeInterval epochTimeInterval, Guid leaderGuid, IReadOnlySet<Guid> participantGuids, Guid previousEpochId, IReadOnlySet<Guid> previousParticipantGuids) {
          lock (synchronization) {
             if (currentEpoch.Id == epochId) {
                // todo: rejoin epoch logic
                Log("Rejoining epoch " + epochId.ToString("n").Substring(0, 8));
             } else {
-               var participantStatusesByGuid = participantGuids.Aggregate(new SortedList<Guid, ManageablePeerStatus>(), (list, x) => list.Add(x, GetOrCreatePeerStatus(x)));
-               var epoch = currentEpoch = new EpochDescriptorImpl(epochId, epochTimeInterval, leaderGuid, participantGuids, participantStatusesByGuid, previousEpochId);
+               var participantStatusesByGuid = participantGuids.Aggregate(new SCG.SortedList<Guid, ManageablePeerStatus>(), (list, x) => list.Add(x, GetOrCreatePeerStatus(x)));
+               var previousParticipantStatusesByGuid = previousParticipantGuids.Aggregate(new SCG.SortedList<Guid, ManageablePeerStatus>(), (list, x) => list.Add(x, GetOrCreatePeerStatus(x)));
+               var epoch = currentEpoch = new EpochDescriptorImpl(epochId, epochTimeInterval, leaderGuid, participantGuids, participantStatusesByGuid, previousEpochId, previousParticipantGuids, previousParticipantStatusesByGuid);
                epochsById.Add(epochId, epoch);
                foreach (var kvp in participantStatusesByGuid) {
                   var peerGuid = kvp.Key;
