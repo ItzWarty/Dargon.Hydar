@@ -19,29 +19,29 @@ namespace Dargon.Hydar.Caching {
       private readonly Guid cacheId;
       private readonly CacheConfiguration defaultCacheConfiguration;
       private readonly CacheEpochContextFactory epochContextFactory;
-      private readonly ClusterContext clusterContext;
+      private readonly ClusteringSubsystem clusteringSubsystem;
       private readonly Dictionary<Guid, CacheEpochContext> contextsByEpochId = new Dictionary<Guid, CacheEpochContext>();
       private readonly object synchronization = new object();
 
       public CacheContextImpl(
          AuditEventBus auditEventBus, 
-         HydarContext hydarContext, 
+         RootMessageDispatcher rootMessageDispatcher, 
          Guid cacheId, 
          CacheConfiguration defaultCacheConfiguration, 
          CacheEpochContextFactory epochContextFactory
-      ) : base(auditEventBus, hydarContext) {
+      ) : base(auditEventBus, rootMessageDispatcher) {
          this.cacheId = cacheId;
          this.defaultCacheConfiguration = defaultCacheConfiguration;
          this.epochContextFactory = epochContextFactory;
 
-         this.clusterContext = context.ClusterContext;
+         this.clusteringSubsystem = base.rootMessageDispatcher.ClusterContext;
       }
 
       public Guid Id { get { return cacheId; } }
       public CacheConfiguration Configuration { get { return defaultCacheConfiguration; } }
 
       public void Initialize() {
-         clusterContext.NewEpoch += HandleNewEpoch;
+         clusteringSubsystem.NewEpoch += HandleNewEpoch;
       }
 
       private void HandleNewEpoch(EpochDescriptor epoch) {
@@ -85,7 +85,7 @@ namespace Dargon.Hydar.Caching {
       }
 
       protected void SendCache<TPayload>(TPayload innerPayload) {
-         var metadata = new CachingPayloadMetadata(cacheId, clusterContext.GetCurrentEpoch().Id);
+         var metadata = new CachingPayloadMetadata(cacheId, clusteringSubsystem.GetCurrentEpoch().Id);
          SendGeneric(new CachingPayload<TPayload>(metadata, innerPayload));
       }
    }

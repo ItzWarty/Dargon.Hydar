@@ -1,37 +1,37 @@
 using System;
 using System.Collections.Generic;
+using Dargon.Hydar.Clustering.Discovery;
+using Dargon.Hydar.Clustering.Messages.Helpers;
 using Dargon.Hydar.Utilities;
 using ItzWarty.Collections;
 
 namespace Dargon.Hydar.Clustering {
    public class EpochDescriptorImpl : EpochDescriptor {
       private readonly Guid id;
+      private readonly Guid leaderId;
       private readonly DateTimeInterval interval;
-      private readonly Guid leaderGuid;
-      private readonly IReadOnlySet<Guid> participantGuids;
+      private readonly IReadOnlySet<Guid> participantIds;
       private readonly SortedList<Guid, ManageablePeerStatus> participantStatusesByGuid;
-      private readonly Guid previousId;
-      private readonly IReadOnlySet<Guid> previousParticipantGuids;
-      private readonly SortedList<Guid, ManageablePeerStatus> previousParticipantStatusesByGuid;
+      private readonly EpochDescriptor previous;
 
-      public EpochDescriptorImpl(Guid id, DateTimeInterval interval, Guid leaderGuid, IReadOnlySet<Guid> participantGuids, SortedList<Guid, ManageablePeerStatus> participantStatusesByGuid, Guid previousId, IReadOnlySet<Guid> previousParticipantGuids, SortedList<Guid, ManageablePeerStatus> previousParticipantStatusesByGuid) {
+      public EpochDescriptorImpl(Guid id, Guid leaderId, DateTimeInterval interval, IReadOnlySet<Guid> participantIds, SortedList<Guid, ManageablePeerStatus> participantStatusesByGuid, EpochDescriptor previous) {
          this.id = id;
+         this.leaderId = leaderId;
          this.interval = interval;
-         this.leaderGuid = leaderGuid;
-         this.participantGuids = participantGuids;
+         this.participantIds = participantIds;
          this.participantStatusesByGuid = participantStatusesByGuid;
-         this.previousId = previousId;
-         this.previousParticipantGuids = previousParticipantGuids;
-         this.previousParticipantStatusesByGuid = previousParticipantStatusesByGuid;
+         this.previous = previous;
       }
 
       public Guid Id { get { return id; } }
+      public Guid LeaderId { get { return leaderId; } }
       public DateTimeInterval Interval { get { return interval; } }
-      public Guid LeaderGuid { get { return leaderGuid; } }
-      public IReadOnlySet<Guid> ParticipantGuids { get { return participantGuids; } }
+      public IReadOnlySet<Guid> ParticipantIds { get { return participantIds; } }
       public IReadOnlyDictionary<Guid, ManageablePeerStatus> ParticipantStatusesByGuid { get { return (IReadOnlyDictionary<Guid, ManageablePeerStatus>)participantStatusesByGuid; } }
-      public Guid PreviousId { get { return previousId; } }
-      public IReadOnlySet<Guid> PreviousParticipantGuids { get { return previousParticipantGuids; } }
-      public IReadOnlyDictionary<Guid, ManageablePeerStatus> PreviousParticipantStatusesByGuid { get { return (IReadOnlyDictionary<Guid, ManageablePeerStatus>)previousParticipantStatusesByGuid; } }
+      public EpochDescriptor Previous { get { return previous; } }
+
+      public EpochSummary ToEpochSummary() {
+         return new EpochSummary(id, leaderId, participantIds);
+      }
    }
 }

@@ -4,19 +4,35 @@ using Dargon.Hydar.PortableObjects;
 using ItzWarty;
 using ItzWarty.Collections;
 using System;
+using Dargon.Hydar.Clustering.Messages;
+using Dargon.Hydar.Clustering.Messages.Helpers;
+using Dargon.Hydar.Clustering.Phases.Helpers;
 using Dargon.Hydar.Utilities;
 
 namespace Dargon.Hydar.Clustering.Phases {
    public class LeaderPhase : PhaseBase {
-      private readonly ISet<Guid> participants;
+      private readonly Guid localIdentifier;
+      private readonly DebugEventRouter debugEventRouter;
+      private readonly EpochManager epochManager;
+      private readonly ClusteringConfiguration clusteringConfiguration;
+      private readonly ClusteringPhaseManager clusteringPhaseManager;
+      private readonly ClusteringPhaseFactory clusteringPhaseFactory;
+      private readonly ClusteringMessageSender clusteringMessageSender;
+      private readonly IReadOnlySet<Guid> participants;
 
-      public LeaderPhase(AuditEventBus auditEventBus, HydarContext context, ManageableClusterContext manageableClusterContext, NodePhaseFactory phaseFactory, ISet<Guid> participants) : base(auditEventBus, context, manageableClusterContext, phaseFactory) {
+      public LeaderPhase(Guid localIdentifier, DebugEventRouter debugEventRouter, EpochManager epochManager, ClusteringConfiguration clusteringConfiguration, ClusteringPhaseManager clusteringPhaseManager, ClusteringPhaseFactory clusteringPhaseFactory, ClusteringMessageSender clusteringMessageSender, IReadOnlySet<Guid> participants) {
+         this.localIdentifier = localIdentifier;
+         this.debugEventRouter = debugEventRouter;
+         this.epochManager = epochManager;
+         this.clusteringConfiguration = clusteringConfiguration;
+         this.clusteringPhaseManager = clusteringPhaseManager;
+         this.clusteringPhaseFactory = clusteringPhaseFactory;
+         this.clusteringMessageSender = clusteringMessageSender;
          this.participants = participants;
       }
 
       public override void Initialize() {
          base.Initialize();
-         RegisterHandler<MemberHeartBeat>(HandleMemberHeartBeat);
          RegisterNullHandler<ElectionAcknowledgement>();
          RegisterNullHandler<ElectionVote>();
       }
@@ -24,37 +40,31 @@ namespace Dargon.Hydar.Clustering.Phases {
       public override void Enter() {
          base.Enter();
 
-         StartNewEpoch();
+         var lastEpoch = epochManager.GetCurrentEpoch();
+         var epochId = Guid.NewGuid();
+         var epochStartTime = DateTime.Now;
+         var epochExpirationTime = epochStartTime + TimeSpan.FromMilliseconds(clusteringConfiguration.EpochDurationMilliseconds);
+         var epochTimeInterval = new DateTimeInterval(epochStartTime, epochExpirationTime);
+         var epochSummary = new EpochSummary(epochId, localIdentifier, participants);
+         epochManager.EnterEpoch(epochTimeInterval, epochSummary, lastEpoch == null ? null : lastEpoch.ToEpochSummary());
+
          SendHeartBeat();
       }
 
-      private void StartNewEpoch() {
-         var lastEpoch = clusterContext.GetCurrentEpoch();
-         var epochId = Guid.NewGuid();
-         var epochStartTime = DateTime.Now;
-         var epochExpirationTime = epochStartTime + TimeSpan.FromMilliseconds(configuration.EpochDurationMilliseconds);
-         var epochTimeInterval = new DateTimeInterval(epochStartTime, epochExpirationTime);
-         clusterContext.EnterEpoch(epochId, epochTimeInterval, node.Identifier, participants, lastEpoch.Id, lastEpoch.ParticipantGuids);
-      }
-
       public override void Tick() {
-         var epoch = clusterContext.GetCurrentEpoch();
+         var epoch = epochManager.GetCurrentEpoch();
          if (DateTime.Now >= epoch.Interval.End) {
-            clusterContext.Transition(phaseFactory.CreateElectionPhase(epoch.Id));
+            var electionPhase = clusteringPhaseFactory.CreateElectionCandidatePhase(new ElectionStateImpl(), epoch.Id);
+            clusteringPhaseManager.Transition(electionPhase);
          }
          SendHeartBeat();
       }
 
       private void SendHeartBeat() {
-         Log("Sending heartbeat to {0} participants".F(participants.Count));
-         var epoch = clusterContext.GetCurrentEpoch();
-         var previousEpoch = clusterContext.GetEpochDescriptorByIdOrNull(epoch.PreviousId);
-         IReadOnlySet<Guid> lastParticipantIds = previousEpoch != null ? previousEpoch.ParticipantGuids : new HashSet<Guid>();
-         Send(new LeaderHeartBeat(epoch.Id, epoch.PreviousId, epoch.Interval, participants, lastParticipantIds));
-      }
-
-      private void HandleMemberHeartBeat(IRemoteIdentity identity, HydarMessageHeader header, MemberHeartBeat payload) {
-         clusterContext.HandlePeerHeartBeat(header.SenderGuid);
+         debugEventRouter.LeaderPhase_SendHeartBeat(participants.Count);
+         var epoch = epochManager.GetCurrentEpoch();
+         var previousEpoch = epoch.Previous;
+         clusteringMessageSender.EpochLeaderHeartBeat(epoch.Interval, epoch.ToEpochSummary(), previousEpoch.ToEpochSummary());
       }
    }
 }

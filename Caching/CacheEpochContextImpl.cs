@@ -17,10 +17,10 @@ namespace Dargon.Hydar.Caching {
 
       public CacheEpochContextImpl(
          AuditEventBus auditEventBus, 
-         HydarContext context, 
+         RootMessageDispatcher rootMessageDispatcher, 
          CacheContext cacheContext, 
          EpochDescriptor epochDescriptor
-      ) : base(auditEventBus, context) {
+      ) : base(auditEventBus, rootMessageDispatcher) {
          this.cacheContext = cacheContext;
          this.epochDescriptor = epochDescriptor;
 

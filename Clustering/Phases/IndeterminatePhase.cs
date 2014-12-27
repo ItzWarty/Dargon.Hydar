@@ -1,42 +1,52 @@
+using System;
 using System.Threading;
 using Dargon.Audits;
+using Dargon.Hydar.Clustering.Messages;
+using Dargon.Hydar.Clustering.Phases.Helpers;
 using Dargon.Hydar.Networking;
 using Dargon.Hydar.PortableObjects;
 
 namespace Dargon.Hydar.Clustering.Phases {
    public class IndeterminatePhase : PhaseBase {
+      private readonly ClusteringConfiguration clusteringConfiguration;
+      private readonly ClusteringPhaseManager clusteringPhaseManager;
+      private readonly ClusteringPhaseFactory clusteringPhaseFactory;
       private int tickCount = 0;
 
-      // auto-generated ctor
-      public IndeterminatePhase(AuditEventBus auditEventBus, HydarContext context, ManageableClusterContext manageableClusterContext, NodePhaseFactory phaseFactory) : base(auditEventBus, context, manageableClusterContext, phaseFactory) { }
+      public IndeterminatePhase(ClusteringConfiguration clusteringConfiguration, ClusteringPhaseManager clusteringPhaseManager, ClusteringPhaseFactory clusteringPhaseFactory) {
+         this.clusteringConfiguration = clusteringConfiguration;
+         this.clusteringPhaseManager = clusteringPhaseManager;
+         this.clusteringPhaseFactory = clusteringPhaseFactory;
+      }
 
       public override void Initialize() {
          base.Initialize();
-         RegisterHandler<LeaderHeartBeat>(HandleLeaderHeartBeat);
-         RegisterHandler<MemberHeartBeat>(HandleMemberHeartBeat);
+         RegisterHandler<EpochLeaderHeartBeat>(HandleLeaderHeartBeat);
          RegisterHandler<ElectionVote>(HandleElectionVote);
          RegisterNullHandler<ElectionAcknowledgement>();
       }
 
       public override void Tick() {
          var currentTickCount = Interlocked.Increment(ref tickCount);
-         if (currentTickCount < context.Configuration.MaximumHeartBeatInterval) {
+         if (currentTickCount < clusteringConfiguration.MaximumHeartBeatInterval) {
             // do nothing
          } else {
-            clusterContext.Transition(phaseFactory.CreateElectionPhase());
+            TransitionToElectionPhase();
          }
       }
 
-      public void HandleLeaderHeartBeat(IRemoteIdentity remoteIdentity, HydarMessageHeader messageHeader, LeaderHeartBeat heartbeat) {
+      internal void HandleLeaderHeartBeat(InboundEnvelopeHeader header, EpochLeaderHeartBeat heartbeat) {
          Interlocked.Exchange(ref tickCount, 0);
       }
 
-      private void HandleMemberHeartBeat(IRemoteIdentity remoteIdentity, HydarMessageHeader messageHeader, MemberHeartBeat heartbeat) {
-         Interlocked.Exchange(ref tickCount, 0);
+      internal void HandleElectionVote(InboundEnvelopeHeader header, ElectionVote vote) {
+         TransitionToElectionPhase();
       }
 
-      private void HandleElectionVote(IRemoteIdentity arg1, HydarMessageHeader arg2, ElectionVote arg3) {
-         clusterContext.Transition(phaseFactory.CreateElectionPhase());
+      internal void TransitionToElectionPhase() {
+         var electionState = new ElectionStateImpl();
+         var electionPhase = clusteringPhaseFactory.CreateElectionCandidatePhase(electionState, Guid.Empty);
+         clusteringPhaseManager.Transition(electionPhase);
       }
    }
 }

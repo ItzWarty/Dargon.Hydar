@@ -1,5 +1,5 @@
 ﻿namespace Dargon.Hydar.Networking {
-   class TestRemoteIdentity : IRemoteIdentity {
+   public class TestRemoteIdentity {
       private readonly uint address;
 
       public TestRemoteIdentity(uint address) {

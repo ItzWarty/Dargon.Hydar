@@ -9,6 +9,6 @@ namespace Dargon.Hydar.Caching {
    public interface CacheEpochContext {
       void HandleNewEpoch();
       void Tick();
-      bool Process(IRemoteIdentity sender, HydarMessage<CachingPayload> message);
+      bool Process(IRemoteIdentity sender, HydarInboundMessage<CachingPayload> message);
    }
 }

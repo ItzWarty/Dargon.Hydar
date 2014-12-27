@@ -14,15 +14,15 @@ namespace Dargon.Hydar.Caching {
 
    public class CacheEpochContextFactoryImpl : CacheEpochContextFactory {
       private readonly AuditEventBus auditEventBus;
-      private readonly HydarContext context;
+      private readonly RootMessageDispatcher rootMessageDispatcher;
 
-      public CacheEpochContextFactoryImpl(AuditEventBus auditEventBus, HydarContext context) {
+      public CacheEpochContextFactoryImpl(AuditEventBus auditEventBus, RootMessageDispatcher rootMessageDispatcher) {
          this.auditEventBus = auditEventBus;
-         this.context = context;
+         this.rootMessageDispatcher = rootMessageDispatcher;
       }
 
       public CacheEpochContext Create(CacheContext cacheContext, EpochDescriptor epochDescriptor) {
-         return new CacheEpochContextImpl(auditEventBus, context, cacheContext, epochDescriptor).With(x => x.Initialize());
+         return new CacheEpochContextImpl(auditEventBus, rootMessageDispatcher, cacheContext, epochDescriptor).With(x => x.Initialize());
       }
    }
 }

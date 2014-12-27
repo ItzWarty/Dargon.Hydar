@@ -1,14 +1,16 @@
 using System;
+using Dargon.Hydar.Clustering.Messages.Helpers;
 using Dargon.Hydar.Utilities;
 using ItzWarty.Collections;
 
 namespace Dargon.Hydar.Clustering {
    public interface EpochDescriptor {
       Guid Id { get; }
+      Guid LeaderId { get; }
       DateTimeInterval Interval { get; }
-      Guid LeaderGuid { get; }
-      IReadOnlySet<Guid> ParticipantGuids { get; }
-      Guid PreviousId { get; }
-      IReadOnlySet<Guid> PreviousParticipantGuids { get; }
+      IReadOnlySet<Guid> ParticipantIds { get; } 
+      EpochDescriptor Previous { get; }
+
+      EpochSummary ToEpochSummary();
    }
 }

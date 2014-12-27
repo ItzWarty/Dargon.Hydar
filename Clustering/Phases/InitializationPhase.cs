@@ -2,11 +2,17 @@
 
 namespace Dargon.Hydar.Clustering.Phases {
    public class InitializationPhase : PhaseBase {
-      public InitializationPhase(AuditEventBus auditEventBus, HydarContext context, ManageableClusterContext manageableClusterContext, NodePhaseFactory phaseFactory) : base(auditEventBus, context, manageableClusterContext, phaseFactory) { }
+      private readonly ClusteringPhaseManager clusteringPhaseManager;
+      private readonly ClusteringPhaseFactory clusteringPhaseFactory;
+
+      public InitializationPhase(ClusteringPhaseManager clusteringPhaseManager, ClusteringPhaseFactory clusteringPhaseFactory) {
+         this.clusteringPhaseManager = clusteringPhaseManager;
+         this.clusteringPhaseFactory = clusteringPhaseFactory;
+      }
 
       public override void Enter() {
-         context.Network.Join(context.Node);
-         clusterContext.Transition(phaseFactory.CreateIndeterminatePhase());
+         var indeterminatePhase = clusteringPhaseFactory.CreateIndeterminatePhase();
+         clusteringPhaseManager.Transition(indeterminatePhase);
       }
 
       public override void Tick() {

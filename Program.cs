@@ -1,46 +1,67 @@
 ﻿using Dargon.Audits;
-using Dargon.Hydar.Caching;
 using Dargon.Hydar.Clustering;
+using Dargon.Hydar.Clustering.Phases;
 using Dargon.Hydar.Networking;
+using Dargon.Hydar.Networking.Helpers;
 using Dargon.Hydar.PortableObjects;
+using Dargon.Hydar.Utilities;
 using Dargon.PortableObjects;
 using ItzWarty;
 using System;
 using System.Threading;
+using Dargon.Hydar.Clustering.Messages;
+using Dargon.Hydar.Networking.PortableObjects;
 
 namespace Dargon.Hydar {
    public class Program {
+      const int TICK_INTERVAL_MILLIS = 200;
+      const int TICKS_TO_ELECTION = 10;
+      const int ELECTION_TICKS_TO_PROMOTION = 10;
+      const long EPOCH_DURATION_MILLISECONDS = 20 * 1000;
+
       public static void Main() {
-         const int tickIntervalMillis = 200;
-         const int ticksToElection = 10;
-         const int electionTicksToPromotion = 10;
-         const long epochDurationMilliseconds = 20 * 1000;
          IPofContext pofContext = new HydarPofContext();
          IPofSerializer pofSerializer = new PofSerializer(pofContext);
-         ClusteringConfiguration configuration = new ClusteringConfigurationImpl(tickIntervalMillis, ticksToElection, electionTicksToPromotion, epochDurationMilliseconds);
-         Network network = new TestNetwork(pofSerializer, new TestNetworkConfiguration());
+         ClusteringConfiguration configuration = new ClusteringConfigurationImpl(TICK_INTERVAL_MILLIS, TICKS_TO_ELECTION, ELECTION_TICKS_TO_PROMOTION, EPOCH_DURATION_MILLISECONDS);
          AuditEventBus auditEventBus = new ConsoleAuditEventBus();
-         var hydarFactory = new HydarFactory(configuration, network, auditEventBus);
-         Util.Generate(64, i => CreateAndConfigureContext(auditEventBus, hydarFactory));
+         TestNetworkManager testNetworkManager = new TestNetworkManager(pofSerializer, new TestNetworkConfiguration());
+         Util.Generate(64, i => CreateAndConfigureContext(auditEventBus, testNetworkManager));
          for (var i = 0; i < 8; i++) {
-            Thread.Sleep((int)epochDurationMilliseconds);
-            Util.Generate(12, x => CreateAndConfigureContext(auditEventBus, hydarFactory));
+            Thread.Sleep((int)EPOCH_DURATION_MILLISECONDS);
+            Util.Generate(12, x => CreateAndConfigureContext(auditEventBus, testNetworkManager));
          }
          CountdownEvent synchronization = new CountdownEvent(1);
          synchronization.Wait();
       }
 
-      private static HydarContext CreateAndConfigureContext(AuditEventBus auditEventBus, HydarFactory nodeFactory) {
-         var context = nodeFactory.CreateContext();
-         var cachingDispatcher = new CachingSubsystem();
-         context.RegisterSubsystem(cachingDispatcher);
-         var dummyCacheGuid = new Guid(129832, 2189, 19823, 38, 82, 218, 83, 37, 93, 173, 18);
-         var dummyCacheConfiguration = new CacheConfigurationImpl { Redundancy = 3 };
-         var cacheEpochDispatcherFactory = new CacheEpochContextFactoryImpl(auditEventBus, context);
-         var dummyCacheContext = new CacheContextImpl(auditEventBus, context, dummyCacheGuid, dummyCacheConfiguration, cacheEpochDispatcherFactory);
-         dummyCacheContext.Initialize();
-         cachingDispatcher.AddCacheContext(dummyCacheContext);
-         return context;
+      private static object CreateAndConfigureContext(AuditEventBus auditEventBus, TestNetworkManager testNetworkManager) {
+         // Initialize Hydar Base Dependencies
+         var nodeIdentifier = Guid.NewGuid();
+         var debugEventRouter = new DebugEventRouterImpl(nodeIdentifier, auditEventBus);
+         var network = testNetworkManager.CreateNetworkInstance().With(testNetworkManager.Join);
+         var inboundEnvelopeBus = new InboundEnvelopeBusImpl();
+         var networkToInboundEnvelopeBusLink = new FilteredNetworkToInboundBusLink(network, inboundEnvelopeBus, nodeIdentifier).With(x => x.Initialize());
+         var outboundEnvelopeBus = new OutboundEnvelopeBusImpl();
+         var outboundEnvelopeBusToNetworkLink = new OutboundBusToNetworkLink(outboundEnvelopeBus, network).With(x => x.Initialize());
+         var outboundEnvelopeFactory = new OutboundEnvelopeFactoryImpl(nodeIdentifier);
+
+         // Initialize Clustering Subsystem Dependencies
+         var epochManager = new EpochManagerImpl;
+         var clusteringMessageFactory = new ClusteringMessageFactoryImpl();
+         var clusteringPhaseManager = new ClusteringPhaseManagerImpl(debugEventRouter, inboundEnvelopeBus);
+         var clusteringMessageSender = new ClusteringMessageSenderImpl(outboundEnvelopeFactory, outboundEnvelopeBus, clusteringMessageFactory);
+         var clusteringConfiguration = new ClusteringConfigurationImpl(TICK_INTERVAL_MILLIS, TICKS_TO_ELECTION, ELECTION_TICKS_TO_PROMOTION, EPOCH_DURATION_MILLISECONDS);
+         var clusteringPhaseFactory = new ClusteringPhaseFactoryImpl(nodeIdentifier, auditEventBus, epochManager, debugEventRouter, outboundEnvelopeBus, clusteringConfiguration, clusteringMessageSender, clusteringPhaseManager);
+         clusteringPhaseManager.Initialize();
+         clusteringPhaseManager.Transition(clusteringPhaseFactory.CreateInitializationPhase());
+         return null;
+         // var dummyCacheGuid = new Guid(129832, 2189, 19823, 38, 82, 218, 83, 37, 93, 173, 18);
+         // var dummyCacheConfiguration = new CacheConfigurationImpl { Redundancy = 3 };
+         // var cacheEpochDispatcherFactory = new CacheEpochContextFactoryImpl(auditEventBus, context);
+         // var dummyCacheContext = new CacheContextImpl(auditEventBus, context, dummyCacheGuid, dummyCacheConfiguration, cacheEpochDispatcherFactory);
+         // dummyCacheContext.Initialize();
+         // cachingDispatcher.AddCacheContext(dummyCacheContext);
+         // return context;
       }
    }
 

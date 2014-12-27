@@ -1,36 +1,36 @@
-﻿using System;
-using Dargon.Audits;
-using Dargon.Hydar.Networking;
-using Dargon.Hydar.PortableObjects;
+﻿using Dargon.Hydar.PortableObjects;
+using System;
+using Dargon.Hydar.Clustering.Messages;
+using Dargon.Hydar.Clustering.Phases.Helpers;
 
 namespace Dargon.Hydar.Clustering.Phases {
    public class DroppedPhase : PhaseBase {
+      private readonly ClusteringPhaseManager clusteringPhaseManager;
+      private readonly ClusteringPhaseFactory clusteringPhaseFactory;
       private readonly DateTime epochEndTime;
 
-      public DroppedPhase(
-         AuditEventBus auditEventBus, 
-         HydarContext context, 
-         ManageableClusterContext manageableClusterContext, 
-         NodePhaseFactory phaseFactory, 
-         DateTime epochEndTime
-      ) : base(auditEventBus, context, manageableClusterContext, phaseFactory) {
+      public DroppedPhase(ClusteringPhaseManager clusteringPhaseManager, ClusteringPhaseFactory clusteringPhaseFactory, DateTime epochEndTime) {
+         this.clusteringPhaseManager = clusteringPhaseManager;
+         this.clusteringPhaseFactory = clusteringPhaseFactory;
          this.epochEndTime = epochEndTime;
       }
 
       public override void Initialize() {
          base.Initialize();
 
-         RegisterNullHandler<LeaderHeartBeat>();
-         RegisterNullHandler<MemberHeartBeat>();
+         RegisterNullHandler<EpochLeaderHeartBeat>();
          RegisterNullHandler<ElectionAcknowledgement>();
          RegisterHandler<ElectionVote>(HandleElectionVote);
       }
 
       public override void Tick() { }
 
-      private void HandleElectionVote(IRemoteIdentity arg1, HydarMessageHeader arg2, ElectionVote arg3) {
+      private void HandleElectionVote(InboundEnvelopeHeader header, ElectionVote message) {
          if (DateTime.Now >= epochEndTime) {
-            clusterContext.Transition(phaseFactory.CreateElectionPhase());
+            ElectionState electionState = new ElectionStateImpl();
+            Guid lastEpochId = Guid.Empty; // uninitialized to prioritize senior nodes
+            var electionPhase = clusteringPhaseFactory.CreateElectionCandidatePhase(electionState, lastEpochId);
+            clusteringPhaseManager.Transition(electionPhase);
          }
       }
    }
