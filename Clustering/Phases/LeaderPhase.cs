@@ -11,7 +11,7 @@ using Dargon.Hydar.Utilities;
 
 namespace Dargon.Hydar.Clustering.Phases {
    public class LeaderPhase : PhaseBase {
-      private readonly Guid localIdentifier;
+      private readonly HydarIdentity identity;
       private readonly DebugEventRouter debugEventRouter;
       private readonly EpochManager epochManager;
       private readonly ClusteringConfiguration clusteringConfiguration;
@@ -20,8 +20,8 @@ namespace Dargon.Hydar.Clustering.Phases {
       private readonly ClusteringMessageSender clusteringMessageSender;
       private readonly IReadOnlySet<Guid> participants;
 
-      public LeaderPhase(Guid localIdentifier, DebugEventRouter debugEventRouter, EpochManager epochManager, ClusteringConfiguration clusteringConfiguration, ClusteringPhaseManager clusteringPhaseManager, ClusteringPhaseFactory clusteringPhaseFactory, ClusteringMessageSender clusteringMessageSender, IReadOnlySet<Guid> participants) {
-         this.localIdentifier = localIdentifier;
+      public LeaderPhase(HydarIdentity identity, DebugEventRouter debugEventRouter, EpochManager epochManager, ClusteringConfiguration clusteringConfiguration, ClusteringPhaseManager clusteringPhaseManager, ClusteringPhaseFactory clusteringPhaseFactory, ClusteringMessageSender clusteringMessageSender, IReadOnlySet<Guid> participants) {
+         this.identity = identity;
          this.debugEventRouter = debugEventRouter;
          this.epochManager = epochManager;
          this.clusteringConfiguration = clusteringConfiguration;
@@ -45,7 +45,7 @@ namespace Dargon.Hydar.Clustering.Phases {
          var epochStartTime = DateTime.Now;
          var epochExpirationTime = epochStartTime + TimeSpan.FromMilliseconds(clusteringConfiguration.EpochDurationMilliseconds);
          var epochTimeInterval = new DateTimeInterval(epochStartTime, epochExpirationTime);
-         var epochSummary = new EpochSummary(epochId, localIdentifier, participants, epochTimeInterval);
+         var epochSummary = new EpochSummary(epochId, identity.NodeId, participants, epochTimeInterval);
          epochManager.EnterEpoch(epochTimeInterval, epochSummary, lastEpoch == null ? EpochSummary.kNullEpochSummary : lastEpoch.ToEpochSummary());
 
          SendHeartBeat();

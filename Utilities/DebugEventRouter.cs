@@ -15,11 +15,11 @@ namespace Dargon.Hydar.Utilities {
    }
 
    public class DebugEventRouterImpl : DebugEventRouter {
-      private readonly Guid nodeIdentity;
+      private readonly HydarIdentity identity;
       private readonly AuditEventBus auditEventBus;
 
-      public DebugEventRouterImpl(Guid nodeIdentity, AuditEventBus auditEventBus) {
-         this.nodeIdentity = nodeIdentity;
+      public DebugEventRouterImpl(HydarIdentity identity, AuditEventBus auditEventBus) {
+         this.identity = identity;
          this.auditEventBus = auditEventBus;
       }
 
@@ -48,7 +48,7 @@ namespace Dargon.Hydar.Utilities {
       }
 
       private void Log(string message) {
-         string output = nodeIdentity.ToString("n").Substring(0, 8) + ": " + message;
+         string output = identity.NodeId.ToString("n").Substring(0, 8) + ": " + message;
          Console.WriteLine(output);
       }
 

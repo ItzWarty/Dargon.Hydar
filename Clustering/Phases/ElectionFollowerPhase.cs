@@ -9,7 +9,7 @@ using Dargon.Hydar.Networking;
 
 namespace Dargon.Hydar.Clustering.Phases {
    public class ElectionFollowerPhase : PhaseBase {
-      private readonly Guid localIdentifier;
+      private readonly HydarIdentity identity;
       private readonly ElectionState state;
       private readonly EpochManager epochManager;
       private readonly ClusteringPhaseFactory clusteringPhaseFactory;
@@ -17,8 +17,8 @@ namespace Dargon.Hydar.Clustering.Phases {
       private readonly ClusteringMessageSender clusteringMessageSender;
       private bool isVoteStable = false;
 
-      public ElectionFollowerPhase(Guid localIdentifier, ElectionState state, EpochManager epochManager, ClusteringPhaseFactory clusteringPhaseFactory, ClusteringPhaseManager clusteringPhaseManager, ClusteringMessageSender clusteringMessageSender) {
-         this.localIdentifier = localIdentifier;
+      public ElectionFollowerPhase(HydarIdentity identity, ElectionState state, EpochManager epochManager, ClusteringPhaseFactory clusteringPhaseFactory, ClusteringPhaseManager clusteringPhaseManager, ClusteringMessageSender clusteringMessageSender) {
+         this.identity = identity;
          this.state = state;
          this.epochManager = epochManager;
          this.clusteringPhaseFactory = clusteringPhaseFactory;
@@ -51,7 +51,7 @@ namespace Dargon.Hydar.Clustering.Phases {
       }
 
       internal void HandleElectionAcknowledgement(InboundEnvelopeHeader header, ElectionAcknowledgement ack) {
-         if (ack.AcknowledgedVoter == localIdentifier) {
+         if (ack.AcknowledgedVoter == identity.NodeId) {
             state.AddAcknowledger(header.SenderId);
          }
       }
@@ -59,7 +59,7 @@ namespace Dargon.Hydar.Clustering.Phases {
       internal void HandleLeaderHeartBeat(InboundEnvelopeHeader header, EpochLeaderHeartBeat heartBeat) {
          if (DateTime.Now < heartBeat.Interval.End) {
             IPhase nextPhase;
-            if (heartBeat.CurrentEpochSummary.ParticipantIds.Contains(localIdentifier)) {
+            if (heartBeat.CurrentEpochSummary.ParticipantIds.Contains(identity.NodeId)) {
                epochManager.EnterEpoch(heartBeat.Interval, heartBeat.CurrentEpochSummary, heartBeat.PreviousEpochSummary);
                nextPhase = clusteringPhaseFactory.CreateFollowerPhase();
             } else {

@@ -9,7 +9,7 @@ using ItzWarty.Collections;
 
 namespace Dargon.Hydar.Clustering.Phases {
    public class ClusteringPhaseFactoryImpl : ClusteringPhaseFactory {
-      private readonly Guid localIdentifier;
+      private readonly HydarIdentity identity;
       private readonly AuditEventBus auditEventBus;
       private readonly EpochManager epochManager;
       private readonly DebugEventRouter debugEventRouter;
@@ -18,8 +18,8 @@ namespace Dargon.Hydar.Clustering.Phases {
       private readonly ClusteringMessageSender clusteringMessageSender;
       private readonly ClusteringPhaseManager clusteringPhaseManager;
 
-      public ClusteringPhaseFactoryImpl(Guid localIdentifier, AuditEventBus auditEventBus, EpochManager epochManager, DebugEventRouter debugEventRouter, OutboundEnvelopeBusImpl outboundEnvelopeBus, ClusteringConfiguration clusteringConfiguration, ClusteringMessageSender clusteringMessageSender, ClusteringPhaseManager clusteringPhaseManager) {
-         this.localIdentifier = localIdentifier;
+      public ClusteringPhaseFactoryImpl(HydarIdentity identity, AuditEventBus auditEventBus, EpochManager epochManager, DebugEventRouter debugEventRouter, OutboundEnvelopeBusImpl outboundEnvelopeBus, ClusteringConfiguration clusteringConfiguration, ClusteringMessageSender clusteringMessageSender, ClusteringPhaseManager clusteringPhaseManager) {
+         this.identity = identity;
          this.auditEventBus = auditEventBus;
          this.epochManager = epochManager;
          this.debugEventRouter = debugEventRouter;
@@ -38,15 +38,15 @@ namespace Dargon.Hydar.Clustering.Phases {
       }
 
       public IPhase CreateElectionCandidatePhase(ElectionState electionState, Guid lastEpochId) {
-         return new ElectionCandidatePhase(localIdentifier, electionState, lastEpochId, debugEventRouter, epochManager, clusteringConfiguration, this, clusteringPhaseManager, clusteringMessageSender).With(x => x.Initialize());
+         return new ElectionCandidatePhase(identity, electionState, lastEpochId, debugEventRouter, epochManager, clusteringConfiguration, this, clusteringPhaseManager, clusteringMessageSender).With(x => x.Initialize());
       }
 
       public IPhase CreateElectionFollowerPhase(ElectionState electionState) {
-         return new ElectionFollowerPhase(localIdentifier, electionState, epochManager, this, clusteringPhaseManager, clusteringMessageSender).With(x => x.Initialize());
+         return new ElectionFollowerPhase(identity, electionState, epochManager, this, clusteringPhaseManager, clusteringMessageSender).With(x => x.Initialize());
       }
 
       public IPhase CreateLeaderPhase(IReadOnlySet<Guid> participants) {
-         return new LeaderPhase(localIdentifier, debugEventRouter, epochManager, clusteringConfiguration, clusteringPhaseManager, this, clusteringMessageSender, participants).With(x => x.Initialize());
+         return new LeaderPhase(identity, debugEventRouter, epochManager, clusteringConfiguration, clusteringPhaseManager, this, clusteringMessageSender, participants).With(x => x.Initialize());
       }
 
       public IPhase CreateFollowerPhase() {

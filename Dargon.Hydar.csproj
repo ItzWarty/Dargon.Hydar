@@ -76,6 +76,7 @@
     <None Include="Caching\CachingPayloadMetadata.cs" />
     <None Include="Caching\HashSpacePartitioningStrategy.cs" />
     <None Include="Caching\UnweightedRingHashSpacePartitioningStrategy.cs" />
+    <Compile Include="Caching\CachingDispatcher.cs" />
     <Compile Include="Caching\__Placeholder.cs" />
     <Compile Include="Clustering\Discovery\PeeringManager.cs" />
     <Compile Include="Clustering\EpochManager.cs" />
@@ -89,6 +90,8 @@
     <Compile Include="Clustering\Phases\DroppedPhase.cs" />
     <Compile Include="Clustering\Phases\ElectionFollowerPhase.cs" />
     <Compile Include="Clustering\Phases\Helpers\ElectionState.cs" />
+    <Compile Include="HydarIdentityImpl.cs" />
+    <Compile Include="HydarIdentity.cs" />
     <Compile Include="Networking\InboundEnvelopeBus.cs" />
     <Compile Include="Networking\Helpers\FilteredNetworkToInboundBusLink.cs" />
     <Compile Include="HydarConstants.cs" />

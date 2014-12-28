@@ -38,15 +38,16 @@ namespace Dargon.Hydar {
       private static int kas = 0;
       private static object CreateAndConfigureContext(AuditEventBus auditEventBus, TestNetworkManager testNetworkManager) {
          // Initialize Hydar Base Dependencies
-         var nodeIdentifier = new Guid(kas++, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0); //Guid.NewGuid();
+         var nodeId = new Guid(kas++, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0); //Guid.NewGuid();
+         var hydarIdentity = new HydarIdentityImpl(nodeId);
          var hydarConfiguration = new HydarConfigurationImpl(TICK_INTERVAL_MILLIS);
-         var debugEventRouter = new DebugEventRouterImpl(nodeIdentifier, auditEventBus);
+         var debugEventRouter = new DebugEventRouterImpl(hydarIdentity, auditEventBus);
          var network = testNetworkManager.CreateNetworkInstance().With(testNetworkManager.Join);
          var inboundEnvelopeBus = new InboundEnvelopeBusImpl();
-         var networkToInboundEnvelopeBusLink = new FilteredNetworkToInboundBusLink(network, inboundEnvelopeBus, nodeIdentifier).With(x => x.Initialize());
+         var networkToInboundEnvelopeBusLink = new FilteredNetworkToInboundBusLink(network, inboundEnvelopeBus, hydarIdentity).With(x => x.Initialize());
          var outboundEnvelopeBus = new OutboundEnvelopeBusImpl();
          var outboundEnvelopeBusToNetworkLink = new OutboundBusToNetworkLink(outboundEnvelopeBus, network).With(x => x.Initialize());
-         var outboundEnvelopeFactory = new OutboundEnvelopeFactoryImpl(nodeIdentifier);
+         var outboundEnvelopeFactory = new OutboundEnvelopeFactoryImpl(hydarIdentity);
 
          // Initialize Clustering Subsystem Dependencies
          var epochManager = new EpochManagerImpl().With(x => x.Initialize());
@@ -54,7 +55,7 @@ namespace Dargon.Hydar {
          var clusteringPhaseManager = new ClusteringPhaseManagerImpl(debugEventRouter, inboundEnvelopeBus);
          var clusteringMessageSender = new ClusteringMessageSenderImpl(outboundEnvelopeFactory, outboundEnvelopeBus, clusteringMessageFactory);
          var clusteringConfiguration = new ClusteringConfigurationImpl(TICKS_TO_ELECTION, ELECTION_TICKS_TO_PROMOTION, EPOCH_DURATION_MILLISECONDS);
-         var clusteringPhaseFactory = new ClusteringPhaseFactoryImpl(nodeIdentifier, auditEventBus, epochManager, debugEventRouter, outboundEnvelopeBus, clusteringConfiguration, clusteringMessageSender, clusteringPhaseManager);
+         var clusteringPhaseFactory = new ClusteringPhaseFactoryImpl(hydarIdentity, auditEventBus, epochManager, debugEventRouter, outboundEnvelopeBus, clusteringConfiguration, clusteringMessageSender, clusteringPhaseManager);
          clusteringPhaseManager.Initialize();
          clusteringPhaseManager.Transition(clusteringPhaseFactory.CreateInitializationPhase());
          new Thread(() => {

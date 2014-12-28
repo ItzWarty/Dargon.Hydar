@@ -11,7 +11,7 @@ using SCG = System.Collections.Generic;
 
 namespace Dargon.Hydar.Clustering.Phases {
    public class ElectionCandidatePhase : PhaseBase {
-      private readonly Guid localIdentifier;
+      private readonly HydarIdentity identity;
       private readonly ElectionState state;
       private readonly Guid lastEpochId;
       private readonly DebugEventRouter debugEventRouter;
@@ -23,8 +23,8 @@ namespace Dargon.Hydar.Clustering.Phases {
       private readonly object synchronization = new object();
       private int electionSecurity = 0;
 
-      public ElectionCandidatePhase(Guid localIdentifier, ElectionState state, Guid lastEpochId, DebugEventRouter debugEventRouter, EpochManager epochManager, ClusteringConfiguration clusteringConfiguration, ClusteringPhaseFactory clusteringPhaseFactory, ClusteringPhaseManager clusteringPhaseManager, ClusteringMessageSender clusteringMessageSender) {
-         this.localIdentifier = localIdentifier;
+      public ElectionCandidatePhase(HydarIdentity identity, ElectionState state, Guid lastEpochId, DebugEventRouter debugEventRouter, EpochManager epochManager, ClusteringConfiguration clusteringConfiguration, ClusteringPhaseFactory clusteringPhaseFactory, ClusteringPhaseManager clusteringPhaseManager, ClusteringMessageSender clusteringMessageSender) {
+         this.identity = identity;
          this.state = state;
          this.lastEpochId = lastEpochId;
          this.debugEventRouter = debugEventRouter;
@@ -38,7 +38,7 @@ namespace Dargon.Hydar.Clustering.Phases {
       public override void Initialize() {
          base.Initialize();
 
-         state.ConsiderCandidate(new ElectionCandidate(localIdentifier, lastEpochId));
+         state.ConsiderCandidate(new ElectionCandidate(identity.NodeId, lastEpochId));
 
          RegisterHandler<ElectionVote>(HandleElectionVote);
          RegisterHandler<ElectionAcknowledgement>(HandleElectionAcknowledgement);
@@ -49,7 +49,7 @@ namespace Dargon.Hydar.Clustering.Phases {
          base.Enter();
 
          lock (synchronization) {
-            state.AddParticipant(localIdentifier);
+            state.AddParticipant(identity.NodeId);
             clusteringMessageSender.ElectionVote(state.SelectedCandidate);
          }
       }
@@ -87,7 +87,7 @@ namespace Dargon.Hydar.Clustering.Phases {
 
       private void HandleElectionAcknowledgement(InboundEnvelopeHeader header, ElectionAcknowledgement acknowledgement) {
          lock (synchronization) {
-            if (acknowledgement.AcknowledgedVoter == localIdentifier) {
+            if (acknowledgement.AcknowledgedVoter == identity.NodeId) {
                state.AddAcknowledger(header.SenderId);
             } else {
                electionSecurity = 0;
@@ -99,7 +99,7 @@ namespace Dargon.Hydar.Clustering.Phases {
          if (DateTime.Now >= heartBeat.Interval.End) {
             return; // throw away stale message
          }
-         if (heartBeat.CurrentEpochSummary.ParticipantIds.Contains(localIdentifier)) {
+         if (heartBeat.CurrentEpochSummary.ParticipantIds.Contains(identity.NodeId)) {
             debugEventRouter.ElectionCandidatePhase_RejoinEpoch(heartBeat.CurrentEpochSummary.EpochId);
             epochManager.EnterEpoch(heartBeat.Interval, heartBeat.CurrentEpochSummary, heartBeat.PreviousEpochSummary);
             var memberPhase = clusteringPhaseFactory.CreateFollowerPhase();

@@ -1,16 +1,18 @@
 ﻿using System;
 using Dargon.Hydar.PortableObjects;
+using ItzWarty.Collections;
+using Enumerable = System.Linq.Enumerable;
 
 namespace Dargon.Hydar.Networking.Helpers {
    public class FilteredNetworkToInboundBusLink {
       private readonly Network network;
       private readonly InboundEnvelopeBus inboundMessageBus;
-      private readonly Guid localIdentifier;
+      private readonly HydarIdentity identity;
 
-      public FilteredNetworkToInboundBusLink(Network network, InboundEnvelopeBus inboundMessageBus, Guid localIdentifier) {
+      public FilteredNetworkToInboundBusLink(Network network, InboundEnvelopeBus inboundMessageBus, HydarIdentity identity) {
          this.network = network;
          this.inboundMessageBus = inboundMessageBus;
-         this.localIdentifier = localIdentifier;
+         this.identity = identity;
       }
 
       public void Initialize() {
@@ -19,7 +21,7 @@ namespace Dargon.Hydar.Networking.Helpers {
 
       internal void HandleNetworkEnvelopeArrived(Network sender, InboundEnvelope message) {
          var recipientId = message.Header.RecipientId;
-         if (recipientId == Guid.Empty || recipientId == localIdentifier) {
+         if (recipientId == Guid.Empty || recipientId == identity.NodeId || identity.GroupIds.Contains(recipientId)) {
             inboundMessageBus.Post(message);
          }
       }
