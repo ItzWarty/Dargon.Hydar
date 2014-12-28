@@ -6,6 +6,8 @@ namespace Dargon.Hydar.Clustering.Messages.Helpers {
       private Guid id;
       private Guid lastEpochId;
 
+      public ElectionCandidate() { }
+
       public ElectionCandidate(Guid id, Guid lastEpochId) {
          this.id = id;
          this.lastEpochId = lastEpochId;

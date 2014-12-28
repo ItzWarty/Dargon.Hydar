@@ -35,12 +35,12 @@ namespace Dargon.Hydar.Clustering.Messages {
          SendMessageBroadcast(clusteringMessageFactory.EpochLeaderHeartBeat(epochInterval, currentEpochSummary, previousEpochSummary));
       }
 
-      internal void SendMessageUnicast(Guid recipientId, IPortableObject message) {
+      internal void SendMessageUnicast<TMessage>(Guid recipientId, TMessage message) {
          var envelope = outboundEnvelopeFactory.CreateUnicastEnvelope(recipientId, message);
          outboundEnvelopeBus.Post(envelope);
       }
 
-      internal void SendMessageBroadcast(IPortableObject message) {
+      internal void SendMessageBroadcast<TMessage>(TMessage message) {
          var envelope = outboundEnvelopeFactory.CreateBroadcastEnvelope(message);
          outboundEnvelopeBus.Post(envelope);
       }

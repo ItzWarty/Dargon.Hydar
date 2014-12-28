@@ -1,10 +1,13 @@
-﻿using Dargon.Audits;
+﻿using System;
+using System.Threading;
+using Dargon.Audits;
 using Dargon.Hydar.Networking;
 using Dargon.Hydar.PortableObjects;
 using Dargon.Hydar.Utilities;
 
 namespace Dargon.Hydar.Clustering.Phases {
    public interface ClusteringPhaseManager {
+      void Tick();
       void Transition(IPhase phase);
       IPhase GetCurrentPhase();
    }
@@ -22,6 +25,12 @@ namespace Dargon.Hydar.Clustering.Phases {
 
       public void Initialize() {
          inboundEnvelopeBus.EventPosted += HandleInboundEnvelope;
+      }
+
+      public void Tick() {
+         lock (synchronization) {
+            currentPhase.Tick();
+         }
       }
 
       private void HandleInboundEnvelope(EventBus<InboundEnvelope> sender, InboundEnvelope envelope) {

@@ -5,10 +5,13 @@ namespace Dargon.Hydar.Networking {
    public interface OutboundEnvelopeBus : EventBus<OutboundEnvelope> { }
 
    public class OutboundEnvelopeBusImpl : OutboundEnvelopeBus {
+      private object x = new object();
       public void Post(OutboundEnvelope obj) {
-         var capture = EventPosted;
-         if (capture != null) {
-            capture(this, obj);
+         lock (x) {
+            var capture = EventPosted;
+            if (capture != null) {
+               capture(this, obj);
+            }
          }
       }
 

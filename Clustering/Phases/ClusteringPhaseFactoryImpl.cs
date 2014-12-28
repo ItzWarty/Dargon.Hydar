@@ -38,11 +38,11 @@ namespace Dargon.Hydar.Clustering.Phases {
       }
 
       public IPhase CreateElectionCandidatePhase(ElectionState electionState, Guid lastEpochId) {
-         return new ElectionCandidatePhase(localIdentifier, electionState, lastEpochId, clusteringConfiguration, this, clusteringPhaseManager, clusteringMessageSender).With(x => x.Initialize());
+         return new ElectionCandidatePhase(localIdentifier, electionState, lastEpochId, debugEventRouter, epochManager, clusteringConfiguration, this, clusteringPhaseManager, clusteringMessageSender).With(x => x.Initialize());
       }
 
       public IPhase CreateElectionFollowerPhase(ElectionState electionState) {
-         return new ElectionFollowerPhase(localIdentifier, electionState, this, clusteringPhaseManager, clusteringMessageSender).With(x => x.Initialize());
+         return new ElectionFollowerPhase(localIdentifier, electionState, epochManager, this, clusteringPhaseManager, clusteringMessageSender).With(x => x.Initialize());
       }
 
       public IPhase CreateLeaderPhase(IReadOnlySet<Guid> participants) {

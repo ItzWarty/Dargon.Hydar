@@ -5,6 +5,7 @@ using System.Linq;
 using Dargon.Hydar.Clustering.Messages;
 using Dargon.Hydar.Clustering.Messages.Helpers;
 using Dargon.Hydar.Clustering.Phases.Helpers;
+using Dargon.Hydar.Utilities;
 using ItzWarty.Collections;
 using SCG = System.Collections.Generic;
 
@@ -13,18 +14,21 @@ namespace Dargon.Hydar.Clustering.Phases {
       private readonly Guid localIdentifier;
       private readonly ElectionState state;
       private readonly Guid lastEpochId;
+      private readonly DebugEventRouter debugEventRouter;
+      private readonly EpochManager epochManager;
       private readonly ClusteringConfiguration clusteringConfiguration;
       private readonly ClusteringPhaseFactory clusteringPhaseFactory;
       private readonly ClusteringPhaseManager clusteringPhaseManager;
       private readonly ClusteringMessageSender clusteringMessageSender;
       private readonly object synchronization = new object();
-      private readonly ISet<Guid> allParticipants = new HashSet<Guid>();
-
       private int electionSecurity = 0;
-      public ElectionCandidatePhase(Guid localIdentifier, ElectionState state, Guid lastEpochId, ClusteringConfiguration clusteringConfiguration, ClusteringPhaseFactory clusteringPhaseFactory, ClusteringPhaseManager clusteringPhaseManager, ClusteringMessageSender clusteringMessageSender) {
+
+      public ElectionCandidatePhase(Guid localIdentifier, ElectionState state, Guid lastEpochId, DebugEventRouter debugEventRouter, EpochManager epochManager, ClusteringConfiguration clusteringConfiguration, ClusteringPhaseFactory clusteringPhaseFactory, ClusteringPhaseManager clusteringPhaseManager, ClusteringMessageSender clusteringMessageSender) {
          this.localIdentifier = localIdentifier;
          this.state = state;
          this.lastEpochId = lastEpochId;
+         this.debugEventRouter = debugEventRouter;
+         this.epochManager = epochManager;
          this.clusteringConfiguration = clusteringConfiguration;
          this.clusteringPhaseFactory = clusteringPhaseFactory;
          this.clusteringPhaseManager = clusteringPhaseManager;
@@ -45,7 +49,7 @@ namespace Dargon.Hydar.Clustering.Phases {
          base.Enter();
 
          lock (synchronization) {
-            allParticipants.Add(localIdentifier);
+            state.AddParticipant(localIdentifier);
             clusteringMessageSender.ElectionVote(state.SelectedCandidate);
          }
       }
@@ -60,12 +64,13 @@ namespace Dargon.Hydar.Clustering.Phases {
             }
 
             electionSecurity++;
+            Console.WriteLine(electionSecurity);
          }
       }
 
       private void HandleElectionVote(InboundEnvelopeHeader header, ElectionVote vote) {
          lock (synchronization) {
-            allParticipants.Add(header.SenderId);
+            state.AddParticipant(header.SenderId);
 
             var comparisonResult = state.ConsiderCandidate(vote.Candidate);
             if (comparisonResult == ConsiderationResult.SuggestionBetter) {
@@ -90,15 +95,17 @@ namespace Dargon.Hydar.Clustering.Phases {
          }
       }
 
-      private void HandleLeaderHeartBeat(InboundEnvelopeHeader header, EpochLeaderHeartBeat payload) {
-         if (DateTime.Now >= payload.Interval.End) {
+      private void HandleLeaderHeartBeat(InboundEnvelopeHeader header, EpochLeaderHeartBeat heartBeat) {
+         if (DateTime.Now >= heartBeat.Interval.End) {
             return; // throw away stale message
          }
-         if (payload.CurrentEpochSummary.ParticipantIds.Contains(localIdentifier)) {
+         if (heartBeat.CurrentEpochSummary.ParticipantIds.Contains(localIdentifier)) {
+            debugEventRouter.ElectionCandidatePhase_RejoinEpoch(heartBeat.CurrentEpochSummary.EpochId);
+            epochManager.EnterEpoch(heartBeat.Interval, heartBeat.CurrentEpochSummary, heartBeat.PreviousEpochSummary);
             var memberPhase = clusteringPhaseFactory.CreateFollowerPhase();
             clusteringPhaseManager.Transition(memberPhase);
          } else {
-            var droppedPhase = clusteringPhaseFactory.CreateDroppedPhase(payload.Interval.End);
+            var droppedPhase = clusteringPhaseFactory.CreateDroppedPhase(heartBeat.Interval.End);
             clusteringPhaseManager.Transition(droppedPhase);
          }
       }

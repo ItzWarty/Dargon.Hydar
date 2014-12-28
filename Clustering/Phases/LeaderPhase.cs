@@ -45,8 +45,8 @@ namespace Dargon.Hydar.Clustering.Phases {
          var epochStartTime = DateTime.Now;
          var epochExpirationTime = epochStartTime + TimeSpan.FromMilliseconds(clusteringConfiguration.EpochDurationMilliseconds);
          var epochTimeInterval = new DateTimeInterval(epochStartTime, epochExpirationTime);
-         var epochSummary = new EpochSummary(epochId, localIdentifier, participants);
-         epochManager.EnterEpoch(epochTimeInterval, epochSummary, lastEpoch == null ? null : lastEpoch.ToEpochSummary());
+         var epochSummary = new EpochSummary(epochId, localIdentifier, participants, epochTimeInterval);
+         epochManager.EnterEpoch(epochTimeInterval, epochSummary, lastEpoch == null ? EpochSummary.kNullEpochSummary : lastEpoch.ToEpochSummary());
 
          SendHeartBeat();
       }

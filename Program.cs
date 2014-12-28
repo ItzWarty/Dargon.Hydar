@@ -22,21 +22,24 @@ namespace Dargon.Hydar {
       public static void Main() {
          IPofContext pofContext = new HydarPofContext();
          IPofSerializer pofSerializer = new PofSerializer(pofContext);
-         ClusteringConfiguration configuration = new ClusteringConfigurationImpl(TICK_INTERVAL_MILLIS, TICKS_TO_ELECTION, ELECTION_TICKS_TO_PROMOTION, EPOCH_DURATION_MILLISECONDS);
+         ClusteringConfiguration configuration = new ClusteringConfigurationImpl(TICKS_TO_ELECTION, ELECTION_TICKS_TO_PROMOTION, EPOCH_DURATION_MILLISECONDS);
          AuditEventBus auditEventBus = new ConsoleAuditEventBus();
          TestNetworkManager testNetworkManager = new TestNetworkManager(pofSerializer, new TestNetworkConfiguration());
-         Util.Generate(64, i => CreateAndConfigureContext(auditEventBus, testNetworkManager));
-         for (var i = 0; i < 8; i++) {
-            Thread.Sleep((int)EPOCH_DURATION_MILLISECONDS);
-            Util.Generate(12, x => CreateAndConfigureContext(auditEventBus, testNetworkManager));
-         }
+         Util.Generate(32, i => CreateAndConfigureContext(auditEventBus, testNetworkManager));
+         //Util.Generate(64, i => CreateAndConfigureContext(auditEventBus, testNetworkManager));
+         // for (var i = 0; i < 8; i++) {
+         //    Thread.Sleep((int)EPOCH_DURATION_MILLISECONDS);
+         //    Util.Generate(12, x => CreateAndConfigureContext(auditEventBus, testNetworkManager));
+         // }
          CountdownEvent synchronization = new CountdownEvent(1);
          synchronization.Wait();
       }
 
+      private static int kas = 0;
       private static object CreateAndConfigureContext(AuditEventBus auditEventBus, TestNetworkManager testNetworkManager) {
          // Initialize Hydar Base Dependencies
-         var nodeIdentifier = Guid.NewGuid();
+         var nodeIdentifier = new Guid(kas++, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0); //Guid.NewGuid();
+         var hydarConfiguration = new HydarConfigurationImpl(TICK_INTERVAL_MILLIS);
          var debugEventRouter = new DebugEventRouterImpl(nodeIdentifier, auditEventBus);
          var network = testNetworkManager.CreateNetworkInstance().With(testNetworkManager.Join);
          var inboundEnvelopeBus = new InboundEnvelopeBusImpl();
@@ -46,15 +49,21 @@ namespace Dargon.Hydar {
          var outboundEnvelopeFactory = new OutboundEnvelopeFactoryImpl(nodeIdentifier);
 
          // Initialize Clustering Subsystem Dependencies
-         var epochManager = new EpochManagerImpl;
+         var epochManager = new EpochManagerImpl().With(x => x.Initialize());
          var clusteringMessageFactory = new ClusteringMessageFactoryImpl();
          var clusteringPhaseManager = new ClusteringPhaseManagerImpl(debugEventRouter, inboundEnvelopeBus);
          var clusteringMessageSender = new ClusteringMessageSenderImpl(outboundEnvelopeFactory, outboundEnvelopeBus, clusteringMessageFactory);
-         var clusteringConfiguration = new ClusteringConfigurationImpl(TICK_INTERVAL_MILLIS, TICKS_TO_ELECTION, ELECTION_TICKS_TO_PROMOTION, EPOCH_DURATION_MILLISECONDS);
+         var clusteringConfiguration = new ClusteringConfigurationImpl(TICKS_TO_ELECTION, ELECTION_TICKS_TO_PROMOTION, EPOCH_DURATION_MILLISECONDS);
          var clusteringPhaseFactory = new ClusteringPhaseFactoryImpl(nodeIdentifier, auditEventBus, epochManager, debugEventRouter, outboundEnvelopeBus, clusteringConfiguration, clusteringMessageSender, clusteringPhaseManager);
          clusteringPhaseManager.Initialize();
          clusteringPhaseManager.Transition(clusteringPhaseFactory.CreateInitializationPhase());
-         return null;
+         new Thread(() => {
+            while(true) {
+               clusteringPhaseManager.Tick();
+               Thread.Sleep(hydarConfiguration.TickIntervalMillis);
+            }
+         }).Start();
+          return null;
          // var dummyCacheGuid = new Guid(129832, 2189, 19823, 38, 82, 218, 83, 37, 93, 173, 18);
          // var dummyCacheConfiguration = new CacheConfigurationImpl { Redundancy = 3 };
          // var cacheEpochDispatcherFactory = new CacheEpochContextFactoryImpl(auditEventBus, context);

@@ -11,14 +11,16 @@ namespace Dargon.Hydar.Clustering.Phases {
    public class ElectionFollowerPhase : PhaseBase {
       private readonly Guid localIdentifier;
       private readonly ElectionState state;
+      private readonly EpochManager epochManager;
       private readonly ClusteringPhaseFactory clusteringPhaseFactory;
       private readonly ClusteringPhaseManager clusteringPhaseManager;
       private readonly ClusteringMessageSender clusteringMessageSender;
       private bool isVoteStable = false;
 
-      public ElectionFollowerPhase(Guid localIdentifier, ElectionState state, ClusteringPhaseFactory clusteringPhaseFactory, ClusteringPhaseManager clusteringPhaseManager, ClusteringMessageSender clusteringMessageSender) {
+      public ElectionFollowerPhase(Guid localIdentifier, ElectionState state, EpochManager epochManager, ClusteringPhaseFactory clusteringPhaseFactory, ClusteringPhaseManager clusteringPhaseManager, ClusteringMessageSender clusteringMessageSender) {
          this.localIdentifier = localIdentifier;
          this.state = state;
+         this.epochManager = epochManager;
          this.clusteringPhaseFactory = clusteringPhaseFactory;
          this.clusteringPhaseManager = clusteringPhaseManager;
          this.clusteringMessageSender = clusteringMessageSender;
@@ -58,6 +60,7 @@ namespace Dargon.Hydar.Clustering.Phases {
          if (DateTime.Now < heartBeat.Interval.End) {
             IPhase nextPhase;
             if (heartBeat.CurrentEpochSummary.ParticipantIds.Contains(localIdentifier)) {
+               epochManager.EnterEpoch(heartBeat.Interval, heartBeat.CurrentEpochSummary, heartBeat.PreviousEpochSummary);
                nextPhase = clusteringPhaseFactory.CreateFollowerPhase();
             } else {
                nextPhase = clusteringPhaseFactory.CreateDroppedPhase(heartBeat.Interval.End);

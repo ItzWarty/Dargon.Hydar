@@ -23,6 +23,7 @@ namespace Dargon.Hydar.Clustering.Phases.Helpers {
    public class ElectionStateImpl : ElectionState {
       private readonly ISet<Guid> participants = new HashSet<Guid>();
       private readonly ISet<Guid> acknowledgers = new HashSet<Guid>();
+      private ElectionCandidate selectedCandidate;
 
       public IReadOnlySet<Guid> Participants { get { return participants; } }
 
@@ -34,14 +35,32 @@ namespace Dargon.Hydar.Clustering.Phases.Helpers {
          acknowledgers.Add(guid);
       }
 
-      public ElectionCandidate SelectedCandidate { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+      public ElectionCandidate SelectedCandidate { get { return selectedCandidate; } set { selectedCandidate = value; } }
 
       public bool IsAcknowledgedBySelectedCandidate() {
-         throw new NotImplementedException();
+         return acknowledgers.Contains(selectedCandidate.Id);
       }
 
       public ConsiderationResult ConsiderCandidate(ElectionCandidate candidate) {
-         throw new NotImplementedException();
+         if (selectedCandidate == null) {
+            selectedCandidate = candidate;
+            return ConsiderationResult.SuggestionBetter;
+         } else {
+            // A new candidate (with previous epoch zero) should give way to older cluster members.
+            var isMaturerCandidate = selectedCandidate.LastEpochId == Guid.Empty && candidate.LastEpochId != Guid.Empty;
+
+            // Between two candidates of the same previous guid, we pick the one with the highest id.
+            var isGreaterCandidate = selectedCandidate.LastEpochId == candidate.LastEpochId && selectedCandidate.Id.CompareTo(candidate.Id) < 0;
+
+            if (isMaturerCandidate || isGreaterCandidate) {
+               selectedCandidate = candidate;
+               return ConsiderationResult.SuggestionBetter;
+            } else if (selectedCandidate.Id == candidate.Id) {
+               return ConsiderationResult.SuggestionEquivalent;
+            } else {
+               return ConsiderationResult.SuggestionWorse;
+            }
+         }
       }
    }
 }
