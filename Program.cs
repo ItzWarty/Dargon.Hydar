@@ -9,6 +9,7 @@ using Dargon.PortableObjects;
 using ItzWarty;
 using System;
 using System.Threading;
+using Dargon.Hydar.Caching;
 using Dargon.Hydar.Clustering.Messages;
 using Dargon.Hydar.Networking.PortableObjects;
 
@@ -64,6 +65,9 @@ namespace Dargon.Hydar {
                Thread.Sleep(hydarConfiguration.TickIntervalMillis);
             }
          }).Start();
+
+         // Initialize Caching Subsystem Dependencies
+         var cacheManager = new CacheManagerImpl(hydarIdentity, inboundEnvelopeBus).With(x => x.Initialize());
          return null;
          // var dummyCacheGuid = new Guid(129832, 2189, 19823, 38, 82, 218, 83, 37, 93, 173, 18);
          // var dummyCacheConfiguration = new CacheConfigurationImpl { Redundancy = 3 };

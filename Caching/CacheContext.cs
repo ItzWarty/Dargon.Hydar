@@ -1,92 +1,37 @@
-﻿using Dargon.Audits;
-using Dargon.Hydar.Clustering;
-using Dargon.Hydar.Networking;
-using Dargon.Hydar.PortableObjects;
-using Dargon.Hydar.Utilities;
+﻿using Dargon.Hydar.PortableObjects;
 using System;
-using System.Collections.Generic;
+using Dargon.Hydar.Utilities;
 
 namespace Dargon.Hydar.Caching {
    public interface CacheContext {
+      string Name { get; }
       Guid Id { get; }
-      CacheConfiguration Configuration { get; }
 
-      void Tick();
-      bool Process(IRemoteIdentity sender, HydarMessage<CachingPayload> message);
+      void Dispatch(InboundEnvelope e);
    }
 
-   public class CacheContextImpl : MessageProcessorBase<HydarMessage<CachingPayload>, Action<IRemoteIdentity, HydarMessageHeader, CachingPayload>>, CacheContext {
-      private readonly Guid cacheId;
-      private readonly CacheConfiguration defaultCacheConfiguration;
-      private readonly CacheEpochContextFactory epochContextFactory;
-      private readonly ClusteringSubsystem clusteringSubsystem;
-      private readonly Dictionary<Guid, CacheEpochContext> contextsByEpochId = new Dictionary<Guid, CacheEpochContext>();
-      private readonly object synchronization = new object();
+   public class CacheContextImpl : EnvelopeProcessorBase<InboundEnvelope, Action<InboundEnvelope>>, CacheContext {
+      private readonly string name;
+      private readonly Guid id;
 
-      public CacheContextImpl(
-         AuditEventBus auditEventBus, 
-         RootMessageDispatcher rootMessageDispatcher, 
-         Guid cacheId, 
-         CacheConfiguration defaultCacheConfiguration, 
-         CacheEpochContextFactory epochContextFactory
-      ) : base(auditEventBus, rootMessageDispatcher) {
-         this.cacheId = cacheId;
-         this.defaultCacheConfiguration = defaultCacheConfiguration;
-         this.epochContextFactory = epochContextFactory;
-
-         this.clusteringSubsystem = base.rootMessageDispatcher.ClusterContext;
+      public CacheContextImpl(string name, Guid id) {
+         this.name = name;
+         this.id = id;
       }
 
-      public Guid Id { get { return cacheId; } }
-      public CacheConfiguration Configuration { get { return defaultCacheConfiguration; } }
+      public string Name { get { return name; } }
+      public Guid Id { get { return id; } }
 
       public void Initialize() {
-         clusteringSubsystem.NewEpoch += HandleNewEpoch;
+         // RegisterHandler<>();
       }
 
-      private void HandleNewEpoch(EpochDescriptor epoch) {
-         Log("New Epoch " + epoch.Id);
-         var epochContext = epochContextFactory.Create(this, epoch);
-         contextsByEpochId.Add(epoch.Id, epochContext);
-         epochContext.HandleNewEpoch();
+      protected override void Invoke(Action<InboundEnvelope> handler, InboundEnvelope envelope) {
+         handler(envelope);
       }
 
-      public void Tick() {
-         foreach (var epochContext in contextsByEpochId.Values) {
-            epochContext.Tick();
-         }
-      }
-
-      public override bool Process(IRemoteIdentity sender, HydarMessage<CachingPayload> message) {
-         if (base.Process(sender, message)) {
-            return true;
-         }
-         var payload = message.Payload;
-         var metadata = payload.Metadata;
-         CacheEpochContext epochContext;
-         if (!contextsByEpochId.TryGetValue(metadata.EpochId, out epochContext)) {
-            return false;
-         } else {
-            return epochContext.Process(sender, message);
-         }
-      }
-
-      protected override void Invoke(Action<IRemoteIdentity, HydarMessageHeader, CachingPayload> handler, IRemoteIdentity sender, HydarMessage<CachingPayload> message) {
-         handler(sender, message.Header, message.Payload);
-      }
-
-      protected override object GetPayload(HydarMessage<CachingPayload> message) {
-         return message.Payload.InnerPayload;
-      }
-
-      protected void SendGeneric<TPayload>(TPayload payload) {
-         var header = new HydarMessageHeaderImpl(node.Identifier);
-         network.Broadcast(node, new HydarMessageImpl<TPayload>(header, payload));
-      }
-
-      protected void SendCache<TPayload>(TPayload innerPayload) {
-         var metadata = new CachingPayloadMetadata(cacheId, clusteringSubsystem.GetCurrentEpoch().Id);
-         SendGeneric(new CachingPayload<TPayload>(metadata, innerPayload));
+      public void Dispatch(InboundEnvelope e) {
+         Process(e);
       }
    }
 }
