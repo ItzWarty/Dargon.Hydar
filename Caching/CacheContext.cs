@@ -1,6 +1,6 @@
 ﻿using Dargon.Hydar.PortableObjects;
-using System;
 using Dargon.Hydar.Utilities;
+using System;
 
 namespace Dargon.Hydar.Caching {
    public interface CacheContext {
@@ -23,7 +23,6 @@ namespace Dargon.Hydar.Caching {
       public Guid Id { get { return id; } }
 
       public void Initialize() {
-         // RegisterHandler<>();
       }
 
       protected override void Invoke(Action<InboundEnvelope> handler, InboundEnvelope envelope) {

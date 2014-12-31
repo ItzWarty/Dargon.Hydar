@@ -14,16 +14,20 @@ namespace Dargon.Hydar.Caching {
    public interface ManageableEntry<K, V> : ReadableEntry<K, V> {
       new V Value { get; set; }
 
-      void ReleaseLock(EntryLockContext<K, V> currentLockContext);
+      void ReleaseLock(CacheOperationContext<K, V> currentLockContext);
    }
 
    public class EntryImpl<K, V> : ManageableEntry<K, V> {
-      private readonly Queue<EntryLockContext<K, V>> pendingLocks = new Queue<EntryLockContext<K, V>>(); 
+      private readonly Queue<CacheOperationContext<K, V>> pendingLocks = new Queue<CacheOperationContext<K, V>>(); 
       private readonly object synchronization = new object();
       private readonly K key;
       private V value;
       private bool present;
-      private EntryLockContext<K, V> activeLock;
+      private CacheOperationContext<K, V> activeLock;
+
+      public EntryImpl() { } 
+
+      public EntryImpl(K key) : this(key, default(V), false) { }
 
       public EntryImpl(K key, V value, bool present) {
          this.key = key;
@@ -35,33 +39,32 @@ namespace Dargon.Hydar.Caching {
       public V Value { get { return value; } set { this.value = value; } }
       public bool IsPresent { get { return present; } }
 
-      public void EnqueueLock(EntryLockContext<K, V> lockContext) {
+      public void EnqueueLock(CacheOperationContext<K, V> lockContext) {
          using (var lockGuard = new LockGuard(synchronization)) {
             if (activeLock == null) {
                activeLock = lockContext;
                lockGuard.Release();
 
-               lockContext.HandleLockAcquired(this);
+               lockContext.HandleExecute(this);
             } else {
                pendingLocks.Enqueue(lockContext);
             }
          }
       }
 
-      public void ReleaseLock(EntryLockContext<K, V> currentLockContext) {
+      public void ReleaseLock(CacheOperationContext<K, V> currentLockContext) {
          using (var lockGuard = new LockGuard(synchronization)) {
             if (activeLock != currentLockContext) {
                throw new InvalidOperationException("Attempted to pass lock with inactive context.");
             }
 
-            activeLock.HandleLockFreed();
             activeLock = null;
             
             if (pendingLocks.Count > 0) {
                activeLock = pendingLocks.Dequeue();
                lockGuard.Release();
 
-               activeLock.HandleLockAcquired(this);
+               activeLock.HandleExecute(this);
             }
          }
       }
