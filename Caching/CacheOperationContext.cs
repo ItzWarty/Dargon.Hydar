@@ -15,7 +15,7 @@
       public CacheOperationStatus Status { get { return status; } }
       public abstract CacheOperationAccessFlags AccessFlags { get; }
 
-      protected abstract void Execute();
+      protected abstract void Execute(ManageableEntry<K, V> entry);
 
       public void HandleEnqueued() {
          lock (synchronization) {
@@ -26,7 +26,7 @@
       public void HandleExecute(ManageableEntry<K, V> entry) {
          lock (synchronization) {
             status = CacheOperationStatus.Running;
-            Execute();
+            Execute(entry);
 
             entry.ReleaseLock(this);
             status = CacheOperationStatus.Completed;

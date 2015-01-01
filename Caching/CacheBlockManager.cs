@@ -5,7 +5,6 @@ namespace Dargon.Hydar.Caching {
       IReadOnlyList<EntryBlock<K, V>> Blocks { get; }
 
       EntryBlock<K, V> GetBlockOrNull(int hash);
-
-      ManageableEntry<K, V> GetEntryOrNull(K key);
+      ManageableEntry<K, V> GetEntryOrNull(K key); 
    }
 }

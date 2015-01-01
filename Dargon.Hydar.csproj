@@ -87,6 +87,9 @@
     <Compile Include="Caching\CacheContext.cs" />
     <Compile Include="Caching\CacheOperationContext.cs" />
     <Compile Include="Caching\EntryPartitionImpl.cs" />
+    <Compile Include="Caching\Operations\CacheReadOperation.cs" />
+    <Compile Include="Caching\Operations\CacheWriteOperation.cs" />
+    <Compile Include="Caching\Operations\ReturningCacheOperation.cs" />
     <Compile Include="Caching\__Old\__Placeholder.cs" />
     <Compile Include="Clustering\Discovery\PeeringManager.cs" />
     <Compile Include="Clustering\EpochManager.cs" />

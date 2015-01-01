@@ -20,7 +20,7 @@ namespace Dargon.Hydar.Caching {
          return cacheBlockManager.GetEntryOrNull(key);
       }
 
-      public V ReadEntry(K key) {
+      public V Get(K key) {
          return GetEntry(key).Value;
       }
    }
