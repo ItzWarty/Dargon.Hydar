@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.Eventing.Reader;
 using System.Threading;
 using Dargon.Audits;
 using Dargon.Hydar.Networking;
@@ -13,12 +14,14 @@ namespace Dargon.Hydar.Clustering.Phases {
    }
 
    public class ClusteringPhaseManagerImpl : ClusteringPhaseManager {
+      private readonly HydarIdentity identity;
       private readonly DebugEventRouter debugEventRouter;
       private readonly InboundEnvelopeBusImpl inboundEnvelopeBus;
       private readonly object synchronization = new object();
       private IPhase currentPhase;
 
-      public ClusteringPhaseManagerImpl(DebugEventRouter debugEventRouter, InboundEnvelopeBusImpl inboundEnvelopeBus) {
+      public ClusteringPhaseManagerImpl(HydarIdentity identity, DebugEventRouter debugEventRouter, InboundEnvelopeBusImpl inboundEnvelopeBus) {
+         this.identity = identity;
          this.debugEventRouter = debugEventRouter;
          this.inboundEnvelopeBus = inboundEnvelopeBus;
       }
@@ -35,7 +38,10 @@ namespace Dargon.Hydar.Clustering.Phases {
 
       private void HandleInboundEnvelope(EventBus<InboundEnvelope> sender, InboundEnvelope envelope) {
          lock (synchronization) {
-            currentPhase.Process(envelope);
+            var recipient = envelope.Header.RecipientId;
+            if (recipient == Guid.Empty || recipient == identity.NodeId) {
+               currentPhase.Process(envelope);
+            }
          }
       }
 

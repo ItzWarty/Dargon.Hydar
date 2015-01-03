@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dargon.Hydar", "Dargon.Hyda
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dargon.Hydar.Tests", "Tests\Dargon.Hydar.Tests.csproj", "{94481B0F-62CC-433B-9A9E-50DB7F50FCE5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DummyApplication", "DummyApplication\DummyApplication.csproj", "{CBA0BE47-35F8-408F-8EC0-3ED1C3347B00}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{94481B0F-62CC-433B-9A9E-50DB7F50FCE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{94481B0F-62CC-433B-9A9E-50DB7F50FCE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{94481B0F-62CC-433B-9A9E-50DB7F50FCE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CBA0BE47-35F8-408F-8EC0-3ED1C3347B00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBA0BE47-35F8-408F-8EC0-3ED1C3347B00}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBA0BE47-35F8-408F-8EC0-3ED1C3347B00}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBA0BE47-35F8-408F-8EC0-3ED1C3347B00}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

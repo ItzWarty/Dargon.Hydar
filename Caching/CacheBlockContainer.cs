@@ -3,6 +3,8 @@ using ItzWarty;
 
 namespace Dargon.Hydar.Caching {
    public interface CacheBlockContainer<K, V> {
+      IReadOnlyList<EntryBlock<K, V>> Blocks { get; }
+
       EntryBlock<K, V> GetBlockForHash(int hash);
       ManageableEntry<K, V> GetEntryOrNull(K key); 
    }
@@ -21,6 +23,8 @@ namespace Dargon.Hydar.Caching {
             }
          );
       }
+
+      public IReadOnlyList<EntryBlock<K, V>> Blocks { get { return blocks; } }
 
       public EntryBlock<K, V> GetBlockById(int id) {
          return blocks[id];

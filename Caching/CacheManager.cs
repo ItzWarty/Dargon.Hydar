@@ -6,12 +6,12 @@ using Dargon.Audits;
 using ItzWarty;
 
 namespace Dargon.Hydar.Caching {
-   public interface CacheRegistry {
+   public interface CacheManager {
       void RegisterCache(CacheContext cacheContext);
       CacheContext GetCacheOrNull(Guid cacheId);
    }
 
-   public class CacheManagerImpl {
+   public class CacheManagerImpl : CacheManager {
       private readonly HydarIdentity identity;
       private readonly InboundEnvelopeBus inboundEnvelopeBus;
       private readonly ConcurrentDictionary<Guid, CacheContext> cacheContextsById = new ConcurrentDictionary<Guid, CacheContext>();

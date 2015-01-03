@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{27FCE073-ACCE-42AB-B85E-67EF69C866A6}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Dargon.Hydar</RootNamespace>
     <AssemblyName>Dargon.Hydar</AssemblyName>
@@ -36,26 +36,35 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Dargon.Audits.Api">
-      <HintPath>..\packages\Dargon.Audits.Api.0.0.1\lib\net45\Dargon.Audits.Api.dll</HintPath>
+      <HintPath>packages\Dargon.Audits.Api.0.0.1\lib\net45\Dargon.Audits.Api.dll</HintPath>
     </Reference>
     <Reference Include="ImpromptuInterface">
-      <HintPath>..\packages\libwarty.proxies-impl.0.0.13\lib\net45\ImpromptuInterface.dll</HintPath>
+      <HintPath>packages\libwarty.proxies-impl.0.0.13\lib\net45\ImpromptuInterface.dll</HintPath>
     </Reference>
-    <Reference Include="libdpo">
-      <HintPath>..\packages\libdpo.0.0.14\lib\net45\libdpo.dll</HintPath>
+    <Reference Include="libdargon.management-api">
+      <HintPath>packages\libdargon.management-impl.0.0.0\lib\net45\libdargon.management-api.dll</HintPath>
+    </Reference>
+    <Reference Include="libdargon.management-impl">
+      <HintPath>packages\libdargon.management-impl.0.0.0\lib\net45\libdargon.management-impl.dll</HintPath>
+    </Reference>
+    <Reference Include="libdpo, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>packages\libdargon.management-impl.0.0.0\lib\net45\libdpo.dll</HintPath>
     </Reference>
     <Reference Include="libwarty, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>packages\libwarty.0.0.16\lib\portable-net45+netcore45+MonoAndroid1+MonoTouch1\libwarty.dll</HintPath>
+      <HintPath>packages\libdargon.management-impl.0.0.0\lib\net45\libwarty.dll</HintPath>
     </Reference>
-    <Reference Include="libwarty.proxies-api">
-      <HintPath>..\packages\libwarty.proxies-api.0.0.16\lib\net45\libwarty.proxies-api.dll</HintPath>
+    <Reference Include="libwarty.proxies-api, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>packages\libdargon.management-impl.0.0.0\lib\net45\libwarty.proxies-api.dll</HintPath>
     </Reference>
     <Reference Include="libwarty.proxies-impl">
-      <HintPath>..\packages\libwarty.proxies-impl.0.0.13\lib\net45\libwarty.proxies-impl.dll</HintPath>
+      <HintPath>packages\libwarty.proxies-impl.0.0.13\lib\net45\libwarty.proxies-impl.dll</HintPath>
     </Reference>
-    <Reference Include="NLog">
-      <HintPath>..\packages\NLog.3.1.0.0\lib\net45\NLog.dll</HintPath>
+    <Reference Include="NLog, Version=3.1.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>packages\libdargon.management-impl.0.0.0\lib\net45\NLog.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -76,6 +85,7 @@
     <Compile Include="Caching\BlockOperationManager.cs" />
     <Compile Include="Caching\BlockPartitionRange.cs" />
     <Compile Include="Caching\CacheBlockContainer.cs" />
+    <Compile Include="Caching\CacheOperationManager.cs" />
     <Compile Include="Caching\EntryOperationAccessFlags.cs" />
     <Compile Include="Caching\EntryOperationContext.cs" />
     <Compile Include="Caching\EntryOperationStatus.cs" />
@@ -83,7 +93,7 @@
     <Compile Include="Caching\EntryBlockImpl.cs" />
     <Compile Include="Caching\EntryBlock.cs" />
     <Compile Include="Caching\EntryImpl.cs" />
-    <Compile Include="Caching\CacheRegistry.cs" />
+    <Compile Include="Caching\CacheManager.cs" />
     <None Include="Caching\__Old\CachingPayload.cs" />
     <None Include="Caching\__Old\CachingPayloadMetadata.cs" />
     <Compile Include="Caching\HashSpacePartitioningStrategy.cs" />
@@ -98,6 +108,7 @@
     <Compile Include="Caching\__Old\__Placeholder.cs" />
     <Compile Include="Clustering\Discovery\PeeringManager.cs" />
     <Compile Include="Clustering\EpochManager.cs" />
+    <Compile Include="Clustering\Management\ClusteringManagementMob.cs" />
     <Compile Include="Clustering\Messages\ClusteringMessageFactory.cs" />
     <Compile Include="Clustering\Messages\ClusteringMessageSender.cs" />
     <Compile Include="Clustering\Messages\Helpers\ElectionCandidate.cs" />
@@ -148,7 +159,6 @@
     <Compile Include="Networking\PortableObjects\InboundEnvelope.cs" />
     <Compile Include="Networking\PortableObjects\InboundEnvelopeHeader.cs" />
     <Compile Include="Networking\PortableObjects\InboundEnvelopeImpl.cs" />
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Networking\TestNetworkManager.cs" />
     <Compile Include="Networking\TestNetworkConfiguration.cs" />
@@ -158,7 +168,9 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Caching\Management\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

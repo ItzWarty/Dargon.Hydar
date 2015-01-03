@@ -1,11 +1,11 @@
 using ItzWarty.Collections;
 
 namespace Dargon.Hydar.Caching {
-   public interface BlockOperationManager {
-
+   public interface BlockOperationManager<K, V> {
+      void EnqueueOperation(K key, EntryOperation<K, V> operation);
    }
 
-   public class BlockOperationManagerImpl<K, V> : BlockOperationManager {
+   public class BlockOperationManagerImpl<K, V> : BlockOperationManager<K, V> {
       private readonly EntryBlock<K, V> block;
       private readonly ConcurrentDictionary<K, EntryOperationContext<K, V>> entryOperationContextsByKey = new ConcurrentDictionary<K, EntryOperationContext<K, V>>();
 
