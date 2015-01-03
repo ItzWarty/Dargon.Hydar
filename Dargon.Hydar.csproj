@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -28,6 +29,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
@@ -70,11 +72,13 @@
     <None Include="Caching\__Old\CacheEpochContextFactory.cs" />
     <None Include="Caching\__Old\CacheEpochContext.cs" />
     <None Include="Caching\__Old\CacheEpochPartitionHistory.cs" />
-    <None Include="Caching\__Old\PartitionRange.cs" />
-    <Compile Include="Caching\CacheBlockManager.cs" />
-    <Compile Include="Caching\CacheOperationAccessFlags.cs" />
-    <Compile Include="Caching\CacheOperationManager.cs" />
-    <Compile Include="Caching\CacheOperationStatus.cs" />
+    <Compile Include="Caching\BlockDescriptor.cs" />
+    <Compile Include="Caching\BlockOperationManager.cs" />
+    <Compile Include="Caching\BlockPartitionRange.cs" />
+    <Compile Include="Caching\CacheBlockContainer.cs" />
+    <Compile Include="Caching\EntryOperationAccessFlags.cs" />
+    <Compile Include="Caching\EntryOperationContext.cs" />
+    <Compile Include="Caching\EntryOperationStatus.cs" />
     <Compile Include="Caching\ImmutableBlockCollection.cs" />
     <Compile Include="Caching\EntryBlockImpl.cs" />
     <Compile Include="Caching\EntryBlock.cs" />
@@ -82,14 +86,15 @@
     <Compile Include="Caching\CacheRegistry.cs" />
     <None Include="Caching\__Old\CachingPayload.cs" />
     <None Include="Caching\__Old\CachingPayloadMetadata.cs" />
-    <None Include="Caching\__Old\HashSpacePartitioningStrategy.cs" />
-    <None Include="Caching\__Old\UnweightedRingHashSpacePartitioningStrategy.cs" />
+    <Compile Include="Caching\HashSpacePartitioningStrategy.cs" />
+    <Compile Include="Caching\Operations\EntryOperationFactory.cs" />
+    <Compile Include="Caching\UnweightedRingHashSpacePartitioningStrategy.cs" />
     <Compile Include="Caching\CacheContext.cs" />
-    <Compile Include="Caching\CacheOperationContext.cs" />
+    <Compile Include="Caching\EntryOperation.cs" />
     <Compile Include="Caching\EntryPartitionImpl.cs" />
-    <Compile Include="Caching\Operations\CacheReadOperation.cs" />
-    <Compile Include="Caching\Operations\CacheWriteOperation.cs" />
-    <Compile Include="Caching\Operations\ReturningCacheOperation.cs" />
+    <Compile Include="Caching\Operations\EntryReadOperation.cs" />
+    <Compile Include="Caching\Operations\EntryWriteOperation.cs" />
+    <Compile Include="Caching\Operations\ReturningEntryOperation.cs" />
     <Compile Include="Caching\__Old\__Placeholder.cs" />
     <Compile Include="Clustering\Discovery\PeeringManager.cs" />
     <Compile Include="Clustering\EpochManager.cs" />

@@ -1,9 +1,9 @@
 ﻿namespace Dargon.Hydar.Caching {
-   public class PartitionRange {
+   public class BlockPartitionRange {
       private readonly int startInclusive;
       private readonly int endExclusive;
 
-      public PartitionRange(int startInclusive, int endExclusive) {
+      public BlockPartitionRange(int startInclusive, int endExclusive) {
          this.startInclusive = startInclusive;
          this.endExclusive = endExclusive;
       }

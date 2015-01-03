@@ -1,7 +1,5 @@
-﻿namespace Dargon.Hydar.Caching
-{
-   public interface EntryBlock<K, V>
-   {
+﻿namespace Dargon.Hydar.Caching {
+   public interface EntryBlock<K, V> {
       int HashRangeOffset { get; }
       int HashRangeSize { get; }
 

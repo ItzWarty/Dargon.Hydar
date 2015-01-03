@@ -1,5 +1,5 @@
 namespace Dargon.Hydar.Caching {
-   public enum CacheOperationStatus {
+   public enum EntryOperationStatus {
       Unattached = 0,
       Pending = 1,
       Aborted = 2,
