@@ -71,9 +71,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Dargon.Hydar.csproj">
+    <ProjectReference Include="..\Dargon.Hydar.Impl.csproj">
       <Project>{27fce073-acce-42ab-b85e-67ef69c866a6}</Project>
-      <Name>Dargon.Hydar</Name>
+      <Name>Dargon.Hydar.Impl</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

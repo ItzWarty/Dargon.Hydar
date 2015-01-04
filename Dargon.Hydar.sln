@@ -3,11 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.22310.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dargon.Hydar", "Dargon.Hydar.csproj", "{27FCE073-ACCE-42AB-B85E-67EF69C866A6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dargon.Hydar.Impl", "Dargon.Hydar.Impl.csproj", "{27FCE073-ACCE-42AB-B85E-67EF69C866A6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dargon.Hydar.Tests", "Tests\Dargon.Hydar.Tests.csproj", "{94481B0F-62CC-433B-9A9E-50DB7F50FCE5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DummyApplication", "DummyApplication\DummyApplication.csproj", "{CBA0BE47-35F8-408F-8EC0-3ED1C3347B00}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dargon.Hydar.Api", "..\libdargon.hydar-api\Dargon.Hydar.Api.csproj", "{EEA8CBE9-90F7-4411-A7A5-A702C902D02F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{CBA0BE47-35F8-408F-8EC0-3ED1C3347B00}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CBA0BE47-35F8-408F-8EC0-3ED1C3347B00}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CBA0BE47-35F8-408F-8EC0-3ED1C3347B00}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EEA8CBE9-90F7-4411-A7A5-A702C902D02F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEA8CBE9-90F7-4411-A7A5-A702C902D02F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEA8CBE9-90F7-4411-A7A5-A702C902D02F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEA8CBE9-90F7-4411-A7A5-A702C902D02F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
