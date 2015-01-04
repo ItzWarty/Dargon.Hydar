@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Dargon.Hydar.Clustering.Discovery {
+namespace Dargon.Hydar.Peering {
    public interface PeerStatus {
       Guid Id { get; }
       bool IsLeader { get; }

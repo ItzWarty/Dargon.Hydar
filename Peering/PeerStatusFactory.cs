@@ -1,6 +1,7 @@
 ﻿using System;
+using Dargon.Hydar.Clustering;
 
-namespace Dargon.Hydar.Clustering.Discovery {
+namespace Dargon.Hydar.Peering {
    public interface PeerStatusFactory {
       ManageablePeerStatus Create(Guid guid);
    }

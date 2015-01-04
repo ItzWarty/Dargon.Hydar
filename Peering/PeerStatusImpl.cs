@@ -1,7 +1,8 @@
 using System;
+using Dargon.Hydar.Clustering;
 using ItzWarty;
 
-namespace Dargon.Hydar.Clustering.Discovery {
+namespace Dargon.Hydar.Peering {
    public class PeerStatusImpl : ManageablePeerStatus {
       private readonly ClusteringConfiguration clusteringConfiguration;
       private readonly Guid id;
