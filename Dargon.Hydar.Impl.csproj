@@ -87,7 +87,7 @@
     <Compile Include="Caching\BlockPartitionRange.cs" />
     <Compile Include="Caching\CacheBlockContainer.cs" />
     <Compile Include="Caching\CacheOperationManager.cs" />
-    <Compile Include="Caching\EntryOperationAccessFlags.cs" />
+    <Compile Include="Caching\EntryOperationType.cs" />
     <Compile Include="Caching\EntryOperationContext.cs" />
     <Compile Include="Caching\EntryOperationStatus.cs" />
     <Compile Include="Caching\ImmutableBlockCollection.cs" />
@@ -172,6 +172,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Caching\Management\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\libdargon.hydar-api\Dargon.Hydar.Api.csproj">
+      <Project>{eea8cbe9-90f7-4411-a7a5-a702c902d02f}</Project>
+      <Name>Dargon.Hydar.Api</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

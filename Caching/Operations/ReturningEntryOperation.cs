@@ -4,7 +4,7 @@ namespace Dargon.Hydar.Caching.Operations {
    public abstract class ReturningEntryOperation<K, V, R> : EntryOperationBase<K, V> {
       private R result;
 
-      public abstract override EntryOperationAccessFlags AccessFlags { get; }
+      public abstract override EntryOperationType Type { get; }
 
       protected override void Execute(ManageableEntry<K, V> entry) {
          result = ExecuteInternal(entry);

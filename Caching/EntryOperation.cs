@@ -4,7 +4,7 @@ using System.Threading;
 namespace Dargon.Hydar.Caching {
    public interface EntryOperation<K, V> {
       EntryOperationStatus Status { get; }
-      EntryOperationAccessFlags AccessFlags { get; }
+      EntryOperationType Type { get; }
 
       void HandleEnqueued();
       void HandleExecute(ManageableEntry<K, V> entry, EntryOperationContext<K, V> context);
@@ -24,7 +24,7 @@ namespace Dargon.Hydar.Caching {
       public event EventHandler Aborted;
 
       public EntryOperationStatus Status { get { return status; } }
-      public abstract EntryOperationAccessFlags AccessFlags { get; }
+      public abstract EntryOperationType Type { get; }
 
       protected abstract void Execute(ManageableEntry<K, V> entry);
 

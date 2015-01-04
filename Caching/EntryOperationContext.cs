@@ -43,7 +43,7 @@ namespace Dargon.Hydar.Caching {
                throw new InvalidOperationException("Attempted to pass lock with inactive context.");
             }
 
-            if (currentOperation.AccessFlags.HasFlag(EntryOperationAccessFlags.Write)) {
+            if (currentOperation.Type.HasFlag(EntryOperationType.Write)) {
                // todo: commit entry
             }
 

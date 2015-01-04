@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace Dargon.Hydar.Caching.Operations {
    public class EntryProcessOperation<K, V, R> : ReturningEntryOperation<K, V, R> {
-      private readonly IEntryProcessor<K, V, R> entryProcessor;
+      private readonly EntryProcessor<K, V, R> entryProcessor;
 
-      public EntryProcessOperation(IEntryProcessor<K, V, R> entryProcessor) {
+      public EntryProcessOperation(EntryProcessor<K, V, R> entryProcessor) {
          this.entryProcessor = entryProcessor;
       }
 
-      public override EntryOperationAccessFlags AccessFlags { get { return EntryOperationAccessFlags.ReadWrite; } }
+      public override EntryOperationType Type { get { return EntryOperationType.Update; } }
 
       public override R ExecuteInternal(ManageableEntry<K, V> entry) {
-         entryProcessor.Process(entry)
+         return entryProcessor.Process(entry);
       }
    }
 }

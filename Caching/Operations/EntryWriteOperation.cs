@@ -6,7 +6,7 @@
          this.value = value;
       }
 
-      public override EntryOperationAccessFlags AccessFlags { get { return EntryOperationAccessFlags.Write; } }
+      public override EntryOperationType Type { get { return EntryOperationType.Write; } }
 
       protected override void Execute(ManageableEntry<K, V> entry) {
          entry.Value = value;
