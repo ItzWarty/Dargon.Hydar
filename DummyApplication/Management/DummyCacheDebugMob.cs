@@ -1,6 +1,7 @@
 ﻿using Dargon.Hydar.Caching;
 using Dargon.Hydar.Caching.Operations;
 using Dargon.Management;
+using DummyApplication.Hydar;
 
 namespace DummyApplication.Management {
    public class DummyCacheDebugMob {
@@ -24,6 +25,14 @@ namespace DummyApplication.Management {
          cacheOperationManager.EnqueueOperation(key, operation);
          operation.Wait();
          return "done";
+      }
+
+      [ManagedOperation]
+      public string ToLower(int key) {
+         var operation = new EntryProcessOperation<int, string, string>(new ToLowerProcessor());
+         cacheOperationManager.EnqueueOperation(key, operation);
+         var result = operation.GetResult();
+         return key + ": " + (result ?? "null");
       }
    }
 }

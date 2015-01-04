@@ -63,6 +63,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DummyApplicationPofContext.cs" />
+    <Compile Include="Hydar\ToLowerProcessor.cs" />
     <Compile Include="Management\DummyCacheDebugMob.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -71,6 +73,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\libdargon.hydar-api\Dargon.Hydar.Api.csproj">
+      <Project>{EEA8CBE9-90F7-4411-A7A5-A702C902D02F}</Project>
+      <Name>Dargon.Hydar.Api</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Dargon.Hydar.Impl.csproj">
       <Project>{27fce073-acce-42ab-b85e-67ef69c866a6}</Project>
       <Name>Dargon.Hydar.Impl</Name>

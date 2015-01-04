@@ -34,6 +34,7 @@ namespace DummyApplication {
          IPofContext pofContext = new PofContext().With(x => {
             x.MergeContext(new HydarPofContext());
             x.MergeContext(new ManagementPofContext());
+            x.MergeContext(new DummyApplicationPofContext());
          });
          IPofSerializer pofSerializer = new PofSerializer(pofContext);
          ClusteringConfiguration configuration = new ClusteringConfigurationImpl(TICKS_TO_ELECTION, ELECTION_TICKS_TO_PROMOTION, EPOCH_DURATION_MILLISECONDS);
