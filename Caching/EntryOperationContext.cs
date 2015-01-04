@@ -14,6 +14,7 @@ namespace Dargon.Hydar.Caching {
       private readonly object synchronization = new object();
       private readonly Queue<EntryOperation<K, V>> pendingOperations = new Queue<EntryOperation<K, V>>();
       private EntryOperation<K, V> activeOperation;
+      private ManageableEntry<K, V> activeEntry;
 
       public EntryOperationContextImpl(K key, EntryBlock<K, V> block) {
          this.key = key;
@@ -21,12 +22,15 @@ namespace Dargon.Hydar.Caching {
       }
 
       public void EnqueueOperation(EntryOperation<K, V> operation) {
+         operation.HandleEnqueued();
+
          using (var lockGuard = new LockGuard(synchronization)) {
             if (activeOperation == null) {
                activeOperation = operation;
                lockGuard.Release();
 
-               activeOperation.HandleExecute(block.GetEntry(key), this);
+               activeEntry = block.GetEntry(key);
+               activeOperation.HandleExecute(activeEntry, this);
             } else {
                pendingOperations.Enqueue(operation);
             }
@@ -39,6 +43,11 @@ namespace Dargon.Hydar.Caching {
                throw new InvalidOperationException("Attempted to pass lock with inactive context.");
             }
 
+            if (currentOperation.AccessFlags.HasFlag(EntryOperationAccessFlags.Write)) {
+               // todo: commit entry
+            }
+
+            activeEntry = null;
             activeOperation = null;
 
             if (pendingOperations.Count > 0) {

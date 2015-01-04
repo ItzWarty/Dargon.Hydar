@@ -1,9 +1,7 @@
 ﻿using ItzWarty.Collections;
 
 namespace Dargon.Hydar.Caching {
-
-   public class EntryBlockImpl<K, V> : EntryBlock<K, V>
-   {
+   public class EntryBlockImpl<K, V> : EntryBlock<K, V> {
       private readonly IConcurrentDictionary<K, ManageableEntry<K, V>> entriesByKey = new ConcurrentDictionary<K, ManageableEntry<K, V>>();
       private readonly int hashRangeOffset;
       private readonly int hashRangeSize;

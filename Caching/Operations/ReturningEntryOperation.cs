@@ -3,7 +3,6 @@
 namespace Dargon.Hydar.Caching.Operations {
    public abstract class ReturningEntryOperation<K, V, R> : EntryOperationBase<K, V> {
       private R result;
-      private readonly CountdownEvent completionLatch = new CountdownEvent(1);
 
       public abstract override EntryOperationAccessFlags AccessFlags { get; }
 
@@ -12,5 +11,10 @@ namespace Dargon.Hydar.Caching.Operations {
       }
 
       public abstract R ExecuteInternal(ManageableEntry<K, V> entry);
+
+      public R GetResult() {
+         Wait();
+         return result;
+      }
    }
 }

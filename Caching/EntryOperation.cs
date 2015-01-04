@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 
 namespace Dargon.Hydar.Caching {
    public interface EntryOperation<K, V> {
@@ -8,6 +9,7 @@ namespace Dargon.Hydar.Caching {
       void HandleEnqueued();
       void HandleExecute(ManageableEntry<K, V> entry, EntryOperationContext<K, V> context);
       bool Abort();
+      void Wait();
 
       event EventHandler Completed;
       event EventHandler Aborted;
@@ -15,6 +17,7 @@ namespace Dargon.Hydar.Caching {
 
    public abstract class EntryOperationBase<K, V> : EntryOperation<K, V> {
       private readonly object synchronization = new object();
+      private readonly CountdownEvent completionLatch = new CountdownEvent(1);
       private EntryOperationStatus status = EntryOperationStatus.Unattached;
 
       public event EventHandler Completed;
@@ -39,6 +42,7 @@ namespace Dargon.Hydar.Caching {
 
                context.HandleOperationComplete(this);
                status = EntryOperationStatus.Completed;
+               completionLatch.Signal();
 
                var capture = Completed;
                if (capture != null) {
@@ -52,6 +56,7 @@ namespace Dargon.Hydar.Caching {
          lock (synchronization) {
             if (status == EntryOperationStatus.Unattached || status == EntryOperationStatus.Pending) {
                status = EntryOperationStatus.Aborted;
+               completionLatch.Signal();
 
                var capture = Aborted;
                if (capture != null) {
@@ -62,6 +67,10 @@ namespace Dargon.Hydar.Caching {
                return false;
             }
          }
+      }
+
+      public void Wait() {
+         completionLatch.Wait();
       }
    }
 }

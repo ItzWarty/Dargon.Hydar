@@ -15,6 +15,7 @@ using Dargon.Hydar.Utilities;
 using Dargon.Management;
 using Dargon.Management.Server;
 using Dargon.PortableObjects;
+using DummyApplication.Management;
 using ItzWarty;
 using ItzWarty.Collections;
 using ItzWarty.IO;
@@ -117,6 +118,7 @@ namespace DummyApplication {
          var dummyCacheBlockContainer = new CacheBlockContainerImpl<int, string>(partitioningStrategy);
          var dummyCacheOperationManager = new CacheOperationManagerImpl<int, string>(partitioningStrategy, dummyCacheBlockContainer);
          cacheManager.RegisterCache(dummyCacheContext);
+         localManagementServerRegistry.RegisterInstance(new DummyCacheDebugMob(dummyCacheOperationManager));
          return null;
       }
    }
