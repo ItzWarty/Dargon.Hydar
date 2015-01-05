@@ -28,7 +28,7 @@ namespace Dargon.Hydar.Clustering.Phases {
 
       public override void Tick() {
          var currentTickCount = Interlocked.Increment(ref tickCount);
-         if (currentTickCount < clusteringConfiguration.MaximumHeartBeatInterval) {
+         if (currentTickCount < clusteringConfiguration.MaximumMissedHeartBeatIntervalToElection) {
             // do nothing
          } else {
             TransitionToElectionPhase();

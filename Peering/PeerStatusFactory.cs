@@ -7,14 +7,14 @@ namespace Dargon.Hydar.Peering {
    }
 
    public class PeerStatusFactoryImpl : PeerStatusFactory {
-      private readonly ClusteringConfiguration clusteringConfiguration;
+      private readonly PeeringConfiguration peeringConfiguration;
 
-      public PeerStatusFactoryImpl(ClusteringConfiguration clusteringConfiguration) {
-         this.clusteringConfiguration = clusteringConfiguration;
+      public PeerStatusFactoryImpl(PeeringConfigurationImpl peeringConfiguration) {
+         this.peeringConfiguration = peeringConfiguration;
       }
 
       public ManageablePeerStatus Create(Guid guid) {
-         return new PeerStatusImpl(clusteringConfiguration, guid);
+         return new PeerStatusImpl(peeringConfiguration, guid);
       }
    }
 }

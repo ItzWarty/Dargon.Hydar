@@ -4,7 +4,7 @@
    }
 
    public interface ClusteringConfiguration {
-      int MaximumHeartBeatInterval { get; }
+      int MaximumMissedHeartBeatIntervalToElection { get; }
       int ElectionTicksToPromotion { get; }
       long EpochDurationMilliseconds { get; }
    }

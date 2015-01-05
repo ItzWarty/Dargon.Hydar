@@ -33,8 +33,8 @@ namespace Dargon.Hydar.Clustering.Phases {
          var currentEpoch = epochManager.GetCurrentEpoch();
          var nextLeaderAbsentTicks = Interlocked.Increment(ref leaderAbsentTicks);
          var shouldTransitionToElection = false;
-         if (nextLeaderAbsentTicks > clusteringConfiguration.MaximumHeartBeatInterval) {
-            debugEventRouter.FollowerPhase_LeaderMissedHeartBeats(clusteringConfiguration.MaximumHeartBeatInterval);
+         if (nextLeaderAbsentTicks > clusteringConfiguration.MaximumMissedHeartBeatIntervalToElection) {
+            debugEventRouter.FollowerPhase_LeaderMissedHeartBeats(clusteringConfiguration.MaximumMissedHeartBeatIntervalToElection);
             shouldTransitionToElection = true;
          } else if (DateTime.Now >= currentEpoch.Interval.End) {
             debugEventRouter.FollowerPhase_EndOfEpoch(currentEpoch.Id);

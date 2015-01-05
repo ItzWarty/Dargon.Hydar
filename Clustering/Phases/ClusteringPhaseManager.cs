@@ -15,18 +15,21 @@ namespace Dargon.Hydar.Clustering.Phases {
 
    public class ClusteringPhaseManagerImpl : ClusteringPhaseManager {
       private readonly HydarIdentity identity;
+      private readonly HydarPeriodicTicker ticker;
       private readonly DebugEventRouter debugEventRouter;
       private readonly InboundEnvelopeBusImpl inboundEnvelopeBus;
       private readonly object synchronization = new object();
       private IPhase currentPhase;
 
-      public ClusteringPhaseManagerImpl(HydarIdentity identity, DebugEventRouter debugEventRouter, InboundEnvelopeBusImpl inboundEnvelopeBus) {
+      public ClusteringPhaseManagerImpl(HydarIdentity identity, HydarPeriodicTicker ticker, DebugEventRouter debugEventRouter, InboundEnvelopeBusImpl inboundEnvelopeBus) {
          this.identity = identity;
+         this.ticker = ticker;
          this.debugEventRouter = debugEventRouter;
          this.inboundEnvelopeBus = inboundEnvelopeBus;
       }
 
       public void Initialize() {
+         ticker.Tick += (s, e) => Tick();
          inboundEnvelopeBus.EventPosted += HandleInboundEnvelope;
       }
 

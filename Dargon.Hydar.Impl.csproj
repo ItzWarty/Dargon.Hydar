@@ -108,14 +108,22 @@
     <Compile Include="Caching\Operations\EntryWriteOperation.cs" />
     <Compile Include="Caching\Operations\ReturningEntryOperation.cs" />
     <Compile Include="Caching\__Old\__Placeholder.cs" />
-    <Compile Include="Peering\Messages\DiscoveryAnnounce.cs" />
-    <Compile Include="Peering\PeeringManager.cs" />
+    <Compile Include="Peering\ManageablePeeringState.cs" />
+    <Compile Include="Peering\Management\PeeringDebugMob.cs" />
+    <Compile Include="Peering\Messages\PeeringAnnounce.cs" />
+    <Compile Include="Peering\Messages\PeeringMessageFactory.cs" />
+    <Compile Include="Peering\Messages\PeeringMessageSender.cs" />
+    <Compile Include="Peering\PeeringAnnouncementBroadcaster.cs" />
+    <Compile Include="Peering\PeeringConfiguration.cs" />
+    <Compile Include="Peering\PeeringMessageDispatcher.cs" />
     <Compile Include="Clustering\EpochManager.cs" />
     <Compile Include="Clustering\Management\ClusteringManagementMob.cs" />
     <Compile Include="Clustering\Messages\ClusteringMessageFactory.cs" />
     <Compile Include="Clustering\Messages\ClusteringMessageSender.cs" />
     <Compile Include="Clustering\Messages\Helpers\ElectionCandidate.cs" />
     <Compile Include="Clustering\Messages\Helpers\EpochSummary.cs" />
+    <Compile Include="Peering\PeeringStateImpl.cs" />
+    <Compile Include="Peering\ReadablePeeringState.cs" />
     <Compile Include="Peering\PeerStatusFactory.cs" />
     <Compile Include="Peering\PeerStatusImpl.cs" />
     <Compile Include="Clustering\Phases\ClusteringPhaseManager.cs" />
@@ -165,6 +173,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Networking\TestNetworkManager.cs" />
     <Compile Include="Networking\TestNetworkConfiguration.cs" />
+    <Compile Include="Utilities\HydarPeriodicTicker.cs" />
     <Compile Include="Utilities\LockGuard.cs" />
     <Compile Include="Utilities\VectorClock.cs" />
   </ItemGroup>

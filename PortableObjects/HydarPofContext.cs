@@ -1,5 +1,6 @@
 ﻿using Dargon.Hydar.Clustering.Messages;
 using Dargon.Hydar.Clustering.Messages.Helpers;
+using Dargon.Hydar.Peering.Messages;
 using Dargon.Hydar.Utilities;
 using Dargon.PortableObjects;
 
@@ -21,6 +22,9 @@ namespace Dargon.Hydar.PortableObjects {
          RegisterPortableObjectType(kBasePofId + 102, typeof(EpochLeaderHeartBeat));
          RegisterPortableObjectType(kBasePofId + 103, typeof(ElectionCandidate));
          RegisterPortableObjectType(kBasePofId + 104, typeof(EpochSummary));
+
+         // [200, 300) peering stuff
+         RegisterPortableObjectType(kBasePofId + 200, typeof(PeeringAnnounce));
       }
    }
 }

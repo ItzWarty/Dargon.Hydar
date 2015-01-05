@@ -1,33 +1,30 @@
-using System;
 using Dargon.Hydar.Clustering;
+using Dargon.Hydar.Peering.Messages;
 using ItzWarty;
+using System;
 
 namespace Dargon.Hydar.Peering {
    public class PeerStatusImpl : ManageablePeerStatus {
-      private readonly ClusteringConfiguration clusteringConfiguration;
+      private readonly object synchronization = new object();
+      private readonly PeeringConfiguration peeringConfiguration;
       private readonly Guid id;
-      private bool isLeader = false;
-      private int rank = -1;
+      private uint address;
       private long lastHeartBeatTime = -1;
 
-      public PeerStatusImpl(ClusteringConfiguration clusteringConfiguration, Guid id) {
-         this.clusteringConfiguration = clusteringConfiguration;
+      public PeerStatusImpl(PeeringConfiguration peeringConfiguration, Guid id) {
+         this.peeringConfiguration = peeringConfiguration;
          this.id = id;
       }
 
-      public void HandleNewEpoch(bool isLeader, int rank) {
-         this.isLeader = isLeader;
-         this.rank = rank;
-      }
+      public Guid Id { get { lock (synchronization) return id; } }
+      public long LastHeartBeatTime { get { lock (synchronization) return lastHeartBeatTime; } }
+      public bool IsActive { get { lock (synchronization) return Util.GetUnixTimeMilliseconds() < lastHeartBeatTime + peeringConfiguration.MaximumMissedHeartBeatIntervalToInactivity; } }
 
-      public void HandleHeartBeat() {
-         lastHeartBeatTime = Util.GetUnixTimeMilliseconds();
+      public void Update(uint newAddress, PeeringAnnounce peeringAnnounce) {
+         lock (synchronization) {
+            address = newAddress;
+            lastHeartBeatTime = Util.GetUnixTimeMilliseconds();
+         }
       }
-
-      public Guid Id { get { return id; } }
-      public bool IsLeader { get { return isLeader; } }
-      public int Rank { get { return rank; } }
-      public long LastHeartBeatTime { get { return lastHeartBeatTime; } }
-      public bool IsActive { get { return Util.GetUnixTimeMilliseconds() < lastHeartBeatTime + clusteringConfiguration.MaximumHeartBeatInterval; } }
    }
 }

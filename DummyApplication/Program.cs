@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading;
-using Dargon.Audits;
+﻿using Dargon.Audits;
 using Dargon.Hydar;
 using Dargon.Hydar.Caching;
 using Dargon.Hydar.Clustering;
@@ -10,6 +8,9 @@ using Dargon.Hydar.Clustering.Phases;
 using Dargon.Hydar.Networking;
 using Dargon.Hydar.Networking.Helpers;
 using Dargon.Hydar.Networking.PortableObjects;
+using Dargon.Hydar.Peering;
+using Dargon.Hydar.Peering.Management;
+using Dargon.Hydar.Peering.Messages;
 using Dargon.Hydar.PortableObjects;
 using Dargon.Hydar.Utilities;
 using Dargon.Management;
@@ -22,6 +23,8 @@ using ItzWarty.IO;
 using ItzWarty.Networking;
 using ItzWarty.Processes;
 using ItzWarty.Threading;
+using System;
+using System.Threading;
 
 namespace DummyApplication {
    public class Program {
@@ -29,6 +32,7 @@ namespace DummyApplication {
       const int TICKS_TO_ELECTION = 10;
       const int ELECTION_TICKS_TO_PROMOTION = 10;
       const long EPOCH_DURATION_MILLISECONDS = 20 * 1000;
+      const long PEERING_MAXIMUM_HEARTBEAT_INTERVAL = 20 * 10000;
 
       public static void Main() {
          IPofContext pofContext = new PofContext().With(x => {
@@ -82,9 +86,10 @@ namespace DummyApplication {
          localManagementServer.Initialize();
 
          // Initialize Hydar Base Dependencies
+         var hydarConfiguration = new HydarConfigurationImpl(TICK_INTERVAL_MILLIS);
+         var ticker = new HydarPeriodicTickerImpl(threadingProxy, hydarConfiguration);
          var nodeId = new Guid(testNodeNumber, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0); //Guid.NewGuid();
          var hydarIdentity = new HydarIdentityImpl(nodeId);
-         var hydarConfiguration = new HydarConfigurationImpl(TICK_INTERVAL_MILLIS);
          var debugEventRouter = new DebugEventRouterImpl(hydarIdentity, auditEventBus);
          var network = testNetworkManager.CreateNetworkInstance().With(testNetworkManager.Join);
          var inboundEnvelopeBus = new InboundEnvelopeBusImpl();
@@ -96,18 +101,22 @@ namespace DummyApplication {
          // Initialize Clustering Subsystem Dependencies
          var epochManager = new EpochManagerImpl().With(x => x.Initialize());
          var clusteringMessageFactory = new ClusteringMessageFactoryImpl();
-         var clusteringPhaseManager = new ClusteringPhaseManagerImpl(hydarIdentity, debugEventRouter, inboundEnvelopeBus);
+         var clusteringPhaseManager = new ClusteringPhaseManagerImpl(hydarIdentity, ticker, debugEventRouter, inboundEnvelopeBus);
          var clusteringMessageSender = new ClusteringMessageSenderImpl(outboundEnvelopeFactory, outboundEnvelopeBus, clusteringMessageFactory);
          var clusteringConfiguration = new ClusteringConfigurationImpl(TICKS_TO_ELECTION, ELECTION_TICKS_TO_PROMOTION, EPOCH_DURATION_MILLISECONDS);
          var clusteringPhaseFactory = new ClusteringPhaseFactoryImpl(hydarIdentity, auditEventBus, epochManager, debugEventRouter, outboundEnvelopeBus, clusteringConfiguration, clusteringMessageSender, clusteringPhaseManager);
          clusteringPhaseManager.Initialize();
          clusteringPhaseManager.Transition(clusteringPhaseFactory.CreateInitializationPhase());
-         new Thread(() => {
-            while(true) {
-               clusteringPhaseManager.Tick();
-               Thread.Sleep(hydarConfiguration.TickIntervalMillis);
-            }
-         }).Start();
+
+         // Initialize Peering Dependencies
+         var peeringConfiguration = new PeeringConfigurationImpl(PEERING_MAXIMUM_HEARTBEAT_INTERVAL);
+         var peerStatusFactory = new PeerStatusFactoryImpl(peeringConfiguration);
+         var manageablePeeringState = new PeeringStateImpl(peerStatusFactory);
+         var peeringMessageDispatcher = new PeeringMessageDispatcherImpl(inboundEnvelopeBus, manageablePeeringState).With(x => x.Initialize());
+         var peeringMessageFactory = new PeeringMessageFactoryImpl();
+         var peeringMessageSender = new PeeringMessageSenderImpl(outboundEnvelopeFactory, outboundEnvelopeBus, peeringMessageFactory);
+         var peeringAnnouncementBroadcaster = new PeeringAnnouncementBroadcasterImpl(ticker, peeringMessageSender).With(x => x.Initialize());
+         localManagementServerRegistry.RegisterInstance(new PeeringDebugMob(manageablePeeringState));
 
          // management
          localManagementServerRegistry.RegisterInstance(new ClusteringManagementMob(hydarIdentity, epochManager));
@@ -120,6 +129,8 @@ namespace DummyApplication {
          var dummyCacheOperationManager = new CacheOperationManagerImpl<int, string>(partitioningStrategy, dummyCacheBlockContainer);
          cacheManager.RegisterCache(dummyCacheContext);
          localManagementServerRegistry.RegisterInstance(new DummyCacheDebugMob(dummyCacheOperationManager));
+
+         ticker.Initialize();
          return null;
       }
    }
