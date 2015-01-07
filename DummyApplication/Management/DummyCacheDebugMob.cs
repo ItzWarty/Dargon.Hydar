@@ -1,5 +1,6 @@
 ﻿using Dargon.Hydar.Caching;
 using Dargon.Hydar.Caching.Operations;
+using Dargon.Hydar.Utilities;
 using Dargon.Management;
 using DummyApplication.Hydar;
 
@@ -48,6 +49,11 @@ namespace DummyApplication.Management {
       [ManagedOperation]
       public int GetBlockIdForKey(int key) {
          return GetBlockIdForHash(key.GetHashCode());
+      }
+
+      [ManagedOperation]
+      public int GetHashForKey(int key) {
+         return HashUtilities.Mix(key.GetHashCode());
       }
    }
 }

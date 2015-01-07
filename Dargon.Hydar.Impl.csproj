@@ -174,6 +174,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Networking\TestNetworkManager.cs" />
     <Compile Include="Networking\TestNetworkConfiguration.cs" />
+    <Compile Include="Utilities\HashUtilities.cs" />
     <Compile Include="Utilities\HydarPeriodicTicker.cs" />
     <Compile Include="Utilities\LockGuard.cs" />
     <Compile Include="Utilities\VectorClock.cs" />

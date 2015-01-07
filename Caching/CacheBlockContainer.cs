@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Dargon.Hydar.Utilities;
 using ItzWarty;
 
 namespace Dargon.Hydar.Caching {
@@ -31,7 +32,8 @@ namespace Dargon.Hydar.Caching {
       } 
 
       public EntryBlock<K, V> GetBlockForHash(int hash) {
-         return blocks[partitioningStrategy.GetBlockForHash(hash)];
+         var mixedHash = HashUtilities.Mix(hash);
+         return blocks[partitioningStrategy.GetBlockForHash(mixedHash)];
       }
 
       public ManageableEntry<K, V> GetEntryOrNull(K key) {
