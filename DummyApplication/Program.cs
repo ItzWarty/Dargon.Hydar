@@ -128,7 +128,7 @@ namespace DummyApplication {
          var dummyCacheBlockContainer = new CacheBlockContainerImpl<int, string>(partitioningStrategy);
          var dummyCacheOperationManager = new CacheOperationManagerImpl<int, string>(partitioningStrategy, dummyCacheBlockContainer);
          cacheManager.RegisterCache(dummyCacheContext);
-         localManagementServerRegistry.RegisterInstance(new DummyCacheDebugMob(dummyCacheOperationManager));
+         localManagementServerRegistry.RegisterInstance(new DummyCacheDebugMob(dummyCacheOperationManager, dummyCacheBlockContainer));
 
          ticker.Initialize();
          return null;

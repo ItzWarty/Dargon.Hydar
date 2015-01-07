@@ -98,6 +98,7 @@
     <None Include="Caching\__Old\CachingPayload.cs" />
     <None Include="Caching\__Old\CachingPayloadMetadata.cs" />
     <Compile Include="Caching\HashSpacePartitioningStrategy.cs" />
+    <Compile Include="Caching\Messages\CacheEntryUpdate.cs" />
     <Compile Include="Caching\Operations\EntryOperationFactory.cs" />
     <Compile Include="Caching\Operations\EntryProcessOperation.cs" />
     <Compile Include="Caching\UnweightedRingHashSpacePartitioningStrategy.cs" />

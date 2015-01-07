@@ -6,9 +6,11 @@ using DummyApplication.Hydar;
 namespace DummyApplication.Management {
    public class DummyCacheDebugMob {
       private readonly CacheOperationManager<int, string> cacheOperationManager;
+      private readonly CacheBlockContainer<int, string> cacheBlockContainer; 
 
-      public DummyCacheDebugMob(CacheOperationManager<int, string> cacheOperationManager) {
+      public DummyCacheDebugMob(CacheOperationManager<int, string> cacheOperationManager, CacheBlockContainer<int, string> cacheBlockContainer) {
          this.cacheOperationManager = cacheOperationManager;
+         this.cacheBlockContainer = cacheBlockContainer;
       }
 
       [ManagedOperation]
@@ -33,6 +35,19 @@ namespace DummyApplication.Management {
          cacheOperationManager.EnqueueOperation(key, operation);
          var result = operation.GetResult();
          return key + ": " + (result ?? "null");
+      }
+
+      [ManagedProperty]
+      public int BlockCount { get { return cacheBlockContainer.Blocks.Count; } }
+
+      [ManagedOperation]
+      public int GetBlockIdForHash(int hash) {
+         return cacheBlockContainer.GetBlockForHash(hash).Id;
+      }
+
+      [ManagedOperation]
+      public int GetBlockIdForKey(int key) {
+         return GetBlockIdForHash(key.GetHashCode());
       }
    }
 }

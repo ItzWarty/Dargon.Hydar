@@ -19,7 +19,7 @@ namespace Dargon.Hydar.Caching {
             partitioningStrategy.BlockCount, 
             i => {
                var desc = partitioningStrategy.GetBlockDescriptor(i);
-               return new EntryBlockImpl<K, V>(desc.Offset, desc.Length);
+               return new EntryBlockImpl<K, V>(i, desc.Offset, desc.Length);
             }
          );
       }
