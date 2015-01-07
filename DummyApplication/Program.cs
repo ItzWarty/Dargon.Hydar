@@ -44,7 +44,7 @@ namespace DummyApplication {
          ClusteringConfiguration configuration = new ClusteringConfigurationImpl(TICKS_TO_ELECTION, ELECTION_TICKS_TO_PROMOTION, EPOCH_DURATION_MILLISECONDS);
          AuditEventBus auditEventBus = new ConsoleAuditEventBus();
          TestNetworkManager testNetworkManager = new TestNetworkManager(pofSerializer, new TestNetworkConfiguration());
-         Util.Generate(128, i => CreateAndConfigureContext(pofContext, pofSerializer, auditEventBus, testNetworkManager));
+         Util.Generate(64, i => CreateAndConfigureContext(pofContext, pofSerializer, auditEventBus, testNetworkManager));
          //Util.Generate(64, i => CreateAndConfigureContext(auditEventBus, testNetworkManager));
          // for (var i = 0; i < 8; i++) {
          //    Thread.Sleep((int)EPOCH_DURATION_MILLISECONDS);

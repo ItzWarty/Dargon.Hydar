@@ -1,4 +1,5 @@
-﻿using Dargon.Hydar.Clustering.Messages;
+﻿using Dargon.Hydar.Caching.Operations;
+using Dargon.Hydar.Clustering.Messages;
 using Dargon.Hydar.Clustering.Messages.Helpers;
 using Dargon.Hydar.Peering.Messages;
 using Dargon.Hydar.Utilities;
@@ -25,6 +26,11 @@ namespace Dargon.Hydar.PortableObjects {
 
          // [200, 300) peering stuff
          RegisterPortableObjectType(kBasePofId + 200, typeof(PeeringAnnounce));
+
+         // [300, 400) caching stuff
+         RegisterPortableObjectType(kBasePofId + 300, typeof(EntryReadOperation<,>));
+         RegisterPortableObjectType(kBasePofId + 301, typeof(EntryWriteOperation<,>));
+         RegisterPortableObjectType(kBasePofId + 302, typeof(EntryProcessOperation<,,>));
       }
    }
 }

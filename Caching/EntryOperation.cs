@@ -2,17 +2,20 @@
 using System.Threading;
 
 namespace Dargon.Hydar.Caching {
-   public interface EntryOperation<K, V> {
+   public interface EntryOperation {
       EntryOperationStatus Status { get; }
       EntryOperationType Type { get; }
 
-      void HandleEnqueued();
-      void HandleExecute(ManageableEntry<K, V> entry, EntryOperationContext<K, V> context);
       bool Abort();
       void Wait();
 
       event EventHandler Completed;
       event EventHandler Aborted;
+   }
+
+   public interface EntryOperation<K, V> : EntryOperation {
+      void HandleEnqueued();
+      void HandleExecute(ManageableEntry<K, V> entry, EntryOperationContext<K, V> context);
    }
 
    public abstract class EntryOperationBase<K, V> : EntryOperation<K, V> {
