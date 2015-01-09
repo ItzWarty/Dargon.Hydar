@@ -123,9 +123,9 @@ namespace DummyApplication {
 
          // Initialize Caching Subsystem Dependencies
          var partitioningStrategy = new UnweightedRingHashSpacePartitioningStrategy(1024, 3);
-         var cacheManager = new CacheManagerImpl(hydarIdentity, inboundEnvelopeBus).With(x => x.Initialize());
-         var dummyCacheContext = new CacheContextImpl("Dummy Cache", Guid.Parse("FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF"));
-         var dummyCacheBlockContainer = new CacheBlockContainerImpl<int, string>(partitioningStrategy);
+         var cacheManager = new OldCacheEnvelopeDispatcherImpl(hydarIdentity, inboundEnvelopeBus).With(x => x.Initialize());
+         var dummyCacheContext = new CacheDispatcherImpl("Dummy Cache", Guid.Parse("FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF"));
+         var dummyCacheBlockContainer = new BlockContainerImpl<int, string>(partitioningStrategy);
          var dummyCacheOperationManager = new CacheOperationManagerImpl<int, string>(partitioningStrategy, dummyCacheBlockContainer);
          cacheManager.RegisterCache(dummyCacheContext);
          localManagementServerRegistry.RegisterInstance(new DummyCacheDebugMob(dummyCacheOperationManager, dummyCacheBlockContainer));

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Dargon.Hydar.Caching {
-   class __Placeholder {
+   public interface EntryProposalContext {
+
    }
 }

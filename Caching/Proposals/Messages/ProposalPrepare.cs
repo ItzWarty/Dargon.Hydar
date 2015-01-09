@@ -1,7 +1,7 @@
-﻿using Dargon.PortableObjects;
-using System;
+﻿using System;
+using Dargon.PortableObjects;
 
-namespace Dargon.Hydar.Caching.Management {
+namespace Dargon.Hydar.Caching.Proposals.Messages {
    public class ProposalPrepare : IPortableObject {
       private Guid proposalId;
       private EntryOperation entryOperation;

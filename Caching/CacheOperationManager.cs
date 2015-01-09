@@ -12,10 +12,10 @@ namespace Dargon.Hydar.Caching {
 
    public class CacheOperationManagerImpl<K, V> : CacheOperationManager<K, V> {
       private readonly HashSpacePartitioningStrategy partitioningStrategy;
-      private readonly CacheBlockContainer<K, V> blockContainer;
+      private readonly BlockContainer<K, V> blockContainer;
       private readonly IReadOnlyList<BlockOperationManager<K, V>> blockOperationManagers;
 
-      public CacheOperationManagerImpl(HashSpacePartitioningStrategy partitioningStrategy, CacheBlockContainer<K, V> blockContainer) {
+      public CacheOperationManagerImpl(HashSpacePartitioningStrategy partitioningStrategy, BlockContainer<K, V> blockContainer) {
          this.partitioningStrategy = partitioningStrategy;
          this.blockContainer = blockContainer;
          this.blockOperationManagers = Util.Generate(

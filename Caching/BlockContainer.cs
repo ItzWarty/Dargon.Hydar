@@ -3,18 +3,18 @@ using Dargon.Hydar.Utilities;
 using ItzWarty;
 
 namespace Dargon.Hydar.Caching {
-   public interface CacheBlockContainer<K, V> {
+   public interface BlockContainer<K, V> {
       IReadOnlyList<EntryBlock<K, V>> Blocks { get; }
 
       EntryBlock<K, V> GetBlockForHash(int hash);
       ManageableEntry<K, V> GetEntryOrNull(K key); 
    }
 
-   public class CacheBlockContainerImpl<K, V> : CacheBlockContainer<K, V> {
+   public class BlockContainerImpl<K, V> : BlockContainer<K, V> {
       private readonly HashSpacePartitioningStrategy partitioningStrategy;
       private readonly IReadOnlyList<EntryBlock<K, V>> blocks;  
 
-      public CacheBlockContainerImpl(HashSpacePartitioningStrategy partitioningStrategy) {
+      public BlockContainerImpl(HashSpacePartitioningStrategy partitioningStrategy) {
          this.partitioningStrategy = partitioningStrategy;
          this.blocks = Util.Generate(
             partitioningStrategy.BlockCount, 
