@@ -76,37 +76,45 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Caching\BlockDescriptor.cs" />
-    <Compile Include="Caching\BlockOperationManager.cs" />
-    <Compile Include="Caching\BlockPartitionRange.cs" />
-    <Compile Include="Caching\BlockContainer.cs" />
-    <Compile Include="Caching\CacheOperationManager.cs" />
-    <Compile Include="Caching\Operations\EntryOperationType.cs" />
-    <Compile Include="Caching\Operations\EntryOperationContext.cs" />
-    <Compile Include="Caching\Operations\EntryOperationStatus.cs" />
-    <Compile Include="Caching\EntryProposalContext.cs" />
-    <Compile Include="Caching\ImmutableBlockCollection.cs" />
-    <Compile Include="Caching\EntryBlockImpl.cs" />
-    <Compile Include="Caching\EntryBlock.cs" />
-    <Compile Include="Caching\EntryImpl.cs" />
-    <Compile Include="Caching\Partitioning\HashSpacePartitioningStrategy.cs" />
+    <Compile Include="Caching\Data\BlockDescriptor.cs" />
+    <Compile Include="Caching\Data\BlockOperationManager.cs" />
+    <Compile Include="Caching\Data\BlockPartitionRange.cs" />
+    <Compile Include="Caching\Data\BlockContainer.cs" />
+    <Compile Include="Caching\Data\CacheOperationManager.cs" />
+    <Compile Include="Caching\Data\Operations\EntryOperationType.cs" />
+    <Compile Include="Caching\Data\Operations\EntryOperationContext.cs" />
+    <Compile Include="Caching\Data\Operations\EntryOperationStatus.cs" />
+    <Compile Include="Caching\Data\EntryProposalContext.cs" />
+    <Compile Include="Caching\Data\ImmutableBlockCollection.cs" />
+    <Compile Include="Caching\Data\EntryBlockImpl.cs" />
+    <Compile Include="Caching\Data\EntryBlock.cs" />
+    <Compile Include="Caching\Data\EntryImpl.cs" />
+    <Compile Include="Caching\Data\Partitioning\HashSpacePartitioningStrategy.cs" />
+    <Compile Include="Caching\Proposals\Messages\ProposalFollowerAccept.cs" />
+    <Compile Include="Caching\Proposals\Messages\ProposalLeaderCancel.cs" />
+    <Compile Include="Caching\Proposals\Phases\ProposalPhaseBase.cs" />
+    <Compile Include="Caching\Proposals\Phases\ProposalPhaseFactory.cs" />
+    <Compile Include="Caching\Proposals\ProposalContextFactory.cs" />
+    <Compile Include="Caching\Proposals\ProposalManager.cs" />
     <Compile Include="Caching\Proposals\Messages\Helpers\RejectionReason.cs" />
-    <Compile Include="Caching\Proposals\Messages\ProposalCommit.cs" />
-    <Compile Include="Caching\Proposals\Messages\ProposalPrepare.cs" />
-    <Compile Include="Caching\Proposals\Messages\ProposalReject.cs" />
-    <Compile Include="Caching\Operations\EntryOperationFactory.cs" />
-    <Compile Include="Caching\Operations\EntryProcessOperation.cs" />
-    <Compile Include="Caching\Proposals\Phases\IdlePhase.cs" />
-    <Compile Include="Caching\Partitioning\UnweightedRingHashSpacePartitioningStrategy.cs" />
+    <Compile Include="Caching\Proposals\Messages\ProposalLeaderCommit.cs" />
+    <Compile Include="Caching\Proposals\Messages\IProposalMessage.cs" />
+    <Compile Include="Caching\Proposals\Messages\ProposalLeaderPrepare.cs" />
+    <Compile Include="Caching\Proposals\Messages\ProposalFollowerReject.cs" />
+    <Compile Include="Caching\Data\Operations\EntryOperationFactory.cs" />
+    <Compile Include="Caching\Data\Operations\EntryProcessOperation.cs" />
+    <Compile Include="Caching\Proposals\Phases\InitialPhase.cs" />
+    <Compile Include="Caching\Data\Partitioning\UnweightedRingHashSpacePartitioningStrategy.cs" />
     <Compile Include="Caching\CacheDispatcher.cs" />
-    <Compile Include="Caching\Operations\EntryOperation.cs" />
-    <Compile Include="Caching\EntryPartitionImpl.cs" />
-    <Compile Include="Caching\Operations\EntryReadOperation.cs" />
-    <Compile Include="Caching\Operations\EntryWriteOperation.cs" />
-    <Compile Include="Caching\Operations\ReturningEntryOperation.cs" />
+    <Compile Include="Caching\Data\Operations\EntryOperation.cs" />
+    <Compile Include="Caching\Data\EntryPartitionImpl.cs" />
+    <Compile Include="Caching\Data\Operations\EntryReadOperation.cs" />
+    <Compile Include="Caching\Data\Operations\EntryWriteOperation.cs" />
+    <Compile Include="Caching\Data\Operations\ReturningEntryOperation.cs" />
     <Compile Include="Caching\Proposals\Phases\PreparedPhase.cs" />
-    <Compile Include="Caching\Proposals\Phases\IPhase.cs" />
-    <Compile Include="Caching\Proposals\Phases\ProposerPhase.cs" />
+    <Compile Include="Caching\Proposals\Phases\IProposalPhase.cs" />
+    <Compile Include="Caching\Proposals\Phases\LeaderProposingPhase.cs" />
+    <Compile Include="Caching\Proposals\ProposalContext.cs" />
     <Compile Include="Peering\ManageablePeeringState.cs" />
     <Compile Include="Peering\Management\PeeringDebugMob.cs" />
     <Compile Include="Peering\Messages\PeeringAnnounce.cs" />
@@ -180,9 +188,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Caching\Management\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\libdargon.hydar-api\Dargon.Hydar.Api.csproj">
       <Project>{eea8cbe9-90f7-4411-a7a5-a702c902d02f}</Project>

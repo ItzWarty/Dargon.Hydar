@@ -1,6 +1,9 @@
 ﻿using Dargon.Audits;
 using Dargon.Hydar;
 using Dargon.Hydar.Caching;
+using Dargon.Hydar.Caching.Data.Partitioning;
+using Dargon.Hydar.Caching.Proposals;
+using Dargon.Hydar.Caching.Proposals.Phases;
 using Dargon.Hydar.Clustering;
 using Dargon.Hydar.Clustering.Management;
 using Dargon.Hydar.Clustering.Messages;
@@ -16,7 +19,6 @@ using Dargon.Hydar.Utilities;
 using Dargon.Management;
 using Dargon.Management.Server;
 using Dargon.PortableObjects;
-using DummyApplication.Management;
 using ItzWarty;
 using ItzWarty.Collections;
 using ItzWarty.IO;
@@ -122,13 +124,19 @@ namespace DummyApplication {
          localManagementServerRegistry.RegisterInstance(new ClusteringManagementMob(hydarIdentity, epochManager));
 
          // Initialize Caching Subsystem Dependencies
+         var dummyCache = "Dummy Cache";
+         var cacheGuid = Guid.Parse("FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF");
          var partitioningStrategy = new UnweightedRingHashSpacePartitioningStrategy(1024, 3);
-         var cacheManager = new OldCacheEnvelopeDispatcherImpl(hydarIdentity, inboundEnvelopeBus).With(x => x.Initialize());
-         var dummyCacheContext = new CacheDispatcherImpl("Dummy Cache", Guid.Parse("FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF"));
-         var dummyCacheBlockContainer = new BlockContainerImpl<int, string>(partitioningStrategy);
-         var dummyCacheOperationManager = new CacheOperationManagerImpl<int, string>(partitioningStrategy, dummyCacheBlockContainer);
-         cacheManager.RegisterCache(dummyCacheContext);
-         localManagementServerRegistry.RegisterInstance(new DummyCacheDebugMob(dummyCacheOperationManager, dummyCacheBlockContainer));
+         var proposalPhaseFactory = new ProposalPhaseFactoryImpl<int, string>();
+         var proposalContextFactory = new ProposalContextFactoryImpl<int, string>(proposalPhaseFactory);
+         var proposalManager = new ProposalManagerImpl<int, string>(hydarIdentity, inboundEnvelopeBus, proposalContextFactory, cacheGuid);
+         var cacheDispatcher = new CacheDispatcherImpl<int, string>(dummyCache, cacheGuid, hydarIdentity, proposalManager);
+         // var cacheManager = new OldCacheEnvelopeDispatcherImpl(hydarIdentity, inboundEnvelopeBus).With(x => x.Initialize());
+         // var dummyCacheContext = new CacheDispatcherImpl("Dummy Cache", Guid.Parse("FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF"));
+         // var dummyCacheBlockContainer = new BlockContainerImpl<int, string>(partitioningStrategy);
+         // var dummyCacheOperationManager = new CacheOperationManagerImpl<int, string>(partitioningStrategy, dummyCacheBlockContainer);
+         // cacheManager.RegisterCache(dummyCacheContext);
+         // localManagementServerRegistry.RegisterInstance(new DummyCacheDebugMob(dummyCacheOperationManager, dummyCacheBlockContainer));
 
          ticker.Initialize();
          return null;

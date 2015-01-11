@@ -1,4 +1,4 @@
-﻿using Dargon.Hydar.Caching.Operations;
+﻿using Dargon.Hydar.Caching.Data.Operations;
 using Dargon.Hydar.Clustering.Messages;
 using Dargon.Hydar.Clustering.Messages.Helpers;
 using Dargon.Hydar.Peering.Messages;
