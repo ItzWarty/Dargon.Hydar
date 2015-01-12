@@ -14,7 +14,7 @@ namespace Dargon.Hydar.Caching.Proposals {
 
    public class ProposalManagerImpl<K, V> : EnvelopeProcessorBase<InboundEnvelope, Action<InboundEnvelope>>, ProposalManager {
       private readonly IConcurrentDictionary<Guid, ProposalContext<K, V>> proposalContextsById = new ConcurrentDictionary<Guid, ProposalContext<K, V>>();
-      private readonly IConcurrentDictionary<K, ProposalContext<K, V>> proposalContextsByEntryKey = new ConcurrentDictionary<K, ProposalContext<K, V>>();
+      private readonly IConcurrentDictionary<K, ProposalContext<K, V>> activeProposalContextsByEntryKey = new ConcurrentDictionary<K, ProposalContext<K, V>>();
       private readonly HydarIdentity hydarIdentity;
       private readonly InboundEnvelopeBus inboundEnvelopeBus;
       private readonly ProposalContextFactory<K, V> proposalContextFactory;
@@ -30,11 +30,11 @@ namespace Dargon.Hydar.Caching.Proposals {
       public void Initialize() {
          inboundEnvelopeBus.EventPosted += HandleInboundEnvelope;
 
-         RegisterHandler<ProposalLeaderPrepare<K>>(HandleProposalPrepare);
-         RegisterHandler<ProposalLeaderCommit>(HandleProposalResponse);
-         RegisterHandler<ProposalLeaderCancel>(HandleProposalResponse);
-         RegisterHandler<ProposalFollowerAccept>(HandleProposalResponse);
-         RegisterHandler<ProposalFollowerReject>(HandleProposalResponse);
+         RegisterHandler<ProposalLeaderPrepare<K>>(HandleLeaderPrepare);
+         RegisterHandler<ProposalLeaderCommit>(e => HandleResponseEnvelope(e, ctx => ctx.ProcessLeaderCommit(e)));
+         RegisterHandler<ProposalLeaderCancel>(e => HandleResponseEnvelope(e, ctx => ctx.ProcessLeaderCancel(e)));
+         RegisterHandler<ProposalFollowerAccept>(e => HandleResponseEnvelope(e, ctx => ctx.ProcessFollowerAccept(e)));
+         RegisterHandler<ProposalFollowerReject>(e => HandleResponseEnvelope(e, ctx => ctx.ProcessFollowerReject(e)));
       }
 
       private void HandleInboundEnvelope(EventBus<InboundEnvelope> sender, InboundEnvelope e) {
@@ -45,25 +45,20 @@ namespace Dargon.Hydar.Caching.Proposals {
          }
       }
 
-      private void HandleProposalPrepare(InboundEnvelope envelope) {
+      private void HandleLeaderPrepare(InboundEnvelope envelope) {
          var message = (ProposalLeaderPrepare<K>)envelope.Message;
-         ProposalContext<K, V> existingProposal;
-         if (proposalContextsByEntryKey.TryGetValue(message.EntryKey, out existingProposal)) {
-            existingProposal.Process(envelope);
-         } else {
-            var proposal = proposalContextsById.GetOrAdd(
-               message.ProposalId,
-               guid => proposalContextFactory.Create(message)
-            );
-            proposal.Process(envelope);
-         }
+         var proposal = proposalContextsById.GetOrAdd(
+            message.ProposalId,
+            guid => proposalContextFactory.Create(message)
+         );
+         proposal.ProcessLeaderPrepare(envelope, activeProposalContextsByEntryKey);
       }
 
-      private void HandleProposalResponse(InboundEnvelope envelope) {
+      private void HandleResponseEnvelope(InboundEnvelope envelope, Action<ProposalContext<K, V>> process) {
          var message = (IProposalMessage)envelope.Message;
          ProposalContext<K, V> proposalContext;
          if (proposalContextsById.TryGetValue(message.ProposalId, out proposalContext)) {
-            proposalContext.Process(envelope);
+            process(proposalContext);
          }
       }
 

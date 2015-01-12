@@ -2,7 +2,7 @@
 using Dargon.Hydar.PortableObjects;
 
 namespace Dargon.Hydar.Caching.Proposals.Phases {
-   public class InitialPhase<K, V> : ProposalPhaseBase {
+   public class InitialPhase<K, V> : ProposalPhaseBase<K, V> {
       private readonly ProposalContext<K, V> proposalContext;
       private readonly ProposalPhaseFactory<K, V> proposalPhaseFactory;
 
@@ -11,15 +11,14 @@ namespace Dargon.Hydar.Caching.Proposals.Phases {
          this.proposalPhaseFactory = proposalPhaseFactory;
       }
 
-      public override void Initialize() {
-         base.Initialize();
-
-         RegisterHandler<ProposalLeaderPrepare<K>>(HandleProposalPrepare);
-      }
-
-      private void HandleProposalPrepare(InboundEnvelopeHeader header, ProposalLeaderPrepare<K> message) {
+      public override void ProcessLeaderPrepare(InboundEnvelopeHeader header, ProposalLeaderPrepare<K> message, object activeProposalContextsByEntryKey) {
          var preparedPhase = proposalPhaseFactory.PreparedPhase(proposalContext);
          proposalContext.Transition(preparedPhase);
       }
+
+      public override void ProcessFollowerAccept(InboundEnvelopeHeader header, ProposalFollowerAccept message) { }
+      public override void ProcessFollowerReject(InboundEnvelopeHeader header, ProposalFollowerReject message) { }
+      public override void ProcessLeaderCommit(InboundEnvelopeHeader header, ProposalLeaderCommit message) { }
+      public override void ProcessLeaderCancel(InboundEnvelopeHeader header, ProposalLeaderCancel message) { }
    }
 }
