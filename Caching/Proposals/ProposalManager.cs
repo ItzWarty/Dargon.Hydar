@@ -1,5 +1,6 @@
 using System;
 using Dargon.Audits;
+using Dargon.Hydar.Caching.Data.Operations;
 using Dargon.Hydar.Caching.Proposals.Messages;
 using Dargon.Hydar.Networking;
 using Dargon.Hydar.PortableObjects;
@@ -8,11 +9,11 @@ using ItzWarty;
 using ItzWarty.Collections;
 
 namespace Dargon.Hydar.Caching.Proposals {
-   public interface ProposalManager {
+   public interface ProposalManager<K, V> {
       bool Process(InboundEnvelope envelope);
    }
 
-   public class ProposalManagerImpl<K, V> : EnvelopeProcessorBase<InboundEnvelope, Action<InboundEnvelope>>, ProposalManager {
+   public class ProposalManagerImpl<K, V> : EnvelopeProcessorBase<InboundEnvelope, Action<InboundEnvelope>>, ProposalManager<K, V> {
       private readonly IConcurrentDictionary<Guid, ProposalContext<K, V>> proposalContextsById = new ConcurrentDictionary<Guid, ProposalContext<K, V>>();
       private readonly HydarIdentity hydarIdentity;
       private readonly InboundEnvelopeBus inboundEnvelopeBus;
@@ -40,7 +41,10 @@ namespace Dargon.Hydar.Caching.Proposals {
          var header = e.Header;
          var recipientId = header.RecipientId;
          if (recipientId == Guid.Empty || recipientId == hydarIdentity.NodeId || recipientId == cacheId) {
-            Process(e);
+            var proposalMessage = e.Message as IProposalMessage;
+            if (proposalMessage.CacheId == cacheId) {
+               Process(e);
+            }
          }
       }
 

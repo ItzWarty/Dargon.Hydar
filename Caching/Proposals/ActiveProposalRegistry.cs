@@ -1,8 +1,10 @@
 ﻿using ItzWarty.Collections;
+using ItzWarty;
 
 namespace Dargon.Hydar.Caching.Proposals {
    public interface ActiveProposalRegistry<K, V> {
       bool TryBully(K key, ProposalContext<K, V> candidate);
+      bool TryDeactivate(ProposalContext<K, V> proposalContext);
    }
 
    public class ActiveProposalRegistryImpl<K, V> : ActiveProposalRegistry<K, V> {
@@ -19,14 +21,17 @@ namespace Dargon.Hydar.Caching.Proposals {
       }
 
       internal ProposalContext<K, V> TryBullyCompareHelper(ProposalContext<K, V> previous, ProposalContext<K, V> candidate, out bool bullySuccessful) {
-         if (previous.Proposal.ProposalId.CompareTo(candidate.Proposal.ProposalId) < 0) {
-            previous.HandleBullied();
+         if (previous.TryBullyWith(candidate)) {
             bullySuccessful = true;
             return candidate;
          } else {
             bullySuccessful = false;
             return previous;
          }
+      }
+
+      public bool TryDeactivate(ProposalContext<K, V> proposalContext) {
+         return activeProposalContextsByEntryKey.TryRemove(proposalContext.Proposal.EntryKey, proposalContext);
       }
    }
 }

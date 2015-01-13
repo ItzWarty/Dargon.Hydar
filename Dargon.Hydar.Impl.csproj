@@ -93,6 +93,8 @@
     <Compile Include="Caching\Proposals\ActiveProposalRegistry.cs" />
     <Compile Include="Caching\Proposals\Messages\ProposalFollowerAccept.cs" />
     <Compile Include="Caching\Proposals\Messages\ProposalLeaderCancel.cs" />
+    <Compile Include="Caching\Proposals\Messages\ProposalMessageFactory.cs" />
+    <Compile Include="Caching\Proposals\Messages\ProposalMessageSender.cs" />
     <Compile Include="Caching\Proposals\Phases\FollowerAcceptedPhase.cs" />
     <Compile Include="Caching\Proposals\Phases\FollowerRejectedPhase.cs" />
     <Compile Include="Caching\Proposals\Phases\InitialPhase.cs" />
@@ -117,8 +119,10 @@
     <Compile Include="Caching\Proposals\Phases\IProposalPhase.cs" />
     <Compile Include="Caching\Proposals\Phases\LeaderProposingPhase.cs" />
     <Compile Include="Caching\Proposals\ProposalContext.cs" />
+    <Compile Include="Caching\Proposals\ProposalQueueManager.cs" />
     <Compile Include="Peering\ManageablePeeringState.cs" />
     <Compile Include="Peering\Management\PeeringDebugMob.cs" />
+    <Compile Include="Utilities\MessageSenderBase.cs" />
     <Compile Include="Peering\Messages\PeeringAnnounce.cs" />
     <Compile Include="Peering\Messages\PeeringMessageFactory.cs" />
     <Compile Include="Peering\Messages\PeeringMessageSender.cs" />

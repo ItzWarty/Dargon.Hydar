@@ -66,6 +66,7 @@
     <Compile Include="DummyApplicationPofContext.cs" />
     <Compile Include="Hydar\ToLowerProcessor.cs" />
     <Compile Include="Management\DummyCacheDebugMob.cs" />
+    <Compile Include="Management\DummyCacheProposalMob.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

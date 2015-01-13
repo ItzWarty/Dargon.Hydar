@@ -16,9 +16,9 @@ namespace Dargon.Hydar.Caching {
       private readonly string cacheName;
       private readonly Guid cacheIdentifier;
       private readonly HydarIdentity nodeIdentity;
-      private readonly ProposalManager proposalManager;
+      private readonly ProposalManager<K, V> proposalManager;
 
-      public CacheDispatcherImpl(string cacheName, Guid cacheIdentifier, HydarIdentity nodeIdentity, ProposalManager proposalManager) {
+      public CacheDispatcherImpl(string cacheName, Guid cacheIdentifier, HydarIdentity nodeIdentity, ProposalManager<K, V> proposalManager) {
          this.cacheName = cacheName;
          this.cacheIdentifier = cacheIdentifier;
          this.nodeIdentity = nodeIdentity;

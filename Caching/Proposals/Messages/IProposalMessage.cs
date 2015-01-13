@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Dargon.Hydar.Caching.Proposals.Messages {
    public interface IProposalMessage {
+      Guid CacheId { get; }
       Guid ProposalId { get; }
    }
 }

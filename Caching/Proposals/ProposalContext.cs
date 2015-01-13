@@ -8,16 +8,16 @@ namespace Dargon.Hydar.Caching.Proposals {
    public interface ProposalContext<K, V> {
       ProposalLeaderPrepare<K> Proposal { get; }
 
-      void Transition(IProposalPhase newPhase);
+      void Transition(IProposalPhase<K, V> newPhase);
       void Step();
       void Process(InboundEnvelope envelope);
-      void HandleBullied();
+      bool TryBullyWith(ProposalContext<K, V> candidate);
    }
 
    public class ProposalContextImpl<K, V> : ProposalContext<K, V> {
       private readonly object synchronization = new object();
       private readonly ProposalLeaderPrepare<K> proposal;
-      private IProposalPhase phase;
+      private IProposalPhase<K, V> phase;
 
       public ProposalContextImpl(ProposalLeaderPrepare<K> proposal) {
          this.proposal = proposal;
@@ -25,11 +25,11 @@ namespace Dargon.Hydar.Caching.Proposals {
 
       public ProposalLeaderPrepare<K> Proposal { get { return proposal; } }
 
-      public void Initialize(IProposalPhase initialPhase) {
+      public void Initialize(IProposalPhase<K, V> initialPhase) {
          Transition(initialPhase);
       }
 
-      public void Transition(IProposalPhase newPhase) {
+      public void Transition(IProposalPhase<K, V> newPhase) {
          lock (synchronization) {
             phase = newPhase;
             phase.HandleEnter();
@@ -48,9 +48,9 @@ namespace Dargon.Hydar.Caching.Proposals {
          }
       }
 
-      public void HandleBullied() {
+      public bool TryBullyWith(ProposalContext<K, V> candidate) {
          lock (synchronization) {
-            phase.HandleBullied();
+            return phase.TryBullyWith(candidate);
          }
       }
    }

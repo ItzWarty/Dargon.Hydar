@@ -1,8 +1,9 @@
-﻿using Dargon.Hydar.Caching.Proposals.Messages;
+﻿using System;
+using Dargon.Hydar.Caching.Proposals.Messages;
 using Dargon.Hydar.PortableObjects;
 
 namespace Dargon.Hydar.Caching.Proposals.Phases {
-   public class InitialPhase<K, V> : ProposalPhaseBase {
+   public class InitialPhase<K, V> : ProposalPhaseBase<K, V> {
       private readonly ProposalContext<K, V> proposalContext;
       private readonly ProposalPhaseFactory<K, V> proposalPhaseFactory;
       private readonly ActiveProposalRegistry<K, V> activeProposalRegistry;
@@ -17,6 +18,10 @@ namespace Dargon.Hydar.Caching.Proposals.Phases {
          base.Initialize();
 
          RegisterHandler<ProposalLeaderPrepare<K>>(HandleProposalPrepare);
+      }
+
+      public override bool TryBullyWith(ProposalContext<K, V> candidate) {
+         throw new InvalidOperationException("Nonsensical to bully initial phase.");
       }
 
       private void HandleProposalPrepare(InboundEnvelopeHeader header, ProposalLeaderPrepare<K> message) {
