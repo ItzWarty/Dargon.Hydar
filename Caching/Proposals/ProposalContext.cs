@@ -11,6 +11,7 @@ namespace Dargon.Hydar.Caching.Proposals {
       void Transition(IProposalPhase newPhase);
       void Step();
       void Process(InboundEnvelope envelope);
+      void HandleBullied();
    }
 
    public class ProposalContextImpl<K, V> : ProposalContext<K, V> {
@@ -44,6 +45,12 @@ namespace Dargon.Hydar.Caching.Proposals {
       public void Process(InboundEnvelope envelope) {
          lock (synchronization) {
             phase.Process(envelope);
+         }
+      }
+
+      public void HandleBullied() {
+         lock (synchronization) {
+            phase.HandleBullied();
          }
       }
    }

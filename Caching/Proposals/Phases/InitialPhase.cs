@@ -5,10 +5,12 @@ namespace Dargon.Hydar.Caching.Proposals.Phases {
    public class InitialPhase<K, V> : ProposalPhaseBase {
       private readonly ProposalContext<K, V> proposalContext;
       private readonly ProposalPhaseFactory<K, V> proposalPhaseFactory;
+      private readonly ActiveProposalRegistry<K, V> activeProposalRegistry;
 
-      public InitialPhase(ProposalContext<K, V> proposalContext, ProposalPhaseFactory<K, V> proposalPhaseFactory) {
+      public InitialPhase(ProposalContext<K, V> proposalContext, ProposalPhaseFactory<K, V> proposalPhaseFactory, ActiveProposalRegistry<K, V> activeProposalRegistry) {
          this.proposalContext = proposalContext;
          this.proposalPhaseFactory = proposalPhaseFactory;
+         this.activeProposalRegistry = activeProposalRegistry;
       }
 
       public override void Initialize() {
@@ -18,8 +20,13 @@ namespace Dargon.Hydar.Caching.Proposals.Phases {
       }
 
       private void HandleProposalPrepare(InboundEnvelopeHeader header, ProposalLeaderPrepare<K> message) {
-         var preparedPhase = proposalPhaseFactory.PreparedPhase(proposalContext);
-         proposalContext.Transition(preparedPhase);
+         if (activeProposalRegistry.TryBully(message.EntryKey, proposalContext)) {
+            var acceptedPhase = proposalPhaseFactory.AcceptedPhase(proposalContext);
+            proposalContext.Transition(acceptedPhase);
+         } else {
+            var rejectedPhase = proposalPhaseFactory.RejectedPhase(proposalContext);
+            proposalContext.Transition(rejectedPhase);
+         }
       }
    }
 }

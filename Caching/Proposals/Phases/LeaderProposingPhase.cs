@@ -20,7 +20,7 @@ namespace Dargon.Hydar.Caching.Proposals.Phases {
       }
 
       private void HandleLeaderPrepare(InboundEnvelopeHeader header, ProposalLeaderPrepare<K> message) {
-         if (message.ProposalId.CompareTo(proposalContext.ProposalId) > 0) {
+         if (message.ProposalId.CompareTo(proposalContext.Proposal.ProposalId) > 0) {
             Cancel();
          }
       }

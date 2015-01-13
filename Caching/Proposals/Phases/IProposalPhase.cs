@@ -5,5 +5,6 @@ namespace Dargon.Hydar.Caching.Proposals.Phases {
       void HandleEnter();
       void Step();
       bool Process(InboundEnvelope envelope);
+      void HandleBullied();
    }
 }

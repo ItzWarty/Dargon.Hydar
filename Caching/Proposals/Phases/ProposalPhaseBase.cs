@@ -11,6 +11,7 @@ namespace Dargon.Hydar.Caching.Proposals.Phases {
       public virtual void Initialize() { }
       public virtual void HandleEnter() { }
       public virtual void Step() { }
+      public virtual void HandleBullied() { }
 
       protected void RegisterHandler<TMessage>(Action<InboundEnvelopeHeader, TMessage> handler) {
          RegisterHandler<TMessage>(e => handler(e.Header, (TMessage)e.Message));

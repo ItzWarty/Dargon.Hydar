@@ -90,8 +90,12 @@
     <Compile Include="Caching\Data\EntryBlock.cs" />
     <Compile Include="Caching\Data\EntryImpl.cs" />
     <Compile Include="Caching\Data\Partitioning\HashSpacePartitioningStrategy.cs" />
+    <Compile Include="Caching\Proposals\ActiveProposalRegistry.cs" />
     <Compile Include="Caching\Proposals\Messages\ProposalFollowerAccept.cs" />
     <Compile Include="Caching\Proposals\Messages\ProposalLeaderCancel.cs" />
+    <Compile Include="Caching\Proposals\Phases\FollowerAcceptedPhase.cs" />
+    <Compile Include="Caching\Proposals\Phases\FollowerRejectedPhase.cs" />
+    <Compile Include="Caching\Proposals\Phases\InitialPhase.cs" />
     <Compile Include="Caching\Proposals\Phases\ProposalPhaseBase.cs" />
     <Compile Include="Caching\Proposals\Phases\ProposalPhaseFactory.cs" />
     <Compile Include="Caching\Proposals\ProposalContextFactory.cs" />
@@ -103,7 +107,6 @@
     <Compile Include="Caching\Proposals\Messages\ProposalFollowerReject.cs" />
     <Compile Include="Caching\Data\Operations\EntryOperationFactory.cs" />
     <Compile Include="Caching\Data\Operations\EntryProcessOperation.cs" />
-    <Compile Include="Caching\Proposals\Phases\InitialPhase.cs" />
     <Compile Include="Caching\Data\Partitioning\UnweightedRingHashSpacePartitioningStrategy.cs" />
     <Compile Include="Caching\CacheDispatcher.cs" />
     <Compile Include="Caching\Data\Operations\EntryOperation.cs" />
@@ -111,7 +114,6 @@
     <Compile Include="Caching\Data\Operations\EntryReadOperation.cs" />
     <Compile Include="Caching\Data\Operations\EntryWriteOperation.cs" />
     <Compile Include="Caching\Data\Operations\ReturningEntryOperation.cs" />
-    <Compile Include="Caching\Proposals\Phases\PreparedPhase.cs" />
     <Compile Include="Caching\Proposals\Phases\IProposalPhase.cs" />
     <Compile Include="Caching\Proposals\Phases\LeaderProposingPhase.cs" />
     <Compile Include="Caching\Proposals\ProposalContext.cs" />

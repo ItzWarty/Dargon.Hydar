@@ -14,7 +14,6 @@ namespace Dargon.Hydar.Caching.Proposals {
 
    public class ProposalManagerImpl<K, V> : EnvelopeProcessorBase<InboundEnvelope, Action<InboundEnvelope>>, ProposalManager {
       private readonly IConcurrentDictionary<Guid, ProposalContext<K, V>> proposalContextsById = new ConcurrentDictionary<Guid, ProposalContext<K, V>>();
-      private readonly IConcurrentDictionary<K, ProposalContext<K, V>> proposalContextsByEntryKey = new ConcurrentDictionary<K, ProposalContext<K, V>>();
       private readonly HydarIdentity hydarIdentity;
       private readonly InboundEnvelopeBus inboundEnvelopeBus;
       private readonly ProposalContextFactory<K, V> proposalContextFactory;
@@ -47,16 +46,11 @@ namespace Dargon.Hydar.Caching.Proposals {
 
       private void HandleProposalPrepare(InboundEnvelope envelope) {
          var message = (ProposalLeaderPrepare<K>)envelope.Message;
-         ProposalContext<K, V> existingProposal;
-         if (proposalContextsByEntryKey.TryGetValue(message.EntryKey, out existingProposal)) {
-            existingProposal.Process(envelope);
-         } else {
-            var proposal = proposalContextsById.GetOrAdd(
-               message.ProposalId,
-               guid => proposalContextFactory.Create(message)
-            );
-            proposal.Process(envelope);
-         }
+         var proposal = proposalContextsById.GetOrAdd(
+            message.ProposalId,
+            guid => proposalContextFactory.Create(message)
+         );
+         proposal.Process(envelope);
       }
 
       private void HandleProposalResponse(InboundEnvelope envelope) {
