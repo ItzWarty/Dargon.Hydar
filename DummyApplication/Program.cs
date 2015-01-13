@@ -127,7 +127,8 @@ namespace DummyApplication {
          var dummyCache = "Dummy Cache";
          var cacheGuid = Guid.Parse("FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF");
          var partitioningStrategy = new UnweightedRingHashSpacePartitioningStrategy(1024, 3);
-         var proposalPhaseFactory = new ProposalPhaseFactoryImpl<int, string>();
+         var activeProposalRegistry = new ActiveProposalRegistryImpl<int, string>();
+         var proposalPhaseFactory = new ProposalPhaseFactoryImpl<int, string>(activeProposalRegistry);
          var proposalContextFactory = new ProposalContextFactoryImpl<int, string>(proposalPhaseFactory);
          var proposalManager = new ProposalManagerImpl<int, string>(hydarIdentity, inboundEnvelopeBus, proposalContextFactory, cacheGuid);
          var cacheDispatcher = new CacheDispatcherImpl<int, string>(dummyCache, cacheGuid, hydarIdentity, proposalManager);

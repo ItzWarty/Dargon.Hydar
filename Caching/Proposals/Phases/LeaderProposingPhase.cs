@@ -2,7 +2,7 @@ using Dargon.Hydar.Caching.Proposals.Messages;
 using Dargon.Hydar.PortableObjects;
 
 namespace Dargon.Hydar.Caching.Proposals.Phases {
-   public class LeaderProposingPhase<K, V> : ProposalPhaseBase<K, V> {
+   public class LeaderProposingPhase<K, V> : ProposalPhaseBase {
       private readonly ProposalContext<K, V> proposalContext;
       private readonly ProposalPhaseFactory<K, V> proposalPhaseFactory;
 
@@ -13,28 +13,24 @@ namespace Dargon.Hydar.Caching.Proposals.Phases {
 
       public override void Initialize() {
          base.Initialize();
+
+         RegisterHandler<ProposalLeaderPrepare<K>>(HandleLeaderPrepare);
+         RegisterHandler<ProposalFollowerAccept>(HandleFollowerAccept);
+         RegisterHandler<ProposalFollowerReject>(HandleFollowerReject);
       }
 
-      public override void ProcessLeaderPrepare(InboundEnvelopeHeader header, ProposalLeaderPrepare<K> message, object activeProposalContextsByEntryKey) {
+      private void HandleLeaderPrepare(InboundEnvelopeHeader header, ProposalLeaderPrepare<K> message) {
          if (message.ProposalId.CompareTo(proposalContext.Proposal.ProposalId) > 0) {
             Cancel();
          }
       }
 
-      public override void ProcessFollowerAccept(InboundEnvelopeHeader header, ProposalFollowerAccept message) {
+      private void HandleFollowerAccept(InboundEnvelopeHeader header, ProposalFollowerAccept message) {
          throw new System.NotImplementedException();
       }
 
-      public override void ProcessFollowerReject(InboundEnvelopeHeader header, ProposalFollowerReject message) {
+      private void HandleFollowerReject(InboundEnvelopeHeader header, ProposalFollowerReject message) {
          Cancel();
-      }
-
-      public override void ProcessLeaderCommit(InboundEnvelopeHeader header, ProposalLeaderCommit message) {
-         throw new System.NotImplementedException();
-      }
-
-      public override void ProcessLeaderCancel(InboundEnvelopeHeader header, ProposalLeaderCancel message) {
-         throw new System.NotImplementedException();
       }
 
       private void Commit() {
