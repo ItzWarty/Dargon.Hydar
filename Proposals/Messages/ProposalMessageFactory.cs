@@ -1,8 +1,8 @@
 ﻿using System;
 using Dargon.Hydar.Caching.Data.Operations;
-using Dargon.Hydar.Caching.Proposals.Messages.Helpers;
+using Dargon.Hydar.Proposals.Messages.Helpers;
 
-namespace Dargon.Hydar.Caching.Proposals.Messages {
+namespace Dargon.Hydar.Proposals.Messages {
    public interface ProposalMessageFactory<K, V> {
       ProposalLeaderPrepare<K> LeaderPrepare(Guid proposalId, K entryKey, EntryOperation operation);
       ProposalLeaderCommit LeaderCommit(Guid proposalId);

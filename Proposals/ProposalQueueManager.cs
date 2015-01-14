@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Dargon.Hydar.Caching.Data.Operations;
 using ItzWarty.Collections;
 
-namespace Dargon.Hydar.Caching.Proposals {
+namespace Dargon.Hydar.Proposals {
    public interface ProposalQueueManager<K, V> {
       void EnqueueOperation(K key, EntryOperation<K, V> operation);
    }

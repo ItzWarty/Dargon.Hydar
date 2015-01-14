@@ -1,14 +1,12 @@
 using System;
 using Dargon.Audits;
-using Dargon.Hydar.Caching.Data.Operations;
-using Dargon.Hydar.Caching.Proposals.Messages;
 using Dargon.Hydar.Networking;
 using Dargon.Hydar.PortableObjects;
+using Dargon.Hydar.Proposals.Messages;
 using Dargon.Hydar.Utilities;
-using ItzWarty;
 using ItzWarty.Collections;
 
-namespace Dargon.Hydar.Caching.Proposals {
+namespace Dargon.Hydar.Proposals {
    public interface ProposalManager<K, V> {
       bool Process(InboundEnvelope envelope);
    }

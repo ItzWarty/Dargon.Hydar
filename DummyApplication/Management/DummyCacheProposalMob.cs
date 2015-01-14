@@ -1,5 +1,5 @@
 ﻿using Dargon.Hydar.Caching.Data.Operations;
-using Dargon.Hydar.Caching.Proposals;
+using Dargon.Hydar.Proposals;
 using DummyApplication.Hydar;
 
 namespace DummyApplication.Management {

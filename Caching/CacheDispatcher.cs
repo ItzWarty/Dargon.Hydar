@@ -1,8 +1,8 @@
 ﻿using Dargon.Hydar.PortableObjects;
 using Dargon.Hydar.Utilities;
 using System;
-using Dargon.Hydar.Caching.Proposals;
-using Dargon.Hydar.Caching.Proposals.Messages;
+using Dargon.Hydar.Proposals;
+using Dargon.Hydar.Proposals.Messages;
 
 namespace Dargon.Hydar.Caching {
    public interface CacheDispatcher {

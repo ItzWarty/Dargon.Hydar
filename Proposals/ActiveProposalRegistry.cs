@@ -1,7 +1,7 @@
-﻿using ItzWarty.Collections;
-using ItzWarty;
+﻿using ItzWarty;
+using ItzWarty.Collections;
 
-namespace Dargon.Hydar.Caching.Proposals {
+namespace Dargon.Hydar.Proposals {
    public interface ActiveProposalRegistry<K, V> {
       bool TryBully(K key, ProposalContext<K, V> candidate);
       bool TryDeactivate(ProposalContext<K, V> proposalContext);

@@ -1,12 +1,12 @@
 ﻿using System;
 using Dargon.PortableObjects;
 
-namespace Dargon.Hydar.Caching.Proposals.Messages {
-   public class ProposalLeaderCommit : IPortableObject, IProposalMessage {
+namespace Dargon.Hydar.Proposals.Messages {
+   public class ProposalLeaderCancel : IPortableObject, IProposalMessage {
       private Guid cacheId;
       private Guid proposalId;
 
-      public ProposalLeaderCommit(Guid cacheId, Guid proposalId) {
+      public ProposalLeaderCancel(Guid cacheId, Guid proposalId) {
          this.cacheId = cacheId;
          this.proposalId = proposalId;
       }

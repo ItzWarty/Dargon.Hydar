@@ -2,8 +2,6 @@
 using Dargon.Hydar;
 using Dargon.Hydar.Caching;
 using Dargon.Hydar.Caching.Data.Partitioning;
-using Dargon.Hydar.Caching.Proposals;
-using Dargon.Hydar.Caching.Proposals.Phases;
 using Dargon.Hydar.Clustering;
 using Dargon.Hydar.Clustering.Management;
 using Dargon.Hydar.Clustering.Messages;
@@ -27,6 +25,8 @@ using ItzWarty.Processes;
 using ItzWarty.Threading;
 using System;
 using System.Threading;
+using Dargon.Hydar.Proposals;
+using Dargon.Hydar.Proposals.Phases;
 
 namespace DummyApplication {
    public class Program {

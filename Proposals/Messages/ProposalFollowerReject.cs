@@ -1,8 +1,8 @@
 ﻿using System;
-using Dargon.Hydar.Caching.Proposals.Messages.Helpers;
+using Dargon.Hydar.Proposals.Messages.Helpers;
 using Dargon.PortableObjects;
 
-namespace Dargon.Hydar.Caching.Proposals.Messages {
+namespace Dargon.Hydar.Proposals.Messages {
    public class ProposalFollowerReject : IPortableObject, IProposalMessage {
       private Guid cacheId;
       private Guid proposalId;

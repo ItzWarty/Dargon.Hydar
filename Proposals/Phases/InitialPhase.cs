@@ -1,8 +1,8 @@
 ﻿using System;
-using Dargon.Hydar.Caching.Proposals.Messages;
 using Dargon.Hydar.PortableObjects;
+using Dargon.Hydar.Proposals.Messages;
 
-namespace Dargon.Hydar.Caching.Proposals.Phases {
+namespace Dargon.Hydar.Proposals.Phases {
    public class InitialPhase<K, V> : ProposalPhaseBase<K, V> {
       private readonly ProposalContext<K, V> proposalContext;
       private readonly ProposalPhaseFactory<K, V> proposalPhaseFactory;

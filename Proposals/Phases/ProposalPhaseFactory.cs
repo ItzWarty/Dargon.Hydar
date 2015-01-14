@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ItzWarty;
+﻿using ItzWarty;
 
-namespace Dargon.Hydar.Caching.Proposals.Phases {
+namespace Dargon.Hydar.Proposals.Phases {
    public interface ProposalPhaseFactory<K, V> {
       IProposalPhase<K, V> Initial(ProposalContext<K, V> proposalContext);
       IProposalPhase<K, V> AcceptedPhase(ProposalContext<K, V> proposalContext);

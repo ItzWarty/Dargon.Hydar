@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Dargon.Hydar.Caching.Proposals.Phases {
+﻿namespace Dargon.Hydar.Proposals.Phases {
    public class FollowerAcceptedPhase<K, V> : ProposalPhaseBase<K, V> {
       private ProposalContext<K, V> proposalContext;
       private ProposalPhaseFactoryImpl<K, V> proposalPhaseFactoryImpl;

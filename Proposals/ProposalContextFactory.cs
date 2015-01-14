@@ -1,8 +1,7 @@
-﻿using System;
-using Dargon.Hydar.Caching.Proposals.Messages;
-using Dargon.Hydar.Caching.Proposals.Phases;
+﻿using Dargon.Hydar.Proposals.Messages;
+using Dargon.Hydar.Proposals.Phases;
 
-namespace Dargon.Hydar.Caching.Proposals {
+namespace Dargon.Hydar.Proposals {
    public interface ProposalContextFactory<K, V> {
       ProposalContext<K, V> Create(ProposalLeaderPrepare<K> proposal);
    }

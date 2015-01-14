@@ -1,10 +1,8 @@
-﻿using System;
-using Dargon.Hydar.Caching.Data.Operations;
-using Dargon.Hydar.Caching.Proposals.Messages;
-using Dargon.Hydar.Caching.Proposals.Phases;
-using Dargon.Hydar.PortableObjects;
+﻿using Dargon.Hydar.PortableObjects;
+using Dargon.Hydar.Proposals.Messages;
+using Dargon.Hydar.Proposals.Phases;
 
-namespace Dargon.Hydar.Caching.Proposals {
+namespace Dargon.Hydar.Proposals {
    public interface ProposalContext<K, V> {
       ProposalLeaderPrepare<K> Proposal { get; }
 

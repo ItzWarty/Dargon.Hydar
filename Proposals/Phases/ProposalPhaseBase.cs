@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Dargon.Hydar.PortableObjects;
 using Dargon.Hydar.Utilities;
 
-namespace Dargon.Hydar.Caching.Proposals.Phases {
+namespace Dargon.Hydar.Proposals.Phases {
    public abstract class ProposalPhaseBase<K, V> : EnvelopeProcessorBase<InboundEnvelope, Action<InboundEnvelope>>, IProposalPhase<K, V> {
       public virtual void Initialize() { }
       public virtual void HandleEnter() { }

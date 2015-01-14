@@ -2,7 +2,7 @@
 using Dargon.Hydar.Caching.Data.Operations;
 using Dargon.PortableObjects;
 
-namespace Dargon.Hydar.Caching.Proposals.Messages {
+namespace Dargon.Hydar.Proposals.Messages {
    public class ProposalLeaderPrepare<K> : IPortableObject, IProposalMessage {
       private Guid cacheId;
       private Guid proposalId;

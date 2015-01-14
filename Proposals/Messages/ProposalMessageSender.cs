@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Dargon.Hydar.Caching.Data.Operations;
-using Dargon.Hydar.Caching.Proposals.Messages.Helpers;
 using Dargon.Hydar.Networking;
 using Dargon.Hydar.Networking.PortableObjects;
+using Dargon.Hydar.Proposals.Messages.Helpers;
 using Dargon.Hydar.Utilities;
 
-namespace Dargon.Hydar.Caching.Proposals.Messages {
+namespace Dargon.Hydar.Proposals.Messages {
    public interface ProposalMessageSender<K, V> {
       void LeaderPrepare(Guid proposalId, K entryKey, EntryOperation operation);
       void LeaderCommit(Guid proposalId);
