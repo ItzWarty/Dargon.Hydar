@@ -130,7 +130,8 @@ namespace DummyApplication {
          var activeProposalRegistry = new ActiveProposalRegistryImpl<int, string>();
          var proposalPhaseFactory = new ProposalPhaseFactoryImpl<int, string>(activeProposalRegistry);
          var proposalContextFactory = new ProposalContextFactoryImpl<int, string>(proposalPhaseFactory);
-         var proposalManager = new ProposalManagerImpl<int, string>(hydarIdentity, inboundEnvelopeBus, proposalContextFactory, cacheGuid);
+         var proposalInboundEnvelopeChannel = new InboundBusToInboundEnvelopeChannel(threadingProxy, inboundEnvelopeBus);
+         var proposalManager = new ProposalManagerImpl<int, string>(threadingProxy, hydarIdentity, proposalInboundEnvelopeChannel, proposalContextFactory, cacheGuid);
          var cacheDispatcher = new CacheDispatcherImpl<int, string>(dummyCache, cacheGuid, hydarIdentity, proposalManager);
          // var cacheManager = new OldCacheEnvelopeDispatcherImpl(hydarIdentity, inboundEnvelopeBus).With(x => x.Initialize());
          // var dummyCacheContext = new CacheDispatcherImpl("Dummy Cache", Guid.Parse("FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF"));

@@ -120,6 +120,7 @@
     <Compile Include="Proposals\Phases\LeaderProposingPhase.cs" />
     <Compile Include="Proposals\ProposalContext.cs" />
     <Compile Include="Proposals\ProposalQueueManager.cs" />
+    <Compile Include="Networking\InboundEnvelopeChannel.cs" />
     <Compile Include="Peering\ManageablePeeringState.cs" />
     <Compile Include="Peering\Management\PeeringDebugMob.cs" />
     <Compile Include="Utilities\MessageSenderBase.cs" />

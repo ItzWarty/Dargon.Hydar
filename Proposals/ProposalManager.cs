@@ -5,6 +5,7 @@ using Dargon.Hydar.PortableObjects;
 using Dargon.Hydar.Proposals.Messages;
 using Dargon.Hydar.Utilities;
 using ItzWarty.Collections;
+using ItzWarty.Threading;
 
 namespace Dargon.Hydar.Proposals {
    public interface ProposalManager<K, V> {
@@ -13,35 +14,45 @@ namespace Dargon.Hydar.Proposals {
 
    public class ProposalManagerImpl<K, V> : EnvelopeProcessorBase<InboundEnvelope, Action<InboundEnvelope>>, ProposalManager<K, V> {
       private readonly IConcurrentDictionary<Guid, ProposalContext<K, V>> proposalContextsById = new ConcurrentDictionary<Guid, ProposalContext<K, V>>();
+      private readonly IThreadingProxy threadingProxy;
       private readonly HydarIdentity hydarIdentity;
-      private readonly InboundEnvelopeBus inboundEnvelopeBus;
+      private readonly InboundEnvelopeChannel inboundEnvelopeChannel;
       private readonly ProposalContextFactory<K, V> proposalContextFactory;
       private readonly Guid cacheId;
+      private readonly IThread processorThread;
+      private readonly ICancellationTokenSource processorCancellationTokenSource;
 
-      public ProposalManagerImpl(HydarIdentity hydarIdentity, InboundEnvelopeBus inboundEnvelopeBus, ProposalContextFactory<K, V> proposalContextFactory, Guid cacheId) {
+      public ProposalManagerImpl(IThreadingProxy threadingProxy, HydarIdentity hydarIdentity, InboundEnvelopeChannel inboundEnvelopeChannel, ProposalContextFactory<K, V> proposalContextFactory, Guid cacheId) {
+         this.threadingProxy = threadingProxy;
          this.hydarIdentity = hydarIdentity;
-         this.inboundEnvelopeBus = inboundEnvelopeBus;
+         this.inboundEnvelopeChannel = inboundEnvelopeChannel;
          this.proposalContextFactory = proposalContextFactory;
          this.cacheId = cacheId;
+
+         this.processorThread = threadingProxy.CreateThread(ProcessingThreadStart, new ThreadCreationOptions { IsBackground = true });
+         this.processorCancellationTokenSource = threadingProxy.CreateCancellationTokenSource();
       }
 
       public void Initialize() {
-         inboundEnvelopeBus.EventPosted += HandleInboundEnvelope;
-
          RegisterHandler<ProposalLeaderPrepare<K>>(HandleProposalPrepare);
          RegisterHandler<ProposalLeaderCommit>(HandleProposalResponse);
          RegisterHandler<ProposalLeaderCancel>(HandleProposalResponse);
          RegisterHandler<ProposalFollowerAccept>(HandleProposalResponse);
          RegisterHandler<ProposalFollowerReject>(HandleProposalResponse);
+
+         processorThread.Start();
       }
 
-      private void HandleInboundEnvelope(EventBus<InboundEnvelope> sender, InboundEnvelope e) {
-         var header = e.Header;
-         var recipientId = header.RecipientId;
-         if (recipientId == Guid.Empty || recipientId == hydarIdentity.NodeId || recipientId == cacheId) {
-            var proposalMessage = e.Message as IProposalMessage;
-            if (proposalMessage.CacheId == cacheId) {
-               Process(e);
+      private void ProcessingThreadStart() {
+         while (!processorCancellationTokenSource.IsCancellationRequested) {
+            var envelope = inboundEnvelopeChannel.TakeEnvelope(processorCancellationTokenSource.Token);
+            var header = envelope.Header;
+            var recipientId = header.RecipientId;
+            if (recipientId == Guid.Empty || recipientId == hydarIdentity.NodeId || recipientId == cacheId) {
+               var proposalMessage = envelope.Message as IProposalMessage;
+               if (proposalMessage != null && proposalMessage.CacheId == cacheId) {
+                  Process(envelope);
+               }
             }
          }
       }
