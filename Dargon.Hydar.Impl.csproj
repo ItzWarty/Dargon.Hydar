@@ -101,7 +101,7 @@
     <Compile Include="Proposals\Phases\ProposalPhaseBase.cs" />
     <Compile Include="Proposals\Phases\ProposalPhaseFactory.cs" />
     <Compile Include="Proposals\ProposalContextFactory.cs" />
-    <Compile Include="Proposals\ProposalManager.cs" />
+    <Compile Include="Proposals\TopicEnvelopeDispatcher.cs" />
     <Compile Include="Proposals\Messages\Helpers\RejectionReason.cs" />
     <Compile Include="Proposals\Messages\ProposalLeaderCommit.cs" />
     <Compile Include="Proposals\Messages\IProposalMessage.cs" />
@@ -119,7 +119,7 @@
     <Compile Include="Proposals\Phases\IProposalPhase.cs" />
     <Compile Include="Proposals\Phases\LeaderProposingPhase.cs" />
     <Compile Include="Proposals\ProposalContext.cs" />
-    <Compile Include="Proposals\ProposalQueueManager.cs" />
+    <Compile Include="Proposals\LocalTopicProposalQueueManager.cs" />
     <Compile Include="Networking\InboundEnvelopeChannel.cs" />
     <Compile Include="Peering\ManageablePeeringState.cs" />
     <Compile Include="Peering\Management\PeeringDebugMob.cs" />

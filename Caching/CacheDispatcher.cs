@@ -1,6 +1,7 @@
 ﻿using Dargon.Hydar.PortableObjects;
 using Dargon.Hydar.Utilities;
 using System;
+using Dargon.Hydar.Networking;
 using Dargon.Hydar.Proposals;
 using Dargon.Hydar.Proposals.Messages;
 
@@ -16,13 +17,13 @@ namespace Dargon.Hydar.Caching {
       private readonly string cacheName;
       private readonly Guid cacheIdentifier;
       private readonly HydarIdentity nodeIdentity;
-      private readonly ProposalManager<K, V> proposalManager;
+      private readonly InboundEnvelopeChannel topicEnvelopeChannel;
 
-      public CacheDispatcherImpl(string cacheName, Guid cacheIdentifier, HydarIdentity nodeIdentity, ProposalManager<K, V> proposalManager) {
+      public CacheDispatcherImpl(string cacheName, Guid cacheIdentifier, HydarIdentity nodeIdentity, InboundEnvelopeChannel topicEnvelopeChannel) {
          this.cacheName = cacheName;
          this.cacheIdentifier = cacheIdentifier;
          this.nodeIdentity = nodeIdentity;
-         this.proposalManager = proposalManager;
+         this.topicEnvelopeChannel = topicEnvelopeChannel;
       }
 
       public string Name { get { return cacheName; } }
@@ -39,7 +40,7 @@ namespace Dargon.Hydar.Caching {
       }
 
       private void RouteToProposalManager(InboundEnvelope envelope) {
-         proposalManager.Process(envelope);
+         topicEnvelopeChannel.PostEnvelope(envelope);
       }
 
       protected override void Invoke(Action<InboundEnvelope> handler, InboundEnvelope envelope) {

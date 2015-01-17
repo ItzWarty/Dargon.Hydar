@@ -1,20 +1,23 @@
 ﻿using System;
 using Dargon.Hydar.Caching.Data.Operations;
+using ItzWarty;
 using ItzWarty.Collections;
 
 namespace Dargon.Hydar.Proposals {
-   public interface ProposalQueueManager<K, V> {
+   public interface LocalTopicProposalQueueManager<K, V> {
       void EnqueueOperation(K key, EntryOperation<K, V> operation);
    }
 
-   public class ProposalQueueManagerImpl<K, V> : ProposalQueueManager<K, V> {
-      private readonly object synchronization = new object();
-      private readonly IPriorityQueue<EnqueuedProposal<K, V>> queue = new PriorityQueue<EnqueuedProposal<K, V>>();
+   public class LocalTopicProposalQueueManagerImpl<K, V> : LocalTopicProposalQueueManager<K, V> {
+      private readonly IConcurrentDictionary<K, IPriorityQueue<EnqueuedProposal<K, V>>> proposalQueuesByKey = new ConcurrentDictionary<K, IPriorityQueue<EnqueuedProposal<K, V>>>();
 
       public void EnqueueOperation(K key, EntryOperation<K, V> operation) {
-         lock (synchronization) {
-            queue.Add(new EnqueuedProposal<K, V>(key, operation, Guid.NewGuid()));
-         }
+         var proposal = new EnqueuedProposal<K, V>(key, operation, Guid.NewGuid());
+         proposalQueuesByKey.AddOrUpdate(
+            key,
+            add => new PriorityQueue<EnqueuedProposal<K, V>>().With(x => x.Add(proposal)),
+            (key_, existing) => existing.With(existing_ => existing_.Add(proposal))
+         );
       }
 
       private class EnqueuedProposal<K, V> : IComparable<EnqueuedProposal<K, V>>  {

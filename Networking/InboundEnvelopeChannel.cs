@@ -1,32 +1,26 @@
-﻿using Dargon.Audits;
-using Dargon.Hydar.PortableObjects;
+﻿using Dargon.Hydar.PortableObjects;
 using ItzWarty.Collections;
 using ItzWarty.Threading;
 using System;
 
 namespace Dargon.Hydar.Networking {
    public interface InboundEnvelopeChannel : IDisposable {
+      void PostEnvelope(InboundEnvelope e);
       InboundEnvelope TakeEnvelope(ICancellationToken cancellationToken);
    }
 
-   public class InboundBusToInboundEnvelopeChannel : InboundEnvelopeChannel {
+   public class InboundEnvelopeChannelImpl : InboundEnvelopeChannel {
       private readonly IThreadingProxy threadingProxy;
-      private readonly InboundEnvelopeBus inboundEnvelopeBus;
       private readonly ICancellationTokenSource cancellationTokenSource;
       private readonly IConcurrentQueue<InboundEnvelope> inboundEnvelopeQueue = new ConcurrentQueue<InboundEnvelope>();
       private readonly ISemaphore inboundEnvelopeCounter = new SemaphoreProxy(0, int.MaxValue);
 
-      public InboundBusToInboundEnvelopeChannel(IThreadingProxy threadingProxy, InboundEnvelopeBus inboundEnvelopeBus) {
+      public InboundEnvelopeChannelImpl(IThreadingProxy threadingProxy) {
          this.threadingProxy = threadingProxy;
-         this.inboundEnvelopeBus = inboundEnvelopeBus;
          this.cancellationTokenSource = threadingProxy.CreateCancellationTokenSource();
       }
 
-      public void Initialize() {
-         inboundEnvelopeBus.EventPosted += HandleEnvelopePosted;
-      }
-
-      private void HandleEnvelopePosted(EventBus<InboundEnvelope> sender, InboundEnvelope e) {
+      public void PostEnvelope(InboundEnvelope e) {
          inboundEnvelopeQueue.Enqueue(e);
          inboundEnvelopeCounter.Release();
       }

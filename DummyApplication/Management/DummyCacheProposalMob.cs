@@ -4,14 +4,14 @@ using DummyApplication.Hydar;
 
 namespace DummyApplication.Management {
    public class DummyCacheProposalMob {
-      private readonly ProposalQueueManager<int, string> proposalQueueManager;
+      private readonly LocalTopicProposalQueueManager<int, string> localTopicProposalQueueManager;
 
-      public DummyCacheProposalMob(ProposalQueueManager<int, string> proposalQueueManager) {
-         this.proposalQueueManager = proposalQueueManager;
+      public DummyCacheProposalMob(LocalTopicProposalQueueManager<int, string> localTopicProposalQueueManager) {
+         this.localTopicProposalQueueManager = localTopicProposalQueueManager;
       }
 
       public void ProposeToLower(int key) {
-         proposalQueueManager.EnqueueOperation(key, new EntryProcessOperation<int, string, string>(new ToLowerProcessor()));
+         localTopicProposalQueueManager.EnqueueOperation(key, new EntryProcessOperation<int, string, string>(new ToLowerProcessor()));
       }
    }
 }

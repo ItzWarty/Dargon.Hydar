@@ -130,9 +130,10 @@ namespace DummyApplication {
          var activeProposalRegistry = new ActiveProposalRegistryImpl<int, string>();
          var proposalPhaseFactory = new ProposalPhaseFactoryImpl<int, string>(activeProposalRegistry);
          var proposalContextFactory = new ProposalContextFactoryImpl<int, string>(proposalPhaseFactory);
-         var proposalInboundEnvelopeChannel = new InboundBusToInboundEnvelopeChannel(threadingProxy, inboundEnvelopeBus);
-         var proposalManager = new ProposalManagerImpl<int, string>(threadingProxy, hydarIdentity, proposalInboundEnvelopeChannel, proposalContextFactory, cacheGuid);
-         var cacheDispatcher = new CacheDispatcherImpl<int, string>(dummyCache, cacheGuid, hydarIdentity, proposalManager);
+         var proposalInboundEnvelopeChannel = new InboundEnvelopeChannelImpl(threadingProxy);
+         var proposalManager = new TopicEnvelopeDispatcherImpl<int, string>(threadingProxy, hydarIdentity, proposalInboundEnvelopeChannel, proposalContextFactory, cacheGuid);
+         var proposalTopicEnvelopeChannel = new InboundEnvelopeChannelImpl(threadingProxy);
+         var cacheDispatcher = new CacheDispatcherImpl<int, string>(dummyCache, cacheGuid, hydarIdentity, proposalTopicEnvelopeChannel);
          // var cacheManager = new OldCacheEnvelopeDispatcherImpl(hydarIdentity, inboundEnvelopeBus).With(x => x.Initialize());
          // var dummyCacheContext = new CacheDispatcherImpl("Dummy Cache", Guid.Parse("FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF"));
          // var dummyCacheBlockContainer = new BlockContainerImpl<int, string>(partitioningStrategy);

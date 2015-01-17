@@ -8,11 +8,11 @@ using ItzWarty.Collections;
 using ItzWarty.Threading;
 
 namespace Dargon.Hydar.Proposals {
-   public interface ProposalManager<K, V> {
-      bool Process(InboundEnvelope envelope);
+   public interface TopicEnvelopeDispatcher<K, V> {
+
    }
 
-   public class ProposalManagerImpl<K, V> : EnvelopeProcessorBase<InboundEnvelope, Action<InboundEnvelope>>, ProposalManager<K, V> {
+   public class TopicEnvelopeDispatcherImpl<K, V> : EnvelopeProcessorBase<InboundEnvelope, Action<InboundEnvelope>>, TopicEnvelopeDispatcher<K, V> {
       private readonly IConcurrentDictionary<Guid, ProposalContext<K, V>> proposalContextsById = new ConcurrentDictionary<Guid, ProposalContext<K, V>>();
       private readonly IThreadingProxy threadingProxy;
       private readonly HydarIdentity hydarIdentity;
@@ -22,7 +22,7 @@ namespace Dargon.Hydar.Proposals {
       private readonly IThread processorThread;
       private readonly ICancellationTokenSource processorCancellationTokenSource;
 
-      public ProposalManagerImpl(IThreadingProxy threadingProxy, HydarIdentity hydarIdentity, InboundEnvelopeChannel inboundEnvelopeChannel, ProposalContextFactory<K, V> proposalContextFactory, Guid cacheId) {
+      public TopicEnvelopeDispatcherImpl(IThreadingProxy threadingProxy, HydarIdentity hydarIdentity, InboundEnvelopeChannel inboundEnvelopeChannel, ProposalContextFactory<K, V> proposalContextFactory, Guid cacheId) {
          this.threadingProxy = threadingProxy;
          this.hydarIdentity = hydarIdentity;
          this.inboundEnvelopeChannel = inboundEnvelopeChannel;
