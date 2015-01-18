@@ -25,6 +25,7 @@ using ItzWarty.Processes;
 using ItzWarty.Threading;
 using System;
 using System.Threading;
+using Dargon.Hydar.Clustering.Utilities;
 using Dargon.Hydar.Proposals;
 using Dargon.Hydar.Proposals.Phases;
 
@@ -39,6 +40,9 @@ namespace DummyApplication {
       public static void Main() {
          IPofContext pofContext = new PofContext().With(x => {
             x.MergeContext(new HydarPofContext());
+            x.MergeContext(new HydarUtilitiesPofContext());
+            x.MergeContext(new HydarNetworkingPofContext());
+            x.MergeContext(new HydarClusteringPofContext());
             x.MergeContext(new ManagementPofContext());
             x.MergeContext(new DummyApplicationPofContext());
          });
@@ -88,8 +92,8 @@ namespace DummyApplication {
          localManagementServer.Initialize();
 
          // Initialize Hydar Base Dependencies
-         var hydarConfiguration = new HydarConfigurationImpl(TICK_INTERVAL_MILLIS);
-         var ticker = new HydarPeriodicTickerImpl(threadingProxy, hydarConfiguration);
+         var tickerConfiguration = new PeriodicTickerConfigurationImpl(TICK_INTERVAL_MILLIS);
+         var ticker = new PeriodicTickerImpl(threadingProxy, tickerConfiguration);
          var nodeId = new Guid(testNodeNumber, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0); //Guid.NewGuid();
          var hydarIdentity = new HydarIdentityImpl(nodeId);
          var debugEventRouter = new DebugEventRouterImpl(hydarIdentity, auditEventBus);
@@ -127,7 +131,7 @@ namespace DummyApplication {
          var dummyCache = "Dummy Cache";
          var cacheGuid = Guid.Parse("FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF");
          var partitioningStrategy = new UnweightedRingHashSpacePartitioningStrategy(1024, 3);
-         var activeProposalRegistry = new ActiveProposalRegistryImpl<int, string>();
+         var activeProposalRegistry = new ActiveProposalManagerImpl<int, string>();
          var proposalPhaseFactory = new ProposalPhaseFactoryImpl<int, string>(activeProposalRegistry);
          var proposalContextFactory = new ProposalContextFactoryImpl<int, string>(proposalPhaseFactory);
          var proposalInboundEnvelopeChannel = new InboundEnvelopeChannelImpl(threadingProxy);

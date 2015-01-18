@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using Dargon.Hydar.Networking;
+﻿using Dargon.Hydar.Networking;
+using Dargon.Hydar.Networking.PortableObjects;
+using Dargon.Hydar.Networking.Utilities;
 using Dargon.Hydar.Peering.Messages;
-using Dargon.Hydar.PortableObjects;
-using Dargon.Hydar.Utilities;
-using ItzWarty.Collections;
+using System;
 
 namespace Dargon.Hydar.Peering {
    public interface PeeringMessageDispatcher {

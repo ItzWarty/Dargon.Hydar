@@ -8,14 +8,14 @@ namespace Dargon.Hydar.Proposals.Phases {
    }
 
    public class ProposalPhaseFactoryImpl<K, V> : ProposalPhaseFactory<K, V> {
-      private readonly ActiveProposalRegistry<K, V> activeProposalRegistry;
+      private readonly ActiveProposalManager<K, V> activeProposalManager;
 
-      public ProposalPhaseFactoryImpl(ActiveProposalRegistry<K, V> activeProposalRegistry) {
-         this.activeProposalRegistry = activeProposalRegistry;
+      public ProposalPhaseFactoryImpl(ActiveProposalManager<K, V> activeProposalManager) {
+         this.activeProposalManager = activeProposalManager;
       }
 
       public IProposalPhase<K, V> Initial(ProposalContext<K, V> proposalContext) {
-         return new InitialPhase<K, V>(proposalContext, this, activeProposalRegistry);
+         return new InitialPhase<K, V>(proposalContext, this, activeProposalManager);
       }
 
       public IProposalPhase<K, V> AcceptedPhase(ProposalContext<K, V> proposalContext) {

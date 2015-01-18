@@ -1,4 +1,4 @@
-﻿using Dargon.Hydar.PortableObjects;
+﻿using Dargon.Hydar.Networking.PortableObjects;
 using Dargon.Hydar.Proposals.Messages;
 using Dargon.Hydar.Proposals.Phases;
 

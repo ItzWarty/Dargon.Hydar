@@ -76,6 +76,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Caching\CacheTopicManager.cs" />
     <Compile Include="Caching\Data\BlockDescriptor.cs" />
     <Compile Include="Caching\Data\BlockOperationManager.cs" />
     <Compile Include="Caching\Data\BlockPartitionRange.cs" />
@@ -90,7 +91,8 @@
     <Compile Include="Caching\Data\EntryBlock.cs" />
     <Compile Include="Caching\Data\EntryImpl.cs" />
     <Compile Include="Caching\Data\Partitioning\HashSpacePartitioningStrategy.cs" />
-    <Compile Include="Proposals\ActiveProposalRegistry.cs" />
+    <Compile Include="Proposals\ActiveProposalManager.cs" />
+    <Compile Include="Proposals\ITopicManager.cs" />
     <Compile Include="Proposals\Messages\ProposalFollowerAccept.cs" />
     <Compile Include="Proposals\Messages\ProposalLeaderCancel.cs" />
     <Compile Include="Proposals\Messages\ProposalMessageFactory.cs" />
@@ -101,6 +103,8 @@
     <Compile Include="Proposals\Phases\ProposalPhaseBase.cs" />
     <Compile Include="Proposals\Phases\ProposalPhaseFactory.cs" />
     <Compile Include="Proposals\ProposalContextFactory.cs" />
+    <Compile Include="Proposals\TopicDescriptorImpl.cs" />
+    <Compile Include="Proposals\TopicDescriptor.cs" />
     <Compile Include="Proposals\TopicEnvelopeDispatcher.cs" />
     <Compile Include="Proposals\Messages\Helpers\RejectionReason.cs" />
     <Compile Include="Proposals\Messages\ProposalLeaderCommit.cs" />
@@ -119,78 +123,24 @@
     <Compile Include="Proposals\Phases\IProposalPhase.cs" />
     <Compile Include="Proposals\Phases\LeaderProposingPhase.cs" />
     <Compile Include="Proposals\ProposalContext.cs" />
-    <Compile Include="Proposals\LocalTopicProposalQueueManager.cs" />
-    <Compile Include="Networking\InboundEnvelopeChannel.cs" />
+    <Compile Include="Proposals\LocalProposalQueueManager.cs" />
     <Compile Include="Peering\ManageablePeeringState.cs" />
     <Compile Include="Peering\Management\PeeringDebugMob.cs" />
-    <Compile Include="Utilities\MessageSenderBase.cs" />
     <Compile Include="Peering\Messages\PeeringAnnounce.cs" />
     <Compile Include="Peering\Messages\PeeringMessageFactory.cs" />
     <Compile Include="Peering\Messages\PeeringMessageSender.cs" />
     <Compile Include="Peering\PeeringAnnouncementBroadcaster.cs" />
     <Compile Include="Peering\PeeringConfiguration.cs" />
     <Compile Include="Peering\PeeringMessageDispatcher.cs" />
-    <Compile Include="Clustering\EpochManager.cs" />
-    <Compile Include="Clustering\Management\ClusteringManagementMob.cs" />
-    <Compile Include="Clustering\Messages\ClusteringMessageFactory.cs" />
-    <Compile Include="Clustering\Messages\ClusteringMessageSender.cs" />
-    <Compile Include="Clustering\Messages\Helpers\ElectionCandidate.cs" />
-    <Compile Include="Clustering\Messages\Helpers\EpochSummary.cs" />
     <Compile Include="Peering\PeeringStateImpl.cs" />
     <Compile Include="Peering\ReadablePeeringState.cs" />
     <Compile Include="Peering\PeerStatusFactory.cs" />
     <Compile Include="Peering\PeerStatusImpl.cs" />
-    <Compile Include="Clustering\Phases\ClusteringPhaseManager.cs" />
-    <Compile Include="Clustering\Phases\DroppedPhase.cs" />
-    <Compile Include="Clustering\Phases\ElectionFollowerPhase.cs" />
-    <Compile Include="Clustering\Phases\Helpers\ElectionState.cs" />
-    <Compile Include="HydarIdentityImpl.cs" />
-    <Compile Include="HydarIdentity.cs" />
-    <Compile Include="Networking\InboundEnvelopeBus.cs" />
-    <Compile Include="Networking\Helpers\FilteredNetworkToInboundBusLink.cs" />
-    <Compile Include="HydarConstants.cs" />
-    <Compile Include="Clustering\EpochDescriptorImpl.cs" />
-    <Compile Include="Clustering\EpochDescriptor.cs" />
-    <Compile Include="Networking\Helpers\OutboundBusToNetworkLink.cs" />
-    <Compile Include="Networking\OutboundEnvelopeBus.cs" />
-    <Compile Include="Networking\PortableObjects\OutboundEnvelopeFactory.cs" />
     <Compile Include="PortableObjects\CacheHave.cs" />
     <Compile Include="PortableObjects\CacheNeed.cs" />
-    <Compile Include="Clustering\Messages\ElectionAcknowledgement.cs" />
-    <Compile Include="Networking\PortableObjects\OutboundEnvelope.cs" />
-    <Compile Include="Networking\PortableObjects\OutboundEnvelopeHeader.cs" />
-    <Compile Include="Networking\PortableObjects\OutboundEnvelopeImpl.cs" />
-    <Compile Include="Utilities\DateTimeInterval.cs" />
-    <Compile Include="Utilities\DebugEventRouter.cs" />
-    <Compile Include="Utilities\EnvelopeProcessorBase.cs" />
-    <Compile Include="Clustering\ClusteringConfiguration.cs" />
-    <Compile Include="Clustering\ClusteringConfigurationImpl.cs" />
-    <Compile Include="Clustering\Phases\ElectionCandidatePhase.cs" />
-    <Compile Include="Clustering\Phases\IndeterminatePhase.cs" />
-    <Compile Include="Clustering\Phases\InitializationPhase.cs" />
-    <Compile Include="Clustering\Phases\IPhase.cs" />
-    <Compile Include="Clustering\Phases\LeaderPhase.cs" />
-    <Compile Include="Clustering\Phases\FollowerPhase.cs" />
-    <Compile Include="Clustering\Phases\ClusteringPhaseFactoryImpl.cs" />
-    <Compile Include="Clustering\Phases\PhaseBase.cs" />
-    <Compile Include="Clustering\Phases\ClusteringPhaseFactory.cs" />
     <Compile Include="Peering\PeerStatus.cs" />
     <Compile Include="PortableObjects\HydarPofContext.cs" />
-    <Compile Include="Networking\Network.cs" />
-    <Compile Include="Networking\IRemoteNodeDescriptor.cs" />
-    <Compile Include="Networking\TestRemoteIdentity.cs" />
-    <Compile Include="Clustering\Messages\ElectionVote.cs" />
-    <Compile Include="Clustering\Messages\EpochLeaderHeartBeat.cs" />
-    <Compile Include="Networking\PortableObjects\InboundEnvelope.cs" />
-    <Compile Include="Networking\PortableObjects\InboundEnvelopeHeader.cs" />
-    <Compile Include="Networking\PortableObjects\InboundEnvelopeImpl.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Networking\TestNetworkManager.cs" />
-    <Compile Include="Networking\TestNetworkConfiguration.cs" />
-    <Compile Include="Utilities\HashUtilities.cs" />
-    <Compile Include="Utilities\HydarPeriodicTicker.cs" />
-    <Compile Include="Utilities\LockGuard.cs" />
-    <Compile Include="Utilities\VectorClock.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -200,6 +150,14 @@
     <ProjectReference Include="..\libdargon.hydar-api\Dargon.Hydar.Api.csproj">
       <Project>{eea8cbe9-90f7-4411-a7a5-a702c902d02f}</Project>
       <Name>Dargon.Hydar.Api</Name>
+    </ProjectReference>
+    <ProjectReference Include="Dargon.Hydar.Networking.Api\Dargon.Hydar.Networking.Api.csproj">
+      <Project>{82C1B545-9A77-4D33-A8C2-53BB7D3F8CFF}</Project>
+      <Name>Dargon.Hydar.Networking.Api</Name>
+    </ProjectReference>
+    <ProjectReference Include="Dargon.Hydar.Utilities\Dargon.Hydar.Utilities.csproj">
+      <Project>{be5cbf24-6ee6-43cb-b7e0-af5f340bbdd8}</Project>
+      <Name>Dargon.Hydar.Utilities</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

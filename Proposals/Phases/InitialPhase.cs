@@ -1,4 +1,5 @@
 ﻿using System;
+using Dargon.Hydar.Networking.PortableObjects;
 using Dargon.Hydar.PortableObjects;
 using Dargon.Hydar.Proposals.Messages;
 
@@ -6,12 +7,12 @@ namespace Dargon.Hydar.Proposals.Phases {
    public class InitialPhase<K, V> : ProposalPhaseBase<K, V> {
       private readonly ProposalContext<K, V> proposalContext;
       private readonly ProposalPhaseFactory<K, V> proposalPhaseFactory;
-      private readonly ActiveProposalRegistry<K, V> activeProposalRegistry;
+      private readonly ActiveProposalManager<K, V> activeProposalManager;
 
-      public InitialPhase(ProposalContext<K, V> proposalContext, ProposalPhaseFactory<K, V> proposalPhaseFactory, ActiveProposalRegistry<K, V> activeProposalRegistry) {
+      public InitialPhase(ProposalContext<K, V> proposalContext, ProposalPhaseFactory<K, V> proposalPhaseFactory, ActiveProposalManager<K, V> activeProposalManager) {
          this.proposalContext = proposalContext;
          this.proposalPhaseFactory = proposalPhaseFactory;
-         this.activeProposalRegistry = activeProposalRegistry;
+         this.activeProposalManager = activeProposalManager;
       }
 
       public override void Initialize() {
@@ -25,7 +26,7 @@ namespace Dargon.Hydar.Proposals.Phases {
       }
 
       private void HandleProposalPrepare(InboundEnvelopeHeader header, ProposalLeaderPrepare<K> message) {
-         if (activeProposalRegistry.TryBully(message.EntryKey, proposalContext)) {
+         if (activeProposalManager.TryBully(message.EntryKey, proposalContext)) {
             var acceptedPhase = proposalPhaseFactory.AcceptedPhase(proposalContext);
             proposalContext.Transition(acceptedPhase);
          } else {

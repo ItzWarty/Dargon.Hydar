@@ -1,6 +1,6 @@
-﻿using System;
-using Dargon.Hydar.PortableObjects;
-using Dargon.Hydar.Utilities;
+﻿using Dargon.Hydar.Networking.PortableObjects;
+using Dargon.Hydar.Networking.Utilities;
+using System;
 
 namespace Dargon.Hydar.Proposals.Phases {
    public abstract class ProposalPhaseBase<K, V> : EnvelopeProcessorBase<InboundEnvelope, Action<InboundEnvelope>>, IProposalPhase<K, V> {

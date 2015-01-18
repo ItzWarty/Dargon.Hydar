@@ -3,24 +3,24 @@ using Dargon.PortableObjects;
 
 namespace Dargon.Hydar.Proposals.Messages {
    public class ProposalLeaderCommit : IPortableObject, IProposalMessage {
-      private Guid cacheId;
+      private Guid topicId;
       private Guid proposalId;
 
-      public ProposalLeaderCommit(Guid cacheId, Guid proposalId) {
-         this.cacheId = cacheId;
+      public ProposalLeaderCommit(Guid topicId, Guid proposalId) {
+         this.topicId = topicId;
          this.proposalId = proposalId;
       }
 
-      public Guid CacheId {  get { return cacheId; } }
+      public Guid TopicId {  get { return topicId; } }
       public Guid ProposalId { get { return proposalId; } }
 
       public void Serialize(IPofWriter writer) {
-         writer.WriteGuid(0, cacheId);
+         writer.WriteGuid(0, topicId);
          writer.WriteGuid(1, proposalId);
       }
 
       public void Deserialize(IPofReader reader) {
-         cacheId = reader.ReadGuid(0);
+         topicId = reader.ReadGuid(0);
          proposalId = reader.ReadGuid(1);
       }
    }

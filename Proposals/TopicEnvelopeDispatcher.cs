@@ -1,11 +1,10 @@
-using System;
-using Dargon.Audits;
 using Dargon.Hydar.Networking;
-using Dargon.Hydar.PortableObjects;
+using Dargon.Hydar.Networking.PortableObjects;
+using Dargon.Hydar.Networking.Utilities;
 using Dargon.Hydar.Proposals.Messages;
-using Dargon.Hydar.Utilities;
 using ItzWarty.Collections;
 using ItzWarty.Threading;
+using System;
 
 namespace Dargon.Hydar.Proposals {
    public interface TopicEnvelopeDispatcher<K, V> {
@@ -50,7 +49,7 @@ namespace Dargon.Hydar.Proposals {
             var recipientId = header.RecipientId;
             if (recipientId == Guid.Empty || recipientId == hydarIdentity.NodeId || recipientId == cacheId) {
                var proposalMessage = envelope.Message as IProposalMessage;
-               if (proposalMessage != null && proposalMessage.CacheId == cacheId) {
+               if (proposalMessage != null && proposalMessage.TopicId == cacheId) {
                   Process(envelope);
                }
             }

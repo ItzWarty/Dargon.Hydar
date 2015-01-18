@@ -1,4 +1,4 @@
-using Dargon.Hydar.PortableObjects;
+using Dargon.Hydar.Networking.PortableObjects;
 
 namespace Dargon.Hydar.Proposals.Phases {
    public interface IProposalPhase<K, V> {

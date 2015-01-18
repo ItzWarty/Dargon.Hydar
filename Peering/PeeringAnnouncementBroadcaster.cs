@@ -11,10 +11,10 @@ namespace Dargon.Hydar.Peering {
    }
 
    public class PeeringAnnouncementBroadcasterImpl : PeeringAnnouncementBroadcaster {
-      private readonly HydarPeriodicTicker hydarPeriodicTicker;
+      private readonly PeriodicTicker hydarPeriodicTicker;
       private readonly PeeringMessageSender peeringMessageSender;
 
-      public PeeringAnnouncementBroadcasterImpl(HydarPeriodicTicker hydarPeriodicTicker, PeeringMessageSender peeringMessageSender) {
+      public PeeringAnnouncementBroadcasterImpl(PeriodicTicker hydarPeriodicTicker, PeeringMessageSender peeringMessageSender) {
          this.hydarPeriodicTicker = hydarPeriodicTicker;
          this.peeringMessageSender = peeringMessageSender;
       }

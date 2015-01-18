@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Dargon.Hydar.Clustering.Messages;
-using Dargon.Hydar.Networking;
+﻿using Dargon.Hydar.Networking;
 using Dargon.Hydar.Networking.PortableObjects;
-using Dargon.Hydar.Utilities;
+using Dargon.Hydar.Networking.Utilities;
 
 namespace Dargon.Hydar.Peering.Messages {
    public interface PeeringMessageSender {

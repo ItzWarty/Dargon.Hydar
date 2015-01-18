@@ -1,4 +1,3 @@
-using Dargon.Hydar.Clustering;
 using Dargon.Hydar.Peering.Messages;
 using ItzWarty;
 using System;

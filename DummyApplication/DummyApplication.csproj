@@ -74,13 +74,33 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Dargon.Hydar.Clustering.Api\Dargon.Hydar.Clustering.Api.csproj">
+      <Project>{857A034F-C116-4DBC-885C-24D7477130E9}</Project>
+      <Name>Dargon.Hydar.Clustering.Api</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\libdargon.hydar-api\Dargon.Hydar.Api.csproj">
       <Project>{EEA8CBE9-90F7-4411-A7A5-A702C902D02F}</Project>
       <Name>Dargon.Hydar.Api</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Dargon.Hydar.Clustering.Impl\Dargon.Hydar.Clustering.Impl.csproj">
+      <Project>{15F3B2C3-AA68-4F95-9140-33F0751EF72C}</Project>
+      <Name>Dargon.Hydar.Clustering.Impl</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Dargon.Hydar.Impl.csproj">
       <Project>{27fce073-acce-42ab-b85e-67ef69c866a6}</Project>
       <Name>Dargon.Hydar.Impl</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Dargon.Hydar.Networking.Api\Dargon.Hydar.Networking.Api.csproj">
+      <Project>{82C1B545-9A77-4D33-A8C2-53BB7D3F8CFF}</Project>
+      <Name>Dargon.Hydar.Networking.Api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Dargon.Hydar.Networking.Impl\Dargon.Hydar.Networking.Impl.csproj">
+      <Project>{510D1FBB-010C-47CA-850C-8CA730341465}</Project>
+      <Name>Dargon.Hydar.Networking.Impl</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Dargon.Hydar.Utilities\Dargon.Hydar.Utilities.csproj">
+      <Project>{be5cbf24-6ee6-43cb-b7e0-af5f340bbdd8}</Project>
+      <Name>Dargon.Hydar.Utilities</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

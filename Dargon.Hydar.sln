@@ -11,6 +11,21 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DummyApplication", "DummyAp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dargon.Hydar.Api", "..\libdargon.hydar-api\Dargon.Hydar.Api.csproj", "{EEA8CBE9-90F7-4411-A7A5-A702C902D02F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dargon.Hydar.Clustering.Api", "..\Dargon.Hydar.Clustering.Api\Dargon.Hydar.Clustering.Api.csproj", "{857A034F-C116-4DBC-885C-24D7477130E9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dargon.Hydar.Clustering.Impl", "Dargon.Hydar.Clustering.Impl\Dargon.Hydar.Clustering.Impl.csproj", "{15F3B2C3-AA68-4F95-9140-33F0751EF72C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dargon.Hydar.Networking.Api", "Dargon.Hydar.Networking.Api\Dargon.Hydar.Networking.Api.csproj", "{82C1B545-9A77-4D33-A8C2-53BB7D3F8CFF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dargon.Hydar.Networking.Impl", "Dargon.Hydar.Networking.Impl\Dargon.Hydar.Networking.Impl.csproj", "{510D1FBB-010C-47CA-850C-8CA730341465}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dargon.Hydar.Utilities", "Dargon.Hydar.Utilities\Dargon.Hydar.Utilities.csproj", "{BE5CBF24-6EE6-43CB-B7E0-AF5F340BBDD8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{989F558E-5437-4D3D-BF6F-6B320B89BED0}"
+	ProjectSection(SolutionItems) = preProject
+		hydar_pof_ranges.txt = hydar_pof_ranges.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +48,26 @@ Global
 		{EEA8CBE9-90F7-4411-A7A5-A702C902D02F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EEA8CBE9-90F7-4411-A7A5-A702C902D02F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EEA8CBE9-90F7-4411-A7A5-A702C902D02F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{857A034F-C116-4DBC-885C-24D7477130E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{857A034F-C116-4DBC-885C-24D7477130E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{857A034F-C116-4DBC-885C-24D7477130E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{857A034F-C116-4DBC-885C-24D7477130E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15F3B2C3-AA68-4F95-9140-33F0751EF72C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15F3B2C3-AA68-4F95-9140-33F0751EF72C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15F3B2C3-AA68-4F95-9140-33F0751EF72C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15F3B2C3-AA68-4F95-9140-33F0751EF72C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{82C1B545-9A77-4D33-A8C2-53BB7D3F8CFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82C1B545-9A77-4D33-A8C2-53BB7D3F8CFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82C1B545-9A77-4D33-A8C2-53BB7D3F8CFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82C1B545-9A77-4D33-A8C2-53BB7D3F8CFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{510D1FBB-010C-47CA-850C-8CA730341465}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{510D1FBB-010C-47CA-850C-8CA730341465}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{510D1FBB-010C-47CA-850C-8CA730341465}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{510D1FBB-010C-47CA-850C-8CA730341465}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE5CBF24-6EE6-43CB-B7E0-AF5F340BBDD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE5CBF24-6EE6-43CB-B7E0-AF5F340BBDD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE5CBF24-6EE6-43CB-B7E0-AF5F340BBDD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE5CBF24-6EE6-43CB-B7E0-AF5F340BBDD8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

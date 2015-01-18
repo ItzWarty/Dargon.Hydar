@@ -1,5 +1,4 @@
 ﻿using System;
-using Dargon.Hydar.Clustering;
 
 namespace Dargon.Hydar.Peering {
    public interface PeerStatusFactory {

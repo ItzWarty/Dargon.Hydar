@@ -1,9 +1,9 @@
-﻿using System;
-using Dargon.Hydar.Caching.Data.Operations;
+﻿using Dargon.Hydar.Caching.Data.Operations;
 using Dargon.Hydar.Networking;
 using Dargon.Hydar.Networking.PortableObjects;
+using Dargon.Hydar.Networking.Utilities;
 using Dargon.Hydar.Proposals.Messages.Helpers;
-using Dargon.Hydar.Utilities;
+using System;
 
 namespace Dargon.Hydar.Proposals.Messages {
    public interface ProposalMessageSender<K, V> {

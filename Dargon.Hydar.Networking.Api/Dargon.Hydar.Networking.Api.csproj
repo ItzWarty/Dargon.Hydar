@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{82C1B545-9A77-4D33-A8C2-53BB7D3F8CFF}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Dargon.Hydar.Networking</RootNamespace>
+    <AssemblyName>Dargon.Hydar.Networking.Api</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Dargon.Audits.Api">
+      <HintPath>..\packages\Dargon.Audits.Api.0.0.1\lib\net45\Dargon.Audits.Api.dll</HintPath>
+    </Reference>
+    <Reference Include="libwarty">
+      <HintPath>..\packages\libwarty.proxies-api.0.0.16\lib\net45\libwarty.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="libwarty.proxies-api">
+      <HintPath>..\packages\libwarty.proxies-api.0.0.16\lib\net45\libwarty.proxies-api.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="HydarIdentity.cs" />
+    <Compile Include="InboundEnvelopeBus.cs" />
+    <Compile Include="InboundEnvelopeChannel.cs" />
+    <Compile Include="IRemoteNodeDescriptor.cs" />
+    <Compile Include="Network.cs" />
+    <Compile Include="OutboundEnvelopeBus.cs" />
+    <Compile Include="PortableObjects\InboundEnvelope.cs" />
+    <Compile Include="PortableObjects\InboundEnvelopeHeader.cs" />
+    <Compile Include="PortableObjects\OutboundEnvelope.cs" />
+    <Compile Include="PortableObjects\OutboundEnvelopeFactory.cs" />
+    <Compile Include="PortableObjects\OutboundEnvelopeHeader.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\EnvelopeProcessorBase.cs" />
+    <Compile Include="Utilities\MessageSenderBase.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
