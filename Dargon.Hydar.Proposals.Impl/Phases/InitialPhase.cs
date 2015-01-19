@@ -1,6 +1,5 @@
 ﻿using System;
 using Dargon.Hydar.Networking.PortableObjects;
-using Dargon.Hydar.PortableObjects;
 using Dargon.Hydar.Proposals.Messages;
 
 namespace Dargon.Hydar.Proposals.Phases {

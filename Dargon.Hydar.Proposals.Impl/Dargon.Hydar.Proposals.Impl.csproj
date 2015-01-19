@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{812B373A-91E2-4640-9B8A-6AAC225EC48A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Dargon.Hydar.Proposals</RootNamespace>
+    <AssemblyName>Dargon.Hydar.Proposals.Impl</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="libdpo">
+      <HintPath>..\packages\libdpo.0.0.14\lib\net45\libdpo.dll</HintPath>
+    </Reference>
+    <Reference Include="libwarty">
+      <HintPath>..\packages\libwarty.0.0.16\lib\portable-net45+netcore45+MonoAndroid1+MonoTouch1\libwarty.dll</HintPath>
+    </Reference>
+    <Reference Include="libwarty.proxies-api">
+      <HintPath>..\packages\libdpo.0.0.14\lib\net45\libwarty.proxies-api.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ActiveProposalManager.cs" />
+    <Compile Include="ActiveProposalManagerImpl.cs" />
+    <Compile Include="LocalProposalQueueManager.cs" />
+    <Compile Include="Messages\Helpers\RejectionReason.cs" />
+    <Compile Include="Messages\IProposalMessage.cs" />
+    <Compile Include="Messages\ProposalFollowerAccept.cs" />
+    <Compile Include="Messages\ProposalFollowerReject.cs" />
+    <Compile Include="Messages\ProposalLeaderCancel.cs" />
+    <Compile Include="Messages\ProposalLeaderCommit.cs" />
+    <Compile Include="Messages\ProposalLeaderPrepare.cs" />
+    <Compile Include="Messages\ProposalMessageFactory.cs" />
+    <Compile Include="Messages\ProposalMessageSender.cs" />
+    <Compile Include="Phases\FollowerAcceptedPhase.cs" />
+    <Compile Include="Phases\FollowerRejectedPhase.cs" />
+    <Compile Include="Phases\InitialPhase.cs" />
+    <Compile Include="Phases\IProposalPhase.cs" />
+    <Compile Include="Phases\LeaderProposingPhase.cs" />
+    <Compile Include="Phases\ProposalPhaseBase.cs" />
+    <Compile Include="Phases\ProposalPhaseFactory.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ProposalContext.cs" />
+    <Compile Include="ProposalContextFactory.cs" />
+    <Compile Include="TopicDescriptorImpl.cs" />
+    <Compile Include="TopicEnvelopeDispatcher.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Dargon.Hydar.Networking.Api\Dargon.Hydar.Networking.Api.csproj">
+      <Project>{82C1B545-9A77-4D33-A8C2-53BB7D3F8CFF}</Project>
+      <Name>Dargon.Hydar.Networking.Api</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

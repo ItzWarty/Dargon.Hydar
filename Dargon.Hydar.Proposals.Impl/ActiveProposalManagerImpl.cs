@@ -2,11 +2,6 @@
 using ItzWarty.Collections;
 
 namespace Dargon.Hydar.Proposals {
-   public interface ActiveProposalManager<K, V> {
-      bool TryBully(K key, ProposalContext<K, V> candidate);
-      bool TryDeactivate(ProposalContext<K, V> proposalContext);
-   }
-
    public class ActiveProposalManagerImpl<K, V> : ActiveProposalManager<K, V> {
       private readonly IConcurrentDictionary<K, ProposalContext<K, V>> activeProposalContextsByEntryKey = new ConcurrentDictionary<K, ProposalContext<K, V>>();
 
@@ -16,7 +11,7 @@ namespace Dargon.Hydar.Proposals {
             key,
             candidate,
             (key_, previous) => TryBullyCompareHelper(previous, candidate, out successful)
-         );
+            );
          return successful;
       }
 
