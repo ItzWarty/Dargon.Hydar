@@ -1,8 +1,7 @@
 ﻿using System;
 
 namespace Dargon.Hydar.Proposals.Messages {
-   public interface IProposalMessage {
-      Guid TopicId { get; }
+   public interface AtomicProposalMessage {
       Guid ProposalId { get; }
    }
 }

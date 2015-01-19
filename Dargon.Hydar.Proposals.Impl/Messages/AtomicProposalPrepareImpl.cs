@@ -3,17 +3,13 @@ using Dargon.Hydar.Caching.Data.Operations;
 using Dargon.PortableObjects;
 
 namespace Dargon.Hydar.Proposals.Messages {
-   public interface ProposalLeaderPrepare : IProposalMessage {
-
-   }
-
-   public class ProposalLeaderPrepare<K> : IPortableObject, ProposalLeaderPrepare {
+   public class AtomicProposalPrepareImpl<K> : IPortableObject, AtomicProposalPrepare {
       private Guid topicId;
       private Guid proposalId;
       private K entryKey;
       private EntryOperation operation;
 
-      public ProposalLeaderPrepare(Guid topicId, Guid proposalId, K entryKey, EntryOperation operation) {
+      public AtomicProposalPrepareImpl(Guid topicId, Guid proposalId, K entryKey, EntryOperation operation) {
          this.topicId = topicId;
          this.proposalId = proposalId;
          this.entryKey = entryKey;

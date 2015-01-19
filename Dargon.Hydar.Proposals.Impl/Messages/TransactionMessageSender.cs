@@ -6,7 +6,7 @@ using Dargon.Hydar.Proposals.Messages.Helpers;
 using System;
 
 namespace Dargon.Hydar.Proposals.Messages {
-   public interface ProposalMessageSender<K, V> {
+   public interface TransactionMessageSender<K, V> {
       void LeaderPrepare(Guid proposalId, K entryKey, EntryOperation operation);
       void LeaderCommit(Guid proposalId);
       void LeaderCancel(Guid proposalId);
@@ -14,38 +14,38 @@ namespace Dargon.Hydar.Proposals.Messages {
       void FollowerReject(Guid proposalId, RejectionReason rejectionReason);
    }
 
-   public class ProposalMessageSenderImpl<K, V> : MessageSenderBase, ProposalMessageSender<K, V> {
+   public class TransactionMessageSenderImpl<K, V> : MessageSenderBase, TransactionMessageSender<K, V> {
       private readonly Guid cacheId;
-      private readonly ProposalMessageFactory<K, V> proposalMessageFactory;
+      private readonly TransactionMessageFactory<K, V> transactionMessageFactory;
 
-      public ProposalMessageSenderImpl(
+      public TransactionMessageSenderImpl(
          Guid cacheId,
          OutboundEnvelopeFactory outboundEnvelopeFactory,
          OutboundEnvelopeBus outboundEnvelopeBus,
-         ProposalMessageFactory<K, V> proposalMessageFactory
+         TransactionMessageFactory<K, V> transactionMessageFactory
       ) : base(outboundEnvelopeFactory, outboundEnvelopeBus) {
          this.cacheId = cacheId;
-         this.proposalMessageFactory = proposalMessageFactory;
+         this.transactionMessageFactory = transactionMessageFactory;
       }
 
       public void LeaderPrepare(Guid proposalId, K entryKey, EntryOperation operation) {
-         SendMessageMulticast(cacheId, proposalMessageFactory.LeaderPrepare(proposalId, entryKey, operation));
+         SendMessageMulticast(cacheId, transactionMessageFactory.LeaderPrepare(proposalId, entryKey, operation));
       }
 
       public void LeaderCommit(Guid proposalId) {
-         SendMessageMulticast(cacheId, proposalMessageFactory.LeaderCommit(proposalId));
+         SendMessageMulticast(cacheId, transactionMessageFactory.LeaderCommit(proposalId));
       }
 
       public void LeaderCancel(Guid proposalId) {
-         SendMessageMulticast(cacheId, proposalMessageFactory.LeaderCancel(proposalId));
+         SendMessageMulticast(cacheId, transactionMessageFactory.LeaderCancel(proposalId));
       }
 
       public void FollowerAccept(Guid proposalId) {
-         SendMessageMulticast(cacheId, proposalMessageFactory.FollowerAccept(proposalId));
+         SendMessageMulticast(cacheId, transactionMessageFactory.FollowerAccept(proposalId));
       }
 
       public void FollowerReject(Guid proposalId, RejectionReason rejectionReason) {
-         SendMessageMulticast(cacheId, proposalMessageFactory.FollowerReject(proposalId, rejectionReason));
+         SendMessageMulticast(cacheId, transactionMessageFactory.FollowerReject(proposalId, rejectionReason));
       }
    }
 }

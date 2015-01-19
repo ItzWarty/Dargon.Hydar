@@ -1,29 +1,29 @@
 ﻿using ItzWarty;
 
 namespace Dargon.Hydar.Proposals.Phases {
-   public interface ProposalPhaseFactory<K, V> {
-      IProposalPhase<K, V> Initial(ProposalContext<K, V> proposalContext);
-      IProposalPhase<K, V> AcceptedPhase(ProposalContext<K, V> proposalContext);
-      IProposalPhase<K, V> RejectedPhase(ProposalContext<K, V> proposalContext);
+   public interface ProposalPhaseFactory<TSubject> {
+      IProposalPhase<TSubject> Initial(SubjectState<TSubject> subjectState);
+      IProposalPhase<TSubject> AcceptedPhase(SubjectState<TSubject> subjectState);
+      IProposalPhase<TSubject> RejectedPhase(SubjectState<TSubject> subjectState);
    }
 
-   public class ProposalPhaseFactoryImpl<K, V> : ProposalPhaseFactory<K, V> {
-      private readonly ActiveProposalManager<K, V> activeProposalManager;
+   public class ProposalPhaseFactoryImpl<TSubject> : ProposalPhaseFactory<TSubject> {
+      private readonly ActiveProposalManager<TSubject> activeProposalManager;
 
-      public ProposalPhaseFactoryImpl(ActiveProposalManager<K, V> activeProposalManager) {
+      public ProposalPhaseFactoryImpl(ActiveProposalManager<TSubject> activeProposalManager) {
          this.activeProposalManager = activeProposalManager;
       }
 
-      public IProposalPhase<K, V> Initial(ProposalContext<K, V> proposalContext) {
-         return new InitialPhase<K, V>(proposalContext, this, activeProposalManager);
+      public IProposalPhase<TSubject> Initial(SubjectState<TSubject> subjectState) {
+         return new InitialPhase<TSubject>(subjectState, this, activeProposalManager);
       }
 
-      public IProposalPhase<K, V> AcceptedPhase(ProposalContext<K, V> proposalContext) {
-         return new FollowerAcceptedPhase<K, V>(proposalContext, this).With(x => x.Initialize());
+      public IProposalPhase<TSubject> AcceptedPhase(SubjectState<TSubject> subjectState) {
+         return new FollowerAcceptedPhase<TSubject>(subjectState, this).With(x => x.Initialize());
       }
 
-      public IProposalPhase<K, V> RejectedPhase(ProposalContext<K, V> proposalContext) {
-         return new FollowerRejectedPhase<K, V>(proposalContext).With(x => x.Initialize());
+      public IProposalPhase<TSubject> RejectedPhase(SubjectState<TSubject> subjectState) {
+         return new FollowerRejectedPhase<TSubject>(subjectState).With(x => x.Initialize());
       }
    }
 }

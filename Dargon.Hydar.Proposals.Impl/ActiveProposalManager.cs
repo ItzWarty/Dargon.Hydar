@@ -1,6 +1,6 @@
 ﻿namespace Dargon.Hydar.Proposals {
-   public interface ActiveProposalManager<K, V> {
-      bool TryBully(K key, ProposalContext<K, V> candidate);
-      bool TryDeactivate(ProposalContext<K, V> proposalContext);
+   public interface ActiveProposalManager<TSubject> {
+      bool TryBully(TSubject key, SubjectState<TSubject> candidate);
+      bool TryDeactivate(SubjectState<TSubject> subjectState);
    }
 }

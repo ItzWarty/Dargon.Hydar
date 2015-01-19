@@ -2,11 +2,11 @@ using System;
 using Dargon.PortableObjects;
 
 namespace Dargon.Hydar.Proposals.Messages {
-   public class ProposalFollowerAccept : IPortableObject, IProposalMessage {
+   public class AtomicProposalAcceptImpl : IPortableObject, AtomicProposalMessage {
       private Guid topicId;
       private Guid proposalId;
 
-      public ProposalFollowerAccept(Guid topicId, Guid proposalId) {
+      public AtomicProposalAcceptImpl(Guid topicId, Guid proposalId) {
          this.topicId = topicId;
          this.proposalId = proposalId;
       }

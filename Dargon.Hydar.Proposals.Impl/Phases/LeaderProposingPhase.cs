@@ -3,12 +3,12 @@ using Dargon.Hydar.Proposals.Messages;
 
 namespace Dargon.Hydar.Proposals.Phases {
    public class LeaderProposingPhase<K, V> : ProposalPhaseBase<K, V> {
-      private readonly ProposalContext<K, V> proposalContext;
+      private readonly SubjectState<> subjectState;
       private readonly ProposalPhaseFactory<K, V> proposalPhaseFactory;
       private readonly ActiveProposalManager<K, V> activeProposalManager;
 
-      public LeaderProposingPhase(ProposalContext<K, V> proposalContext, ProposalPhaseFactory<K, V> proposalPhaseFactory, ActiveProposalManager<K, V> activeProposalManager) {
-         this.proposalContext = proposalContext;
+      public LeaderProposingPhase(SubjectState<> subjectState, ProposalPhaseFactory<K, V> proposalPhaseFactory, ActiveProposalManager<K, V> activeProposalManager) {
+         this.subjectState = subjectState;
          this.proposalPhaseFactory = proposalPhaseFactory;
          this.activeProposalManager = activeProposalManager;
       }
@@ -16,27 +16,27 @@ namespace Dargon.Hydar.Proposals.Phases {
       public override void Initialize() {
          base.Initialize();
 
-         RegisterHandler<ProposalLeaderPrepare<K>>(HandleLeaderPrepare);
-         RegisterHandler<ProposalFollowerAccept>(HandleFollowerAccept);
-         RegisterHandler<ProposalFollowerReject>(HandleFollowerReject);
+         RegisterHandler<AtomicProposalPrepareImpl<K>>(HandleLeaderPrepare);
+         RegisterHandler<AtomicProposalAcceptImpl>(HandleFollowerAccept);
+         RegisterHandler<AtomicProposalRejectImpl>(HandleFollowerReject);
       }
 
-      private void HandleLeaderPrepare(InboundEnvelopeHeader header, ProposalLeaderPrepare<K> message) {
-         if (message.ProposalId.CompareTo(proposalContext.Proposal.ProposalId) > 0) {
+      private void HandleLeaderPrepare(InboundEnvelopeHeader header, AtomicProposalPrepareImpl<K> message) {
+         if (message.ProposalId.CompareTo(subjectState.AtomicProposal.ProposalId) > 0) {
             Cancel();
          }
       }
 
-      private void HandleFollowerAccept(InboundEnvelopeHeader header, ProposalFollowerAccept message) {
+      private void HandleFollowerAccept(InboundEnvelopeHeader header, AtomicProposalAcceptImpl message) {
          throw new System.NotImplementedException();
       }
 
-      private void HandleFollowerReject(InboundEnvelopeHeader header, ProposalFollowerReject message) {
+      private void HandleFollowerReject(InboundEnvelopeHeader header, AtomicProposalRejectImpl message) {
          Cancel();
       }
 
-      public override bool TryBullyWith(ProposalContext<K, V> candidate) {
-         if (candidate.Proposal.ProposalId.CompareTo(proposalContext.Proposal.ProposalId) > 0) {
+      public override bool TryBullyWith(SubjectState<> candidate) {
+         if (candidate.AtomicProposal.ProposalId.CompareTo(subjectState.AtomicProposal.ProposalId) > 0) {
             Cancel();
             return true;
          }

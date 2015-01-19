@@ -1,10 +1,10 @@
 ﻿namespace Dargon.Hydar.Proposals.Phases {
    public class FollowerAcceptedPhase<K, V> : ProposalPhaseBase<K, V> {
-      private ProposalContext<K, V> proposalContext;
+      private SubjectState<> subjectState;
       private ProposalPhaseFactoryImpl<K, V> proposalPhaseFactoryImpl;
 
-      public FollowerAcceptedPhase(ProposalContext<K, V> proposalContext, ProposalPhaseFactoryImpl<K, V> proposalPhaseFactoryImpl) {
-         this.proposalContext = proposalContext;
+      public FollowerAcceptedPhase(SubjectState<> subjectState, ProposalPhaseFactoryImpl<K, V> proposalPhaseFactoryImpl) {
+         this.subjectState = subjectState;
          this.proposalPhaseFactoryImpl = proposalPhaseFactoryImpl;
       }
 
@@ -12,7 +12,7 @@
          base.Step();
       }
 
-      public override bool TryBullyWith(ProposalContext<K, V> candidate) {
+      public override bool TryBullyWith(SubjectState<> candidate) {
          return false;
       }
    }

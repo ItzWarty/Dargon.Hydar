@@ -1,10 +1,15 @@
 using Dargon.Hydar.Networking.PortableObjects;
 
 namespace Dargon.Hydar.Proposals.Phases {
-   public interface IProposalPhase<K, V> {
+   public interface IProposalPhase<K> {
       void HandleEnter();
       void Step();
-      bool Process(InboundEnvelope envelope);
-      bool TryBullyWith(ProposalContext<K, V> candidate);
+
+      void HandlePrepare();
+      void HandleCommit();
+      void HandleCancel();
+      void HandleAccept();
+      void HandleReject();
+      bool TryCancel();
    }
 }

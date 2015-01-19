@@ -3,9 +3,9 @@ using ItzWarty.Collections;
 
 namespace Dargon.Hydar.Proposals {
    public class ActiveProposalManagerImpl<K, V> : ActiveProposalManager<K, V> {
-      private readonly IConcurrentDictionary<K, ProposalContext<K, V>> activeProposalContextsByEntryKey = new ConcurrentDictionary<K, ProposalContext<K, V>>();
+      private readonly IConcurrentDictionary<K, SubjectState<>> activeProposalContextsByEntryKey = new ConcurrentDictionary<K, SubjectState<>>();
 
-      public bool TryBully(K key, ProposalContext<K, V> candidate) {
+      public bool TryBully(K key, SubjectState<> candidate) {
          bool successful = true;
          activeProposalContextsByEntryKey.AddOrUpdate(
             key,
@@ -15,7 +15,7 @@ namespace Dargon.Hydar.Proposals {
          return successful;
       }
 
-      internal ProposalContext<K, V> TryBullyCompareHelper(ProposalContext<K, V> previous, ProposalContext<K, V> candidate, out bool bullySuccessful) {
+      internal SubjectState<> TryBullyCompareHelper(SubjectState<> previous, SubjectState<> candidate, out bool bullySuccessful) {
          if (previous.TryBullyWith(candidate)) {
             bullySuccessful = true;
             return candidate;
@@ -25,8 +25,8 @@ namespace Dargon.Hydar.Proposals {
          }
       }
 
-      public bool TryDeactivate(ProposalContext<K, V> proposalContext) {
-         return activeProposalContextsByEntryKey.TryRemove(proposalContext.Proposal.EntryKey, proposalContext);
+      public bool TryDeactivate(SubjectState<> subjectState) {
+         return activeProposalContextsByEntryKey.TryRemove(subjectState.AtomicProposal.EntryKey, subjectState);
       }
    }
 }

@@ -26,9 +26,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentat
 		hydar_pof_ranges.txt = hydar_pof_ranges.txt
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dargon.Hydar.Proposals.Api", "Dargon.Hydar.Proposals.Api\Dargon.Hydar.Proposals.Api.csproj", "{655D930A-5CDC-47CF-B4A9-E158C16AA925}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dargon.Hydar.AtomicProposals.Api", "Dargon.Hydar.Proposals.Api\Dargon.Hydar.AtomicProposals.Api.csproj", "{655D930A-5CDC-47CF-B4A9-E158C16AA925}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dargon.Hydar.Proposals.Impl", "Dargon.Hydar.Proposals.Impl\Dargon.Hydar.Proposals.Impl.csproj", "{812B373A-91E2-4640-9B8A-6AAC225EC48A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dargon.Hydar.AtomicProposals.Impl", "Dargon.Hydar.Proposals.Impl\Dargon.Hydar.AtomicProposals.Impl.csproj", "{812B373A-91E2-4640-9B8A-6AAC225EC48A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

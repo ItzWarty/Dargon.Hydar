@@ -2,11 +2,11 @@
 using Dargon.PortableObjects;
 
 namespace Dargon.Hydar.Proposals.Messages {
-   public class ProposalLeaderCancel : IPortableObject, IProposalMessage {
+   public class AtomicProposalCommitImpl : IPortableObject, AtomicProposalMessage {
       private Guid topicId;
       private Guid proposalId;
 
-      public ProposalLeaderCancel(Guid topicId, Guid proposalId) {
+      public AtomicProposalCommitImpl(Guid topicId, Guid proposalId) {
          this.topicId = topicId;
          this.proposalId = proposalId;
       }
