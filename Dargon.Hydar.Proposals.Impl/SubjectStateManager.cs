@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ItzWarty.Collections;
+using System;
 
 namespace Dargon.Hydar.Proposals {
    public interface SubjectStateManager<TSubject> {
@@ -10,8 +7,18 @@ namespace Dargon.Hydar.Proposals {
    }
 
    public class SubjectStateManagerImpl<TSubject> : SubjectStateManager<TSubject> {
+      private readonly SubjectStateFactory<TSubject> subjectStateFactory; 
+      private readonly IConcurrentDictionary<TSubject, SubjectState<TSubject>> activeProposalContextsByEntryKey = new ConcurrentDictionary<TSubject, SubjectState<TSubject>>();
+
+      public SubjectStateManagerImpl(SubjectStateFactory<TSubject> subjectStateFactory) {
+         this.subjectStateFactory = subjectStateFactory;
+      }
+
       public SubjectState<TSubject> GetOrCreate(TSubject subject) {
-         throw new NotImplementedException();
+         return activeProposalContextsByEntryKey.GetOrAdd(
+            subject,
+            subjectStateFactory.Create
+         );
       }
    }
 }

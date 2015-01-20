@@ -1,7 +1,6 @@
 ﻿using Dargon.Hydar.Networking;
 using Dargon.Hydar.Networking.PortableObjects;
 using Dargon.Hydar.Networking.Utilities;
-using Dargon.Hydar.Proposals.Messages;
 using System;
 
 namespace Dargon.Hydar.Caching {
@@ -31,11 +30,11 @@ namespace Dargon.Hydar.Caching {
       public void Initialize() {
          nodeIdentity.AddGroup(cacheIdentifier, cacheName);
 
-         RegisterHandler<ProposalLeaderPrepare<K>>(RouteToProposalManager);
-         RegisterHandler<ProposalFollowerAccept>(RouteToProposalManager);
-         RegisterHandler<ProposalFollowerReject>(RouteToProposalManager);
-         RegisterHandler<ProposalLeaderCommit>(RouteToProposalManager);
-         RegisterHandler<ProposalLeaderCancel>(RouteToProposalManager);
+//         RegisterHandler<ProposalLeaderPrepare<K>>(RouteToProposalManager);
+//         RegisterHandler<ProposalFollowerAccept>(RouteToProposalManager);
+//         RegisterHandler<ProposalFollowerReject>(RouteToProposalManager);
+//         RegisterHandler<ProposalLeaderCommit>(RouteToProposalManager);
+//         RegisterHandler<ProposalLeaderCancel>(RouteToProposalManager);
       }
 
       private void RouteToProposalManager(InboundEnvelope envelope) {

@@ -3,7 +3,7 @@ using Dargon.Hydar.Proposals.Messages.Helpers;
 using Dargon.PortableObjects;
 
 namespace Dargon.Hydar.Proposals.Messages {
-   public class AtomicProposalRejectImpl : IPortableObject, AtomicProposalMessage {
+   public class AtomicProposalRejectImpl : IPortableObject, AtomicProposalReject {
       private Guid topicId;
       private Guid proposalId;
       private RejectionReason rejectionReason;

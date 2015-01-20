@@ -30,6 +30,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dargon.Hydar.AtomicProposal
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dargon.Hydar.AtomicProposals.Impl", "Dargon.Hydar.Proposals.Impl\Dargon.Hydar.AtomicProposals.Impl.csproj", "{812B373A-91E2-4640-9B8A-6AAC225EC48A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dargon.Hydar.Caching.Impl", "..\Dargon.Hydar.Caching.Impl\Dargon.Hydar.Caching.Impl.csproj", "{3311AC76-BE04-4A11-8350-BAF88EE46305}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -80,6 +82,10 @@ Global
 		{812B373A-91E2-4640-9B8A-6AAC225EC48A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{812B373A-91E2-4640-9B8A-6AAC225EC48A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{812B373A-91E2-4640-9B8A-6AAC225EC48A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3311AC76-BE04-4A11-8350-BAF88EE46305}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3311AC76-BE04-4A11-8350-BAF88EE46305}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3311AC76-BE04-4A11-8350-BAF88EE46305}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3311AC76-BE04-4A11-8350-BAF88EE46305}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

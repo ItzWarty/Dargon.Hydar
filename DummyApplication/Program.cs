@@ -1,11 +1,11 @@
 ﻿using Dargon.Audits;
-using Dargon.Hydar;
 using Dargon.Hydar.Caching;
 using Dargon.Hydar.Caching.Data.Partitioning;
 using Dargon.Hydar.Clustering;
 using Dargon.Hydar.Clustering.Management;
 using Dargon.Hydar.Clustering.Messages;
 using Dargon.Hydar.Clustering.Phases;
+using Dargon.Hydar.Clustering.Utilities;
 using Dargon.Hydar.Networking;
 using Dargon.Hydar.Networking.Helpers;
 using Dargon.Hydar.Networking.PortableObjects;
@@ -13,6 +13,8 @@ using Dargon.Hydar.Peering;
 using Dargon.Hydar.Peering.Management;
 using Dargon.Hydar.Peering.Messages;
 using Dargon.Hydar.PortableObjects;
+using Dargon.Hydar.Proposals;
+using Dargon.Hydar.Proposals.Messages;
 using Dargon.Hydar.Utilities;
 using Dargon.Management;
 using Dargon.Management.Server;
@@ -25,9 +27,6 @@ using ItzWarty.Processes;
 using ItzWarty.Threading;
 using System;
 using System.Threading;
-using Dargon.Hydar.Clustering.Utilities;
-using Dargon.Hydar.Proposals;
-using Dargon.Hydar.Proposals.Phases;
 
 namespace DummyApplication {
    public class Program {
@@ -129,21 +128,30 @@ namespace DummyApplication {
 
          // Initialize Caching Subsystem Dependencies
          var dummyCache = "Dummy Cache";
-         var cacheGuid = Guid.Parse("FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF");
+         var cacheId = Guid.Parse("FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF");
          var partitioningStrategy = new UnweightedRingHashSpacePartitioningStrategy(1024, 3);
-         var activeProposalRegistry = new ActiveProposalManagerImpl<int, string>();
-         var proposalPhaseFactory = new ProposalPhaseFactoryImpl<int, string>(activeProposalRegistry);
-         var proposalContextFactory = new ProposalContextFactoryImpl<int, string>(proposalPhaseFactory);
-         var proposalInboundEnvelopeChannel = new InboundEnvelopeChannelImpl(threadingProxy);
-         var proposalManager = new TopicEnvelopeDispatcherImpl<int, string>(threadingProxy, hydarIdentity, proposalInboundEnvelopeChannel, proposalContextFactory, cacheGuid);
-         var proposalTopicEnvelopeChannel = new InboundEnvelopeChannelImpl(threadingProxy);
-         var cacheDispatcher = new CacheDispatcherImpl<int, string>(dummyCache, cacheGuid, hydarIdentity, proposalTopicEnvelopeChannel);
-         // var cacheManager = new OldCacheEnvelopeDispatcherImpl(hydarIdentity, inboundEnvelopeBus).With(x => x.Initialize());
-         // var dummyCacheContext = new CacheDispatcherImpl("Dummy Cache", Guid.Parse("FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF"));
-         // var dummyCacheBlockContainer = new BlockContainerImpl<int, string>(partitioningStrategy);
-         // var dummyCacheOperationManager = new CacheOperationManagerImpl<int, string>(partitioningStrategy, dummyCacheBlockContainer);
-         // cacheManager.RegisterCache(dummyCacheContext);
-         // localManagementServerRegistry.RegisterInstance(new DummyCacheDebugMob(dummyCacheOperationManager, dummyCacheBlockContainer));
+         var cacheAtomicExecutionContext = new CacheAtomicExecutionContext<int>();
+         var subjectStateFactory = new SubjectStateFactoryImpl<int>(cacheAtomicExecutionContext);
+         var subjectStateManager = new SubjectStateManagerImpl<int>(subjectStateFactory);
+         var atomicProposalMessageFactory = new AtomicProposalMessageFactoryImpl<int>(cacheId);
+         var proposalMessageSender = new ProposalMessageSenderImpl<int>(cacheId, outboundEnvelopeFactory, outboundEnvelopeBus, atomicProposalMessageFactory);
+         var proposalStateFactory = new ProposalStateFactoryImpl<int>(cacheId, subjectStateManager, proposalMessageSender);
+         var proposalStateManager = new ProposalStateManagerImpl<int>(proposalStateFactory);
+         var inboundEnvelopeChannel = new InboundEnvelopeChannelImpl(threadingProxy);
+         var atomicProposalEnvelopeChannelConsumer = new AtomicProposalEnvelopeChannelConsumerImpl<int>(threadingProxy, hydarIdentity, inboundEnvelopeChannel, proposalStateManager, cacheId);
+//         var activeProposalRegistry = new ActiveProposalManagerImpl<int, string>();
+//         var proposalPhaseFactory = new ProposalPhaseFactoryImpl<int, string>(activeProposalRegistry);
+//         var proposalContextFactory = new ProposalContextFactoryImpl<int, string>(proposalPhaseFactory);
+//         var proposalInboundEnvelopeChannel = new InboundEnvelopeChannelImpl(threadingProxy);
+//         var proposalManager = new TopicEnvelopeDispatcherImpl<int, string>(threadingProxy, hydarIdentity, proposalInboundEnvelopeChannel, proposalContextFactory, cacheGuid);
+//         var proposalTopicEnvelopeChannel = new InboundEnvelopeChannelImpl(threadingProxy);
+//         var cacheDispatcher = new CacheDispatcherImpl<int, string>(dummyCache, cacheGuid, hydarIdentity, proposalTopicEnvelopeChannel);
+// var cacheManager = new OldCacheEnvelopeDispatcherImpl(hydarIdentity, inboundEnvelopeBus).With(x => x.Initialize());
+// var dummyCacheContext = new CacheDispatcherImpl("Dummy Cache", Guid.Parse("FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF"));
+// var dummyCacheBlockContainer = new BlockContainerImpl<int, string>(partitioningStrategy);
+// var dummyCacheOperationManager = new CacheOperationManagerImpl<int, string>(partitioningStrategy, dummyCacheBlockContainer);
+// cacheManager.RegisterCache(dummyCacheContext);
+// localManagementServerRegistry.RegisterInstance(new DummyCacheDebugMob(dummyCacheOperationManager, dummyCacheBlockContainer));
 
          ticker.Initialize();
          return null;

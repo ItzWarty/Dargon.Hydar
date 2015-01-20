@@ -30,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="libwarty, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\libwarty.0.0.16\lib\portable-net45+netcore45+MonoAndroid1+MonoTouch1\libwarty.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -43,6 +47,8 @@
     <Compile Include="Messages\AtomicProposalMessage.cs" />
     <Compile Include="AtomicExecutionContext.cs" />
     <Compile Include="Messages\AtomicProposalPrepare.cs" />
+    <Compile Include="Messages\AtomicProposalReject.cs" />
+    <Compile Include="Messages\Helpers\RejectionReason.cs" />
     <Compile Include="Proposal.cs" />
     <Compile Include="PrepareResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -53,6 +59,9 @@
       <Project>{82C1B545-9A77-4D33-A8C2-53BB7D3F8CFF}</Project>
       <Name>Dargon.Hydar.Networking.Api</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

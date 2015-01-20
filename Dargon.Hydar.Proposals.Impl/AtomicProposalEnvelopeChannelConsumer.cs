@@ -80,15 +80,15 @@ namespace Dargon.Hydar.Proposals {
          var message = (AtomicProposalMessage)envelope.Message;
          var proposalState = proposalStateManager.GetProposalStateByIdOrNull(message.ProposalId);
          if (proposalState != null) {
-            proposalState.HandleAccept();
+            proposalState.HandleAccept(envelope.Header.SenderId);
          }
       }
 
       private void HandleProposalReject(InboundEnvelope envelope) {
-         var message = (AtomicProposalMessage)envelope.Message;
+         var message = (AtomicProposalReject)envelope.Message;
          var proposalState = proposalStateManager.GetProposalStateByIdOrNull(message.ProposalId);
          if (proposalState != null) {
-            proposalState.HandleReject();
+            proposalState.HandleReject(envelope.Header.SenderId, message.RejectionReason);
          }
       }
 

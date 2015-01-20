@@ -1,54 +1,74 @@
+using System;
 using Dargon.Hydar.Networking.PortableObjects;
 using Dargon.Hydar.Proposals.Messages;
+using Dargon.Hydar.Proposals.Messages.Helpers;
+using ItzWarty.Collections;
 
 namespace Dargon.Hydar.Proposals.Phases {
-   public class LeaderProposingPhase<K, V> : ProposalPhaseBase<K, V> {
-      private readonly SubjectState<> subjectState;
-      private readonly ProposalPhaseFactory<K, V> proposalPhaseFactory;
-      private readonly ActiveProposalManager<K, V> activeProposalManager;
+   public class LeaderProposingPhase<TSubject> : ProposalPhaseBase<TSubject> {
+      private readonly ProposalState<TSubject> proposalState;
+      private readonly SubjectState<TSubject> subjectState;
+      private readonly ProposalPhaseFactory<TSubject> proposalPhaseFactory;
+      private readonly ProposalMessageSender<TSubject> proposalMessageSender;
+      private readonly HashSet<Guid> acceptingPeers = new HashSet<Guid>();
 
-      public LeaderProposingPhase(SubjectState<> subjectState, ProposalPhaseFactory<K, V> proposalPhaseFactory, ActiveProposalManager<K, V> activeProposalManager) {
+      public LeaderProposingPhase(ProposalState<TSubject> proposalState, SubjectState<TSubject> subjectState, ProposalPhaseFactory<TSubject> proposalPhaseFactory, ProposalMessageSender<TSubject> proposalMessageSender) {
+         this.proposalState = proposalState;
          this.subjectState = subjectState;
          this.proposalPhaseFactory = proposalPhaseFactory;
-         this.activeProposalManager = activeProposalManager;
+         this.proposalMessageSender = proposalMessageSender;
       }
 
       public override void Initialize() {
          base.Initialize();
 
-         RegisterHandler<AtomicProposalPrepareImpl<K>>(HandleLeaderPrepare);
-         RegisterHandler<AtomicProposalAcceptImpl>(HandleFollowerAccept);
-         RegisterHandler<AtomicProposalRejectImpl>(HandleFollowerReject);
+         // We might transition to commit 
+         ConsiderCommitTransition();
       }
 
-      private void HandleLeaderPrepare(InboundEnvelopeHeader header, AtomicProposalPrepareImpl<K> message) {
-         if (message.ProposalId.CompareTo(subjectState.AtomicProposal.ProposalId) > 0) {
-            Cancel();
+      public override void HandlePrepare() {
+         // This indicates a guid collision by two proposing leaders who generated the same guid.
+         throw new InvalidOperationException();
+      }
+
+      public override void HandleCommit() {
+         // This indicates a collision by two leaders who generated the same guid.
+         throw new InvalidOperationException();
+      }
+
+      public override void HandleCancel() {
+         // This indicates a collision by two leaders who generated the same guid.
+         throw new InvalidOperationException();
+      }
+
+      public override void HandleAccept(Guid senderId) {
+         acceptingPeers.Add(senderId);
+
+         ConsiderCommitTransition();
+      }
+
+      public override void HandleReject(Guid senderId, RejectionReason rejectionReason) {
+         var cancelPhase = proposalPhaseFactory.LeaderCancelledPhase();
+         proposalState.Transition(cancelPhase);
+      }
+
+      public override void HandleCommitAcknowledgement(Guid senderId) {
+         throw new InvalidOperationException();
+      }
+
+      public override void HandleCancelAcknowledgement(Guid senderId) {
+         throw new InvalidOperationException();
+      }
+
+      public override bool TryCancel() {
+         return true;
+      }
+
+      private void ConsiderCommitTransition() {
+         if (acceptingPeers.Count == proposalState.Proposal.Participants.Count - 1) {
+            var commitPhase = proposalPhaseFactory.LeaderCommittedPhase();
+            proposalState.Transition(commitPhase);
          }
-      }
-
-      private void HandleFollowerAccept(InboundEnvelopeHeader header, AtomicProposalAcceptImpl message) {
-         throw new System.NotImplementedException();
-      }
-
-      private void HandleFollowerReject(InboundEnvelopeHeader header, AtomicProposalRejectImpl message) {
-         Cancel();
-      }
-
-      public override bool TryBullyWith(SubjectState<> candidate) {
-         if (candidate.AtomicProposal.ProposalId.CompareTo(subjectState.AtomicProposal.ProposalId) > 0) {
-            Cancel();
-            return true;
-         }
-         return false;
-      }
-
-      private void Commit() {
-
-      }
-
-      private void Cancel() {
-         throw new System.NotImplementedException();
       }
    }
 }

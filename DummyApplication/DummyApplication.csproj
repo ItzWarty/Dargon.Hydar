@@ -74,6 +74,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Dargon.Hydar.Caching.Impl\Dargon.Hydar.Caching.Impl.csproj">
+      <Project>{3311AC76-BE04-4A11-8350-BAF88EE46305}</Project>
+      <Name>Dargon.Hydar.Caching.Impl</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Dargon.Hydar.Clustering.Api\Dargon.Hydar.Clustering.Api.csproj">
       <Project>{857A034F-C116-4DBC-885C-24D7477130E9}</Project>
       <Name>Dargon.Hydar.Clustering.Api</Name>
@@ -97,6 +101,14 @@
     <ProjectReference Include="..\Dargon.Hydar.Networking.Impl\Dargon.Hydar.Networking.Impl.csproj">
       <Project>{510D1FBB-010C-47CA-850C-8CA730341465}</Project>
       <Name>Dargon.Hydar.Networking.Impl</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Dargon.Hydar.Proposals.Api\Dargon.Hydar.AtomicProposals.Api.csproj">
+      <Project>{655D930A-5CDC-47CF-B4A9-E158C16AA925}</Project>
+      <Name>Dargon.Hydar.AtomicProposals.Api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Dargon.Hydar.Proposals.Impl\Dargon.Hydar.AtomicProposals.Impl.csproj">
+      <Project>{812B373A-91E2-4640-9B8A-6AAC225EC48A}</Project>
+      <Name>Dargon.Hydar.AtomicProposals.Impl</Name>
     </ProjectReference>
     <ProjectReference Include="..\Dargon.Hydar.Utilities\Dargon.Hydar.Utilities.csproj">
       <Project>{be5cbf24-6ee6-43cb-b7e0-af5f340bbdd8}</Project>

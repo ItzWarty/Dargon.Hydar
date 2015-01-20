@@ -1,40 +1,35 @@
-﻿using System;
-using Dargon.Hydar.Networking.PortableObjects;
+using System;
 using Dargon.Hydar.Proposals.Messages;
 using Dargon.Hydar.Proposals.Messages.Helpers;
 
 namespace Dargon.Hydar.Proposals.Phases {
-   public class FollowerRejectedPhase<TSubject> : ProposalPhaseBase<TSubject> {
+   public class LeaderCancelledPhase<TSubject> : ProposalPhaseBase<TSubject> {
       private readonly ProposalState<TSubject> proposalState;
       private readonly SubjectState<TSubject> subjectState;
       private readonly ProposalPhaseFactory<TSubject> proposalPhaseFactory;
       private readonly ProposalMessageSender<TSubject> proposalMessageSender;
-      private readonly RejectionReason rejectionReason;
 
-      public FollowerRejectedPhase(ProposalState<TSubject> proposalState, SubjectState<TSubject> subjectState, ProposalPhaseFactory<TSubject> proposalPhaseFactory, ProposalMessageSender<TSubject> proposalMessageSender, RejectionReason rejectionReason) {
+      public LeaderCancelledPhase(ProposalState<TSubject> proposalState, SubjectState<TSubject> subjectState, ProposalPhaseFactory<TSubject> proposalPhaseFactory, ProposalMessageSender<TSubject> proposalMessageSender) {
          this.proposalState = proposalState;
          this.subjectState = subjectState;
          this.proposalPhaseFactory = proposalPhaseFactory;
          this.proposalMessageSender = proposalMessageSender;
-         this.rejectionReason = rejectionReason;
       }
 
       public override void Initialize() {
          base.Initialize();
 
-         BroadcastFollowerReject();
+         BroadcastLeaderCancel();
       }
 
-      public override void HandlePrepare() {
-         BroadcastFollowerReject();
-      }
+      public override void HandlePrepare() { }
 
       public override void HandleCommit() {
          throw new InvalidOperationException();
       }
 
       public override void HandleCancel() {
-         TransitionToCancelledPhase();
+         throw new InvalidOperationException();
       }
 
       public override void HandleAccept(Guid senderId) { }
@@ -46,18 +41,15 @@ namespace Dargon.Hydar.Proposals.Phases {
       }
 
       public override void HandleCancelAcknowledgement(Guid senderId) {
-         TransitionToCancelledPhase();
+         throw new InvalidOperationException();
       }
 
-      public override bool TryCancel() { return false; }
-
-      private void TransitionToCancelledPhase() {
-         var cancelledPhase = proposalPhaseFactory.FollowerCancelledPhase();
-         proposalState.Transition(cancelledPhase);
+      public override bool TryCancel() {
+         throw new InvalidOperationException();
       }
 
-      private void BroadcastFollowerReject() {
-         proposalMessageSender.FollowerReject(proposalState.ProposalId, rejectionReason);
+      private void BroadcastLeaderCancel() {
+         proposalMessageSender.LeaderCancel(proposalState.ProposalId);
       }
    }
 }

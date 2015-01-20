@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Dargon.Hydar.Proposals.Messages;
+using Dargon.Hydar.Proposals.Messages.Helpers;
 using Dargon.Hydar.Proposals.Phases;
 
 namespace Dargon.Hydar.Proposals {
@@ -16,8 +17,8 @@ namespace Dargon.Hydar.Proposals {
       void HandlePrepare();
       void HandleCommit();
       void HandleCancel();
-      void HandleAccept();
-      void HandleReject();
+      void HandleAccept(Guid senderId);
+      void HandleReject(Guid senderId, RejectionReason rejectionReason);
 
       bool TryCancel();
    }
@@ -69,15 +70,15 @@ namespace Dargon.Hydar.Proposals {
          }
       }
 
-      public void HandleAccept() {
+      public void HandleAccept(Guid senderId) {
          lock (synchronization) {
-            phase.HandleAccept();
+            phase.HandleAccept(senderId);
          }
       }
 
-      public void HandleReject() {
+      public void HandleReject(Guid senderId, RejectionReason rejectionReason) {
          lock (synchronization) {
-            phase.HandleReject();
+            phase.HandleReject(senderId, rejectionReason);
          }
       }
 
