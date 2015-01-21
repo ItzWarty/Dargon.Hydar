@@ -51,11 +51,11 @@ namespace Dargon.Hydar.Proposals.Phases {
       }
 
       public IProposalPhase<TSubject> LeaderCommittedPhase() {
-         throw new System.NotImplementedException();
+         return new LeaderCommittedPhase<TSubject>(proposalState, subjectState, proposalMessageSender);
       }
 
       public IProposalPhase<TSubject> LeaderCancelledPhase() {
-         throw new System.NotImplementedException();
+         return new LeaderCancelledPhase<TSubject>(proposalState, subjectState, proposalMessageSender);
       }
    }
 }

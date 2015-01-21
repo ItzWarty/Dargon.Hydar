@@ -42,6 +42,7 @@ namespace DummyApplication {
             x.MergeContext(new HydarUtilitiesPofContext());
             x.MergeContext(new HydarNetworkingPofContext());
             x.MergeContext(new HydarClusteringPofContext());
+            x.MergeContext(new HydarCachingImplPofContext());
             x.MergeContext(new ManagementPofContext());
             x.MergeContext(new DummyApplicationPofContext());
          });
@@ -138,6 +139,7 @@ namespace DummyApplication {
          var proposalStateFactory = new ProposalStateFactoryImpl<int>(cacheId, subjectStateManager, proposalMessageSender);
          var proposalStateManager = new ProposalStateManagerImpl<int>(proposalStateFactory);
          var inboundEnvelopeChannel = new InboundEnvelopeChannelImpl(threadingProxy);
+         subjectStateFactory.SetProposalStateManager(proposalStateManager);
          var atomicProposalEnvelopeChannelConsumer = new AtomicProposalEnvelopeChannelConsumerImpl<int>(threadingProxy, hydarIdentity, inboundEnvelopeChannel, proposalStateManager, cacheId);
 //         var activeProposalRegistry = new ActiveProposalManagerImpl<int, string>();
 //         var proposalPhaseFactory = new ProposalPhaseFactoryImpl<int, string>(activeProposalRegistry);

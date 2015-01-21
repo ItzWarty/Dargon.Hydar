@@ -9,6 +9,7 @@ using ItzWarty.Collections;
 
 namespace Dargon.Hydar.Proposals {
    public interface ProposalStateManager<TSubject> {
+      ProposalState<TSubject> CreateLeaderState(Proposal<TSubject> proposal);
       void HandleProposalPrepare(Guid proposalId, Proposal<TSubject> proposal);
       ProposalState<TSubject> GetProposalStateByIdOrNull(Guid proposalId);
    }
@@ -21,10 +22,18 @@ namespace Dargon.Hydar.Proposals {
          this.proposalStateFactory = proposalStateFactory;
       }
 
+      public ProposalState<TSubject> CreateLeaderState(Proposal<TSubject> proposal) {
+         return proposalStatesById.AddOrUpdate(
+            Guid.NewGuid(),
+            proposalId => proposalStateFactory.CreateLeader(proposalId, proposal),
+            (proposalId, existing) => proposalStateFactory.CreateLeader(proposalId, proposal)
+         );
+      }
+
       public void HandleProposalPrepare(Guid proposalId, Proposal<TSubject> proposal) {
          var state = proposalStatesById.AddOrUpdate(
             proposalId,
-            proposalId_ => proposalStateFactory.Create(proposalId, proposal),
+            proposalId_ => proposalStateFactory.CreateFollower(proposalId, proposal),
             (proposalId_, existing) => existing
          );
          state.HandlePrepare();

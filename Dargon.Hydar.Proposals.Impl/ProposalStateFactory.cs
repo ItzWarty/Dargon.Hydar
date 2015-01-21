@@ -5,7 +5,8 @@ using ItzWarty;
 
 namespace Dargon.Hydar.Proposals {
    public interface ProposalStateFactory<TSubject> {
-      ProposalState<TSubject> Create(Guid proposalId, Proposal<TSubject> proposal);
+      ProposalState<TSubject> CreateFollower(Guid proposalId, Proposal<TSubject> proposal);
+      ProposalState<TSubject> CreateLeader(Guid proposalId, Proposal<TSubject> proposal);
    }
 
    public class ProposalStateFactoryImpl<TSubject> : ProposalStateFactory<TSubject> {
@@ -19,11 +20,19 @@ namespace Dargon.Hydar.Proposals {
          this.proposalMessageSender = proposalMessageSender;
       }
 
-      public ProposalState<TSubject> Create(Guid proposalId, Proposal<TSubject> proposal) {
+      public ProposalState<TSubject> CreateFollower(Guid proposalId, Proposal<TSubject> proposal) {
          var subjectState = subjectStateManager.GetOrCreate(proposal.Subject);
          var proposalState = new ProposalStateImpl<TSubject>(proposalId, proposal);
          var proposalPhaseFactory = new ProposalPhaseFactoryImpl<TSubject>(proposalState, subjectState, proposalMessageSender);
          proposalState.Initialize(proposalPhaseFactory.FollowerInitialPhase());
+         return proposalState;
+      }
+
+      public ProposalState<TSubject> CreateLeader(Guid proposalId, Proposal<TSubject> proposal) {
+         var subjectState = subjectStateManager.GetOrCreate(proposal.Subject);
+         var proposalState = new ProposalStateImpl<TSubject>(proposalId, proposal);
+         var proposalPhaseFactory = new ProposalPhaseFactoryImpl<TSubject>(proposalState, subjectState, proposalMessageSender);
+         proposalState.Initialize(proposalPhaseFactory.LeaderProposingPhase());
          return proposalState;
       }
    }

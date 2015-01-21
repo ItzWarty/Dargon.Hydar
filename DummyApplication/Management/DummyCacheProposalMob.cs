@@ -1,5 +1,4 @@
-﻿using Dargon.Hydar.Caching.Data.Operations;
-using DummyApplication.Hydar;
+﻿using DummyApplication.Hydar;
 
 namespace DummyApplication.Management {
    public class DummyCacheProposalMob {

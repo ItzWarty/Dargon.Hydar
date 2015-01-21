@@ -1,6 +1,6 @@
 ﻿using Dargon.Hydar.Caching;
 using Dargon.Hydar.Caching.Data;
-using Dargon.Hydar.Caching.Data.Operations;
+using Dargon.Hydar.Caching.Operations;
 using Dargon.Hydar.Utilities;
 using Dargon.Management;
 using DummyApplication.Hydar;

@@ -86,6 +86,10 @@
       <Project>{EEA8CBE9-90F7-4411-A7A5-A702C902D02F}</Project>
       <Name>Dargon.Hydar.Api</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Dargon.Hydar.Caching.Api\Dargon.Hydar.Caching.Api.csproj">
+      <Project>{84DF356C-E99B-424E-9467-543E0476701D}</Project>
+      <Name>Dargon.Hydar.Caching.Api</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Dargon.Hydar.Clustering.Impl\Dargon.Hydar.Clustering.Impl.csproj">
       <Project>{15F3B2C3-AA68-4F95-9140-33F0751EF72C}</Project>
       <Name>Dargon.Hydar.Clustering.Impl</Name>

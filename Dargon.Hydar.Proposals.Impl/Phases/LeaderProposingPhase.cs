@@ -23,6 +23,7 @@ namespace Dargon.Hydar.Proposals.Phases {
          base.Initialize();
 
          // We might transition to commit 
+         BroadcastPrepareMessage();
          ConsiderCommitTransition();
       }
 
@@ -62,6 +63,11 @@ namespace Dargon.Hydar.Proposals.Phases {
 
       public override bool TryCancel() {
          return true;
+      }
+
+      private void BroadcastPrepareMessage() {
+         var proposal = proposalState.Proposal;
+         proposalMessageSender.LeaderPrepare(proposalState.ProposalId, proposal.Subject, proposal);
       }
 
       private void ConsiderCommitTransition() {

@@ -66,17 +66,20 @@
     <Compile Include="Phases\FollowerInitialPhase.cs" />
     <Compile Include="Phases\IProposalPhase.cs" />
     <Compile Include="Phases\LeaderCancelledPhase.cs" />
+    <Compile Include="Phases\LeaderCommittedPhase.cs" />
     <Compile Include="Phases\LeaderProposingPhase.cs" />
     <Compile Include="Phases\ProposalPhaseBase.cs" />
     <Compile Include="Phases\ProposalPhaseFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="AtomicProposalManagementServiceImpl.cs" />
     <Compile Include="ProposalState.cs" />
-    <Compile Include="SubjectState.cs" />
     <Compile Include="ProposalStateFactory.cs" />
     <Compile Include="ProposalStateManagerImpl.cs" />
+    <Compile Include="SubjectState.cs" />
     <Compile Include="SubjectStateFactory.cs" />
+    <Compile Include="SubjectStateImpl.cs" />
     <Compile Include="SubjectStateManager.cs" />
-    <Compile Include="TopicDescriptorImpl.cs" />
+    <Compile Include="SubjectStateManagerImpl.cs" />
     <Compile Include="AtomicProposalEnvelopeChannelConsumer.cs" />
   </ItemGroup>
   <ItemGroup>

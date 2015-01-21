@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{655D930A-5CDC-47CF-B4A9-E158C16AA925}</ProjectGuid>
+    <ProjectGuid>{84DF356C-E99B-424E-9467-543E0476701D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Dargon.Hydar.Proposals</RootNamespace>
-    <AssemblyName>Dargon.Hydar.Proposals.Api</AssemblyName>
+    <RootNamespace>Dargon.Hydar.Caching</RootNamespace>
+    <AssemblyName>Dargon.Hydar.Caching.Api</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -30,9 +30,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="libwarty, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\libwarty.0.0.16\lib\portable-net45+netcore45+MonoAndroid1+MonoTouch1\libwarty.dll</HintPath>
+    <Reference Include="libdpo">
+      <HintPath>..\packages\libdpo.0.0.14\lib\net45\libdpo.dll</HintPath>
+    </Reference>
+    <Reference Include="libwarty">
+      <HintPath>..\packages\libdpo.0.0.14\lib\net45\libwarty.dll</HintPath>
+    </Reference>
+    <Reference Include="libwarty.proxies-api">
+      <HintPath>..\packages\libdpo.0.0.14\lib\net45\libwarty.proxies-api.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -43,21 +48,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AtomicProposalManagementService.cs" />
-    <Compile Include="Messages\AtomicProposalMessage.cs" />
-    <Compile Include="AtomicExecutionContext.cs" />
-    <Compile Include="Messages\AtomicProposalPrepare.cs" />
-    <Compile Include="Messages\AtomicProposalReject.cs" />
-    <Compile Include="Messages\Helpers\RejectionReason.cs" />
-    <Compile Include="Proposal.cs" />
-    <Compile Include="PrepareResult.cs" />
+    <Compile Include="HydarCachingApiPofContext.cs" />
+    <Compile Include="Processors\EntryProcessor.cs" />
+    <Compile Include="ICache.cs" />
+    <Compile Include="ICacheIndex.cs" />
+    <Compile Include="ICacheProjector.cs" />
+    <Compile Include="IFilterArgument.cs" />
+    <Compile Include="ManageableEntry.cs" />
+    <Compile Include="EntryAccessFlags.cs" />
+    <Compile Include="Processors\PutEntryProcessor.cs" />
+    <Compile Include="Processors\RemoveEntryProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Dargon.Hydar.Networking.Api\Dargon.Hydar.Networking.Api.csproj">
-      <Project>{82C1B545-9A77-4D33-A8C2-53BB7D3F8CFF}</Project>
-      <Name>Dargon.Hydar.Networking.Api</Name>
-    </ProjectReference>
+    <Compile Include="ReadableEntry.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
