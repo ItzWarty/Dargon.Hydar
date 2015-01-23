@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DummyApplication", "DummyAp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dargon.Hydar.Api", "..\libdargon.hydar-api\Dargon.Hydar.Api.csproj", "{EEA8CBE9-90F7-4411-A7A5-A702C902D02F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dargon.Hydar.Clustering.Api", "..\Dargon.Hydar.Clustering.Api\Dargon.Hydar.Clustering.Api.csproj", "{857A034F-C116-4DBC-885C-24D7477130E9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dargon.Hydar.Clustering.Api", "Dargon.Hydar.Clustering.Api\Dargon.Hydar.Clustering.Api.csproj", "{857A034F-C116-4DBC-885C-24D7477130E9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dargon.Hydar.Clustering.Impl", "Dargon.Hydar.Clustering.Impl\Dargon.Hydar.Clustering.Impl.csproj", "{15F3B2C3-AA68-4F95-9140-33F0751EF72C}"
 EndProject
@@ -30,7 +30,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dargon.Hydar.AtomicProposal
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dargon.Hydar.AtomicProposals.Impl", "Dargon.Hydar.Proposals.Impl\Dargon.Hydar.AtomicProposals.Impl.csproj", "{812B373A-91E2-4640-9B8A-6AAC225EC48A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dargon.Hydar.Caching.Impl", "..\Dargon.Hydar.Caching.Impl\Dargon.Hydar.Caching.Impl.csproj", "{3311AC76-BE04-4A11-8350-BAF88EE46305}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dargon.Hydar.Caching.Impl", "Dargon.Hydar.Caching.Impl\Dargon.Hydar.Caching.Impl.csproj", "{3311AC76-BE04-4A11-8350-BAF88EE46305}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dargon.Hydar.Caching.Api", "Dargon.Hydar.Caching.Api\Dargon.Hydar.Caching.Api.csproj", "{84DF356C-E99B-424E-9467-543E0476701D}"
 EndProject
