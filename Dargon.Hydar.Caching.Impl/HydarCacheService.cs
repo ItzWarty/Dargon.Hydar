@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Dargon.Hydar.Caching.Processors;
 using Dargon.Hydar.Caching.Proposals;
 using Dargon.Hydar.Proposals;
 
@@ -13,20 +14,17 @@ namespace Dargon.Hydar.Caching {
 
    public class HydarCacheServiceImpl<TKey, TValue> : HydarCacheService<TKey, TValue> {
       private readonly AtomicProposalManagementService<TKey> atomicProposalManagementService;
+      private readonly CacheProposalFactory<TKey, TValue> cacheProposalFactory;
 
-      public HydarCacheServiceImpl(AtomicProposalManagementService<TKey> atomicProposalManagementService) {
+      public HydarCacheServiceImpl(AtomicProposalManagementService<TKey> atomicProposalManagementService, CacheProposalFactory<TKey, TValue> cacheProposalFactory) {
          this.atomicProposalManagementService = atomicProposalManagementService;
+         this.cacheProposalFactory = cacheProposalFactory;
       }
 
       public void Put(TKey key, TValue value) {
+         var processor = new PutEntryProcessor<TKey, TValue>(value);
+         var proposal = cacheProposalFactory.ProcessProposal(processor);
+         atomicProposalManagementService.EnqueueProposal(key, proposal);
       }
-
-//      public TResult Process<TResult>(TKey key, EntryProcessor<TKey, TValue, TResult> processor) {
-//         atomicProposalManagementService.EnqueueProposal();
-//         // atomicProposalManagementService.EnqueueProposal();
-////         var state = subjectStateManager.GetOrCreate(key);
-////         var processProposal = new CacheProcessProposal<TKey, TValue, TResult>(processor);
-////         state.EnqueueProposal(processProposal);
-//      }
    }
 }

@@ -86,7 +86,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Dargon.Hydar.Clustering.Api\Dargon.Hydar.Clustering.Api.csproj">
+    <ProjectReference Include="..\Dargon.Hydar.Clustering.Api\Dargon.Hydar.Clustering.Api.csproj">
       <Project>{857a034f-c116-4dbc-885c-24d7477130e9}</Project>
       <Name>Dargon.Hydar.Clustering.Api</Name>
     </ProjectReference>

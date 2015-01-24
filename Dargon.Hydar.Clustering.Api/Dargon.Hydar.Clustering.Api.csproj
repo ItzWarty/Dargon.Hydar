@@ -53,7 +53,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Dargon.Hydar\Dargon.Hydar.Utilities\Dargon.Hydar.Utilities.csproj">
+    <ProjectReference Include="..\Dargon.Hydar.Utilities\Dargon.Hydar.Utilities.csproj">
       <Project>{be5cbf24-6ee6-43cb-b7e0-af5f340bbdd8}</Project>
       <Name>Dargon.Hydar.Utilities</Name>
     </ProjectReference>

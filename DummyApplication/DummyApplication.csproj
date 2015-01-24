@@ -74,11 +74,11 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Dargon.Hydar.Caching.Impl\Dargon.Hydar.Caching.Impl.csproj">
+    <ProjectReference Include="..\Dargon.Hydar.Caching.Impl\Dargon.Hydar.Caching.Impl.csproj">
       <Project>{3311AC76-BE04-4A11-8350-BAF88EE46305}</Project>
       <Name>Dargon.Hydar.Caching.Impl</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Dargon.Hydar.Clustering.Api\Dargon.Hydar.Clustering.Api.csproj">
+    <ProjectReference Include="..\Dargon.Hydar.Clustering.Api\Dargon.Hydar.Clustering.Api.csproj">
       <Project>{857A034F-C116-4DBC-885C-24D7477130E9}</Project>
       <Name>Dargon.Hydar.Clustering.Api</Name>
     </ProjectReference>

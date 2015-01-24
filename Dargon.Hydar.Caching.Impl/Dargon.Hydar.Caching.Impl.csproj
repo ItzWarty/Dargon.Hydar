@@ -92,15 +92,15 @@
     <Compile Include="Proposals\CacheProposalFactory.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Dargon.Hydar\Dargon.Hydar.Caching.Api\Dargon.Hydar.Caching.Api.csproj">
+    <ProjectReference Include="..\Dargon.Hydar.Caching.Api\Dargon.Hydar.Caching.Api.csproj">
       <Project>{84DF356C-E99B-424E-9467-543E0476701D}</Project>
       <Name>Dargon.Hydar.Caching.Api</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Dargon.Hydar\Dargon.Hydar.Proposals.Api\Dargon.Hydar.AtomicProposals.Api.csproj">
+    <ProjectReference Include="..\Dargon.Hydar.Proposals.Api\Dargon.Hydar.AtomicProposals.Api.csproj">
       <Project>{655D930A-5CDC-47CF-B4A9-E158C16AA925}</Project>
       <Name>Dargon.Hydar.AtomicProposals.Api</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Dargon.Hydar\Dargon.Hydar.Utilities\Dargon.Hydar.Utilities.csproj">
+    <ProjectReference Include="..\Dargon.Hydar.Utilities\Dargon.Hydar.Utilities.csproj">
       <Project>{be5cbf24-6ee6-43cb-b7e0-af5f340bbdd8}</Project>
       <Name>Dargon.Hydar.Utilities</Name>
     </ProjectReference>
