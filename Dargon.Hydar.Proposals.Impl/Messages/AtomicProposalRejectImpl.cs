@@ -8,6 +8,8 @@ namespace Dargon.Hydar.Proposals.Messages {
       private Guid proposalId;
       private RejectionReason rejectionReason;
 
+      public AtomicProposalRejectImpl() { }
+
       public AtomicProposalRejectImpl(Guid topicId, Guid proposalId, RejectionReason rejectionReason) {
          this.topicId = topicId;
          this.proposalId = proposalId;

@@ -21,6 +21,10 @@ namespace Dargon.Hydar.Proposals.Phases {
 
       public override void Initialize() {
          base.Initialize();
+      }
+
+      public override void HandleEnter() {
+         base.HandleEnter();
 
          // We might transition to commit 
          BroadcastPrepareMessage();

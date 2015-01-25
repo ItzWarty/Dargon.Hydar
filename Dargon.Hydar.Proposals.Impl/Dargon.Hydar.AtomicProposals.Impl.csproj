@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HydarAtomicProposalsPofContext.cs" />
     <Compile Include="Messages\AtomicProposalCommitAcknowledgementImpl.cs" />
     <Compile Include="Messages\AtomicProposalAcceptImpl.cs" />
     <Compile Include="Messages\AtomicProposalRejectImpl.cs" />

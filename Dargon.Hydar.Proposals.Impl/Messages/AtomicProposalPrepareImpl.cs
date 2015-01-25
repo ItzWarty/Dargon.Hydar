@@ -8,6 +8,8 @@ namespace Dargon.Hydar.Proposals.Messages {
       private TSubject entryKey;
       private Proposal<TSubject> proposal;
 
+      public AtomicProposalPrepareImpl() { } 
+
       public AtomicProposalPrepareImpl(Guid topicId, Guid proposalId, TSubject entryKey, Proposal<TSubject> operation) {
          this.topicId = topicId;
          this.proposalId = proposalId;

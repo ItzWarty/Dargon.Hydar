@@ -6,6 +6,8 @@ namespace Dargon.Hydar.Proposals.Messages {
       private Guid topicId;
       private Guid proposalId;
 
+      public AtomicProposalCancelImpl() { }
+
       public AtomicProposalCancelImpl(Guid topicId, Guid proposalId) {
          this.topicId = topicId;
          this.proposalId = proposalId;

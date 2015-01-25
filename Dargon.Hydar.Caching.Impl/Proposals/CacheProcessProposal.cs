@@ -13,18 +13,20 @@ namespace Dargon.Hydar.Caching.Proposals {
 
    public class CacheProcessProposalImpl<TKey, TValue, TResult> : CacheProcessProposal<TKey, TValue, TResult> {
       private readonly IThreadingProxy threadingProxy;
+      private readonly TKey key;
       private readonly EntryProcessor<TKey, TValue, TResult> processor;
       private readonly ICountdownEvent completionLatch;
       private readonly object synchronization = new object();
       private TResult result;
 
-      public CacheProcessProposalImpl(IThreadingProxy threadingProxy, EntryProcessor<TKey, TValue, TResult> processor) {
+      public CacheProcessProposalImpl(IThreadingProxy threadingProxy, TKey key, EntryProcessor<TKey, TValue, TResult> processor) {
          this.threadingProxy = threadingProxy;
+         this.key = key;
          this.processor = processor;
          this.completionLatch = threadingProxy.CreateCountdownEvent(1);
       }
 
-      public TKey Subject { get { throw new NotImplementedException(); } }
+      public TKey Subject { get { return key; } }
       public IReadOnlySet<Guid> Participants { get { throw new NotImplementedException(); } }
       public Guid EpochId { get { throw new NotImplementedException(); } }
 

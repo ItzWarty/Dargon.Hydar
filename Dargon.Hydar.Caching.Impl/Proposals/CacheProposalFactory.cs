@@ -3,7 +3,7 @@ using ItzWarty.Threading;
 
 namespace Dargon.Hydar.Caching.Proposals {
    public interface CacheProposalFactory<TKey, TValue> {
-      CacheProcessProposal<TKey, TValue, TResult> ProcessProposal<TResult>(EntryProcessor<TKey, TValue, TResult> processor);
+      CacheProcessProposal<TKey, TValue, TResult> ProcessProposal<TResult>(TKey key, EntryProcessor<TKey, TValue, TResult> processor);
    }
 
    public class CacheProposalFactoryImpl<TKey, TValue> : CacheProposalFactory<TKey, TValue> {
@@ -13,8 +13,8 @@ namespace Dargon.Hydar.Caching.Proposals {
          this.threadingProxy = threadingProxy;
       }
 
-      public CacheProcessProposal<TKey, TValue, TResult> ProcessProposal<TResult>(EntryProcessor<TKey, TValue, TResult> processor) {
-         return new CacheProcessProposalImpl<TKey, TValue, TResult>(threadingProxy, processor);
+      public CacheProcessProposal<TKey, TValue, TResult> ProcessProposal<TResult>(TKey key, EntryProcessor<TKey, TValue, TResult> processor) {
+         return new CacheProcessProposalImpl<TKey, TValue, TResult>(threadingProxy, key, processor);
       }
    }
 }

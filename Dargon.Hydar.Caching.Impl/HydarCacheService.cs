@@ -9,7 +9,7 @@ using Dargon.Hydar.Proposals;
 
 namespace Dargon.Hydar.Caching {
    public interface HydarCacheService<TKey, TValue> {
-      
+      void Put(TKey key, TValue value);
    }
 
    public class HydarCacheServiceImpl<TKey, TValue> : HydarCacheService<TKey, TValue> {
@@ -23,7 +23,7 @@ namespace Dargon.Hydar.Caching {
 
       public void Put(TKey key, TValue value) {
          var processor = new PutEntryProcessor<TKey, TValue>(value);
-         var proposal = cacheProposalFactory.ProcessProposal(processor);
+         var proposal = cacheProposalFactory.ProcessProposal(key, processor);
          atomicProposalManagementService.EnqueueProposal(key, proposal);
       }
    }

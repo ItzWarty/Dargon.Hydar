@@ -21,6 +21,8 @@ namespace Dargon.Hydar.Proposals {
 
          lock (activeProposalSynchronization) {
             if (activeProposalState == null) {
+               // CreateLeaderState automatically sends a message out.
+               // Bullying success guaranteed because no active proposal.
                var proposalState = proposalStateManager.CreateLeaderState(proposal);
                TryBullyCurrentProposal(proposalState);
             }

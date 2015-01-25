@@ -22,7 +22,7 @@ namespace Dargon.Hydar.Caching {
       }
 
       public TResult Process<TResult>(TKey key, EntryProcessor<TKey, TValue, TResult> processor) {
-         var proposal = cacheProposalFactory.ProcessProposal(processor);
+         var proposal = cacheProposalFactory.ProcessProposal(key, processor);
          atomicProposalManagementService.EnqueueProposal(key, proposal);
          return proposal.GetResult();
       }

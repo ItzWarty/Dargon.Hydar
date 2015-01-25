@@ -67,6 +67,7 @@
     <Compile Include="Hydar\ToLowerProcessor.cs" />
     <Compile Include="Management\DummyCacheDebugMob.cs" />
     <Compile Include="Management\DummyCacheProposalMob.cs" />
+    <Compile Include="Management\DummyCacheServiceDebugMob.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
