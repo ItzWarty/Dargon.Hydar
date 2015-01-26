@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Diagnostics;
 using ItzWarty.Collections;
 
 namespace Dargon.Hydar.Proposals {
    public class SubjectStateImpl<TSubject> : SubjectState<TSubject> {
       private readonly object activeProposalSynchronization = new object();
-      private readonly IConcurrentQueue<Proposal<TSubject>> localProposals = new ConcurrentQueue<Proposal<TSubject>>();
+      private readonly IConcurrentQueue<Proposal<TSubject>> localProposalQueue = new ConcurrentQueue<Proposal<TSubject>>();
       private readonly AtomicExecutionContext<TSubject> atomicExecutionContext;
       private readonly ProposalStateManager<TSubject> proposalStateManager;
       private readonly TSubject subject;
@@ -16,17 +17,23 @@ namespace Dargon.Hydar.Proposals {
          this.proposalStateManager = proposalStateManager;
       }
 
-      public void EnqueueProposal(Proposal<TSubject> proposal) {
-         localProposals.Enqueue(proposal);
-
+      public void Signal() {
          lock (activeProposalSynchronization) {
             if (activeProposalState == null) {
-               // CreateLeaderState automatically sends a message out.
-               // Bullying success guaranteed because no active proposal.
-               var proposalState = proposalStateManager.CreateLeaderState(proposal);
-               TryBullyCurrentProposal(proposalState);
+               Proposal<TSubject> proposal;
+               if (localProposalQueue.TryDequeue(out proposal)) {
+                  var proposalState = proposalStateManager.CreateLeaderState(proposal);
+                  var proposalBullySuccessful = TryBullyCurrentProposal(proposalState);
+                  Trace.Assert(proposalBullySuccessful);
+               }
             }
          }
+      }
+
+      public void EnqueueProposal(Proposal<TSubject> proposal) {
+         localProposalQueue.Enqueue(proposal);
+
+         Signal();
       }
 
       public void ExecuteProposal(Proposal<TSubject> proposal) {
@@ -40,11 +47,7 @@ namespace Dargon.Hydar.Proposals {
             } else {
                activeProposalState = null;
 
-               Proposal<TSubject> nextProposal;
-               if (localProposals.TryDequeue(out nextProposal)) {
-                  var nextProposalState = proposalStateManager.CreateLeaderState(nextProposal);
-                  TryBullyCurrentProposal(nextProposalState);
-               }
+               Signal();
             }
          }
       }
