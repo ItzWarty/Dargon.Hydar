@@ -96,6 +96,10 @@
       <Project>{84DF356C-E99B-424E-9467-543E0476701D}</Project>
       <Name>Dargon.Hydar.Caching.Api</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Dargon.Hydar.Clustering.Api\Dargon.Hydar.Clustering.Api.csproj">
+      <Project>{857a034f-c116-4dbc-885c-24d7477130e9}</Project>
+      <Name>Dargon.Hydar.Clustering.Api</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Dargon.Hydar.Proposals.Api\Dargon.Hydar.AtomicProposals.Api.csproj">
       <Project>{655D930A-5CDC-47CF-B4A9-E158C16AA925}</Project>
       <Name>Dargon.Hydar.AtomicProposals.Api</Name>
