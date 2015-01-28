@@ -20,13 +20,13 @@ namespace Dargon.Hydar.Utilities {
       public TimeSpan Span { get { return End - Start; } set { End = Start + value; } }
 
       public void Serialize(IPofWriter writer) {
-         writer.WriteS64(0, Start.ToBinary());
-         writer.WriteS64(1, End.ToBinary());
+         writer.WriteDateTime(0, Start);
+         writer.WriteDateTime(1, End);
       }
 
       public void Deserialize(IPofReader reader) {
-         Start = DateTime.FromBinary(reader.ReadS64(0));
-         End = DateTime.FromBinary(reader.ReadS64(1));
-      }
+         Start = reader.ReadDateTime(0);
+         End = reader.ReadDateTime(1);
+      }  
    }
 }
